@@ -1,0 +1,1664 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#0a0a0a">
+<title>סוחר הסם</title>
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon-192.png">
+<style>
+:root{
+  --bg:#0a0a0a; --bg2:#141414; --card:#1a1a1a; --line:#2a2a2a;
+  --gold:#e8c25a; --gold2:#c9a038; --text:#f2f2f2; --dim:#9a9a9a;
+  --good:#5ec27a; --bad:#e2604f; --warn:#e8b34a; --info:#5a9fd8;
+  --radius:16px; --tap:#e8c25a22;
+}
+/* ===== 5 palettes ===== */
+[data-pal="gold"]{ --gold:#e8c25a; --gold2:#c9a038; }
+[data-pal="emerald"]{ --gold:#4fd1a5; --gold2:#2fae86; --tap:#4fd1a522;}
+[data-pal="ruby"]{ --gold:#f0607a; --gold2:#d13e5c; --tap:#f0607a22;}
+[data-pal="sapphire"]{ --gold:#5aa9f0; --gold2:#3d84d1; --tap:#5aa9f022;}
+[data-pal="violet"]{ --gold:#b07af0; --gold2:#8f52d1; --tap:#b07af022;}
+/* ===== day theme ===== */
+[data-theme="day"]{
+  --bg:#f3efe6; --bg2:#eae4d6; --card:#ffffff; --line:#ddd4c2;
+  --text:#1e1a12; --dim:#6b6355; --gold2:#a9822a;
+}
+[data-theme="day"][data-pal="gold"]{ --gold:#b58a1f; }
+[data-theme="day"][data-pal="emerald"]{ --gold:#1f9e77; }
+[data-theme="day"][data-pal="ruby"]{ --gold:#c0324e; }
+[data-theme="day"][data-pal="sapphire"]{ --gold:#2f6fc0; }
+[data-theme="day"][data-pal="violet"]{ --gold:#7b3fc0; }
+
+*{box-sizing:border-box; -webkit-tap-highlight-color:transparent; margin:0; padding:0}
+html,body{height:100%}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Rubik","Heebo",Roboto,Arial,sans-serif;
+  background:var(--bg); color:var(--text);
+  overflow:hidden; overscroll-behavior:none;
+  transition:background .25s;
+}
+button{font-family:inherit; cursor:pointer; color:inherit}
+.hide{display:none !important}
+
+/* ===== app shell ===== */
+#app{height:100%; max-width:560px; margin:0 auto; position:relative; display:flex; flex-direction:column; background:var(--bg)}
+.screen{position:absolute; inset:0; display:flex; flex-direction:column; opacity:0; pointer-events:none; transform:translateY(8px); transition:opacity .2s, transform .2s; overflow:hidden}
+.screen.on{opacity:1; pointer-events:auto; transform:none; z-index:2}
+.scroll{flex:1; overflow-y:auto; -webkit-overflow-scrolling:touch; padding:16px 16px 90px}
+
+/* ===== topbar ===== */
+.top{display:flex; align-items:center; gap:10px; padding:14px 16px 10px; border-bottom:1px solid var(--line); background:var(--bg2)}
+.top h2{font-size:18px; font-weight:800; letter-spacing:.3px; flex:1}
+.iconbtn{width:40px; height:40px; border-radius:12px; border:1px solid var(--line); background:var(--card); font-size:18px; display:flex; align-items:center; justify-content:center; flex:0 0 auto}
+.iconbtn:active{background:var(--tap)}
+.backbtn{font-size:15px; font-weight:700; padding:0 14px; height:40px; border-radius:12px; border:1px solid var(--gold2); background:var(--card); color:var(--gold); display:flex; align-items:center; gap:6px}
+.backbtn:active{background:var(--tap)}
+
+/* ===== cards / buttons ===== */
+.card{background:var(--card); border:1px solid var(--line); border-radius:var(--radius); padding:16px; margin-bottom:12px}
+.btn{display:block; width:100%; padding:15px; border-radius:14px; border:1px solid var(--gold2); background:var(--card); color:var(--gold); font-size:16px; font-weight:800; text-align:center; margin-bottom:10px; transition:transform .05s}
+.btn:active{transform:scale(.98); background:var(--tap)}
+.btn.primary{background:linear-gradient(180deg,var(--gold),var(--gold2)); color:#141005; border:none; box-shadow:0 4px 18px -6px var(--gold2)}
+.btn.ghost{border-color:var(--line); color:var(--text)}
+.btn.sm{padding:11px; font-size:14px; margin:0}
+.btn.danger{border-color:var(--bad); color:var(--bad)}
+.btn:disabled{opacity:.4}
+.row{display:flex; gap:10px}
+.row>*{flex:1}
+
+/* ===== home ===== */
+.hero{text-align:center; padding:34px 20px 22px}
+.logo{width:96px; height:96px; margin:0 auto 14px; display:block; filter:drop-shadow(0 6px 18px var(--tap))}
+.brand{font-size:32px; font-weight:900; letter-spacing:1px; background:linear-gradient(180deg,var(--gold),var(--gold2)); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent}
+.tagline{color:var(--dim); font-size:14px; margin-top:6px; font-weight:600}
+.menugrid{display:grid; grid-template-columns:1fr 1fr; gap:12px; padding:4px 16px 20px}
+.menutile{background:var(--card); border:1px solid var(--line); border-radius:var(--radius); padding:20px 12px; text-align:center; transition:transform .06s}
+.menutile:active{transform:scale(.97); background:var(--tap)}
+.menutile .em{font-size:30px; display:block; margin-bottom:8px}
+.menutile .lb{font-size:14px; font-weight:800}
+.menutile.wide{grid-column:1/3; display:flex; align-items:center; justify-content:center; gap:10px; padding:16px; flex-direction:row}
+.menutile.wide .em{margin:0; font-size:24px}
+
+/* ===== HUD ===== */
+.hud{background:var(--bg2); border-bottom:1px solid var(--line); padding:10px 12px}
+.hudrow{display:flex; align-items:center; gap:8px}
+.hudrow h2{flex:1; font-size:17px; font-weight:800; display:flex; align-items:center; gap:6px}
+.daypill{font-size:12px; font-weight:800; color:var(--gold); border:1px solid var(--gold2); border-radius:20px; padding:4px 10px}
+.stats{display:flex; gap:8px; margin-top:9px}
+.stat{flex:1; background:var(--card); border:1px solid var(--line); border-radius:12px; padding:7px 6px; text-align:center; min-width:0}
+.stat .v{font-size:15px; font-weight:800; white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+.stat .k{font-size:10px; color:var(--dim); font-weight:700; margin-top:2px}
+.stat.cash .v{color:var(--gold)}
+
+/* ===== tabs ===== */
+.tabs{display:flex; border-top:1px solid var(--line); background:var(--bg2); position:absolute; bottom:0; left:0; right:0; z-index:5; padding-bottom:env(safe-area-inset-bottom)}
+.tab{flex:1; padding:9px 2px 8px; text-align:center; border:none; background:none; color:var(--dim)}
+.tab .em{font-size:19px; display:block}
+.tab .lb{font-size:9px; font-weight:700; margin-top:1px; white-space:nowrap}
+.tab.on{color:var(--gold)}
+.tab.on .em{filter:drop-shadow(0 0 6px var(--tap))}
+
+/* ===== market ===== */
+.news{background:linear-gradient(90deg,var(--tap),transparent); border:1px solid var(--gold2); border-radius:12px; padding:9px 12px; font-size:13px; font-weight:700; margin-bottom:12px; display:flex; align-items:center; gap:8px}
+/* best-deal callout */
+.deal{background:linear-gradient(135deg,#e8c25a22,#c9a03810 60%,transparent); border:1px solid var(--gold2); border-radius:16px; padding:12px 14px; margin-bottom:14px; cursor:pointer; transition:transform .08s, box-shadow .15s; position:relative; overflow:hidden}
+.deal:active{transform:scale(.98)}
+.deal::before{content:""; position:absolute; inset:0 0 0 auto; width:60%; background:linear-gradient(90deg,transparent,#e8c25a0a); pointer-events:none}
+.deal .dealhd{font:800 12px Georgia,serif; letter-spacing:.02em; color:var(--gold); margin-bottom:5px}
+.deal .dealbody{font-size:14.5px; font-weight:700; line-height:1.5}
+.deal .dealbody b{color:var(--text)}
+.deal .dealfoot{display:flex; flex-wrap:wrap; justify-content:space-between; gap:4px 10px; margin-top:7px; align-items:baseline}
+.deal .dealprofit{color:var(--good); font-weight:900; font-size:14px; font-variant-numeric:tabular-nums}
+.deal .dealage{color:var(--dim); font-size:10.5px}
+.deal.none{cursor:default; background:var(--card); color:var(--dim); font-size:12.5px; font-weight:600; line-height:1.5}
+.deal.none:active{transform:none}
+
+.goodrow{display:flex; align-items:center; gap:10px; background:var(--card); border:1px solid var(--line); border-radius:14px; padding:11px 12px; margin-bottom:9px}
+.goodrow .gem{font-size:26px; width:34px; text-align:center; flex:0 0 auto}
+.goodrow .gmid{flex:1; min-width:0}
+.goodrow .gname{font-size:15px; font-weight:800}
+.goodrow .gsub{font-size:12px; color:var(--dim); margin-top:2px; display:flex; gap:8px; align-items:center; flex-wrap:wrap}
+.price{font-weight:800}
+.arrow{font-size:11px; font-weight:800; padding:1px 5px; border-radius:6px}
+.arrow.up{color:var(--bad); background:#e2604f22}
+.arrow.dn{color:var(--good); background:#5ec27a22}
+.gbtns{display:flex; flex-direction:column; gap:6px; flex:0 0 auto}
+.minibtn{width:78px; padding:7px 0; border-radius:9px; border:1px solid var(--gold2); background:var(--card); color:var(--gold); font-size:12px; font-weight:800}
+.minibtn:active{background:var(--tap)}
+.minibtn.sell{border-color:var(--good); color:var(--good)}
+.minibtn:disabled{opacity:.35}
+.hold{font-size:12px; color:var(--gold); font-weight:800}
+
+/* ===== map ===== */
+.mapwrap{position:relative; width:100%; aspect-ratio:2/1.05; background:
+  radial-gradient(120% 90% at 50% 20%, #10233a44, transparent),
+  var(--bg2); border:1px solid var(--line); border-radius:16px; overflow:hidden; margin-bottom:12px}
+[data-theme="day"] .mapwrap{background:radial-gradient(120% 90% at 50% 20%, #cfe0f0, transparent), var(--bg2)}
+.mapgrid{position:absolute; inset:0; opacity:.25; background-image:
+  linear-gradient(var(--line) 1px, transparent 1px),
+  linear-gradient(90deg, var(--line) 1px, transparent 1px);
+  background-size:11.11% 20%}
+.pin{position:absolute; transform:translate(-50%,-50%); text-align:center; z-index:3}
+.pin .dot{font-size:19px; line-height:1; display:block; filter:drop-shadow(0 1px 2px #000a)}
+.pin .pn{font-size:9px; font-weight:800; color:var(--dim); margin-top:1px; white-space:nowrap}
+.pin.here .dot{animation:pulse 1.4s infinite}
+.pin.here .pn{color:var(--gold)}
+.pin.sel .pn{color:var(--gold)}
+.pin.sel::after{content:""; position:absolute; inset:-6px -6px 10px; border:2px solid var(--gold); border-radius:50%; }
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.25)}}
+#routeSvg{position:absolute; inset:0; width:100%; height:100%; z-index:2; pointer-events:none}
+.dash{stroke:var(--gold); stroke-width:1.6; fill:none; stroke-dasharray:5 4; opacity:.9; animation:march 1s linear infinite}
+@keyframes march{to{stroke-dashoffset:-18}}
+
+/* ===== city specialty tags ===== */
+.tags{display:flex; flex-wrap:wrap; gap:6px; justify-content:center; margin:2px 0 10px}
+.tag{font-size:11.5px; font-weight:800; padding:4px 10px; border-radius:20px; border:1px solid var(--line); white-space:nowrap}
+.tag.cheap{color:var(--good); background:#5ec27a14; border-color:#5ec27a44}
+.tag.hot{color:var(--bad); background:#e2604f14; border-color:#e2604f44}
+.desthead{text-align:center; font-size:17px; font-weight:900; margin:2px 0 4px}
+
+/* ===== destination profit panel ===== */
+.intelcard{background:var(--card); border:1px solid var(--line); border-radius:14px; padding:10px 12px; margin:2px 0 12px}
+.intelcard.none{text-align:center; color:var(--dim); font-size:13px; font-weight:700; padding:14px 12px}
+.ichead{font-size:13px; font-weight:800; margin-bottom:8px; color:var(--gold)}
+.ictoggle{display:flex; align-items:center; justify-content:space-between; width:100%; background:none; border:none; color:var(--gold); padding:2px 0; margin:0; font-family:inherit; cursor:pointer}
+.ictoggle .chev{font-size:12px; opacity:.7}
+.ichead .age{color:var(--dim); font-weight:600; font-size:11px}
+.pr{display:flex; align-items:center; justify-content:space-between; gap:6px; padding:5px 0; border-top:1px solid var(--line); font-size:12.5px}
+.pr:first-of-type{border-top:none}
+.pr.own{background:linear-gradient(90deg,var(--tap),transparent); margin:0 -6px; padding:6px; border-radius:8px; border-top:none}
+.pr .pg{flex:1; min-width:0; font-weight:700; overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
+.pr .pg .hq{color:var(--gold); font-size:11px}
+.pr .pp{color:var(--dim); font-variant-numeric:tabular-nums; font-size:11.5px; white-space:nowrap}
+.pr .pp .ar.up{color:var(--good)} .pr .pp .ar.down{color:var(--bad)}
+.pr .pd{width:78px; text-align:end; font-weight:800; font-variant-numeric:tabular-nums; white-space:nowrap}
+.pr .pd small{font-weight:600; opacity:.8}
+.pd.up{color:var(--good)} .pd.down{color:var(--bad)}
+.icnote{font-size:10.5px; color:var(--dim); margin-top:8px; line-height:1.4}
+
+/* ===== world intel table ===== */
+.intelwrap{overflow-x:auto; border:1px solid var(--line); border-radius:14px}
+table.intel{border-collapse:collapse; width:100%; font-size:12px; font-variant-numeric:tabular-nums}
+table.intel th,table.intel td{padding:7px 6px; text-align:center; border-bottom:1px solid var(--line); white-space:nowrap}
+table.intel thead th{position:sticky; top:0; background:var(--bg2); font-size:15px; z-index:1}
+table.intel thead th:first-child{text-align:start; font-size:12px; color:var(--dim)}
+table.intel td.cty{text-align:start; font-weight:700}
+table.intel td.cty .age{display:block; font-size:9px; color:var(--dim); font-weight:600}
+table.intel tr.cur{background:var(--tap)}
+table.intel tr.cur td.cty{color:var(--gold)}
+table.intel td.unk{color:var(--line); font-weight:900}
+table.intel td.lo{color:var(--good); font-weight:800}
+table.intel td.hi{color:var(--bad); font-weight:800}
+
+/* ===== JOURNEY overlay ===== */
+.journey{position:fixed; inset:0; z-index:60; background:var(--bg); display:flex; flex-direction:column; padding:14px; animation:fadein .25s}
+@keyframes fadein{from{opacity:0}to{opacity:1}}
+.jbar{text-align:center; font-size:15px; font-weight:800; padding:8px 6px 12px; flex:0 0 auto}
+.jbar .jem{font-size:20px}
+.jbar .jarr{color:var(--gold); margin:0 2px}
+.jbar .jday{color:var(--dim); font-weight:600; font-size:13px}
+.jmap{position:relative; flex:1 1 auto; min-height:0; background:
+  radial-gradient(120% 90% at 50% 20%, #10233a44, transparent), var(--bg2);
+  border:1px solid var(--line); border-radius:18px; overflow:hidden}
+[data-theme="day"] .jmap{background:radial-gradient(120% 90% at 50% 20%, #cfe0f0, transparent), var(--bg2)}
+#jsvg{position:absolute; inset:0; width:100%; height:100%; z-index:2; pointer-events:none}
+.jroute{stroke:var(--line); stroke-width:1.2; fill:none; stroke-dasharray:3 3}
+.jtrail{stroke:var(--gold); stroke-width:1.8; fill:none; filter:drop-shadow(0 0 3px var(--gold2))}
+.jpin{position:absolute; transform:translate(-50%,-50%); text-align:center; z-index:3}
+.jpin .jdot{font-size:19px; line-height:1; display:block; filter:drop-shadow(0 1px 2px #000a)}
+.jpin .jpn{font-size:10px; font-weight:800; color:var(--gold); margin-top:1px; white-space:nowrap}
+.jpin.dim{opacity:.4}
+.jpin.dim .jdot{font-size:15px}
+.jpin.from .jpn{color:var(--dim)}
+.jtoken{position:absolute; transform:translate(-50%,-50%); font-size:27px; z-index:5; filter:drop-shadow(0 2px 4px #000b)}
+.jtoken.halt{animation:tokbounce .5s infinite}
+.jtoken.arrived{animation:tokland .4s}
+@keyframes tokbounce{0%,100%{transform:translate(-50%,-50%) scale(1)}50%{transform:translate(-50%,-55%) scale(1.18)}}
+@keyframes tokland{0%{transform:translate(-50%,-50%) scale(1.4)}100%{transform:translate(-50%,-50%) scale(1)}}
+.jflash{position:absolute; width:44px; height:44px; transform:translate(-50%,-50%); border-radius:50%; z-index:4; opacity:0}
+.jflash.show{opacity:1; animation:ring 1s ease-out infinite}
+.jflash.bad{box-shadow:0 0 0 2px var(--bad)}
+.jflash.good{box-shadow:0 0 0 2px var(--good)}
+@keyframes ring{0%{transform:translate(-50%,-50%) scale(.5);opacity:.9}100%{transform:translate(-50%,-50%) scale(1.8);opacity:0}}
+.jevent{position:absolute; inset:0; z-index:10; display:none; align-items:flex-end; justify-content:center; padding:16px; background:#0009}
+.jevent.show{display:flex; animation:fadein .2s}
+.jecard{background:var(--card); border:1px solid var(--line); border-radius:20px; padding:20px 18px; text-align:center; width:100%; max-width:360px; animation:sheetup .28s cubic-bezier(.2,.8,.2,1)}
+/* event choices */
+.evchoices{display:flex; flex-direction:column; gap:8px; margin-top:14px}
+.btn.evchoice{display:flex; align-items:center; gap:11px; text-align:start; padding:11px 13px; background:var(--bg2); border:1px solid var(--line); border-radius:14px; width:100%}
+.btn.evchoice:active{transform:scale(.98)}
+.btn.evchoice .che{font-size:22px; flex:0 0 auto}
+.btn.evchoice .chl{display:flex; flex-direction:column; line-height:1.25; min-width:0}
+.btn.evchoice .chl b{font-size:15px; color:var(--text)}
+.btn.evchoice .chl small{font-size:11.5px; color:var(--dim)}
+/* HUD debt line */
+.hudloan{display:flex; align-items:center; justify-content:space-between; gap:8px; margin-top:8px; padding:6px 11px; border:1px solid #e2604f55; background:#e2604f14; border-radius:10px; font-size:12.5px; font-weight:700; color:var(--bad)}
+.hudloan b{color:var(--bad)}
+.hudloan .hlrate{font-size:11px; opacity:.85}
+.loanCard{margin-top:12px; border-color:#e2604f44}
+/* end-screen net-worth graph */
+.endgraph{margin:14px 0 6px}
+.graphhd{font:800 12px Georgia,serif; color:var(--gold); margin-bottom:8px; text-align:center}
+.wgraph{width:100%; height:120px; display:block; background:var(--bg2); border:1px solid var(--line); border-radius:14px}
+.graphax{display:flex; justify-content:space-between; font-size:10px; color:var(--dim); margin-top:4px; padding:0 4px}
+
+.jecard.bad{border-color:#e2604f66} .jecard.good{border-color:#5ec27a66}
+@keyframes sheetup{from{transform:translateY(30px);opacity:0}to{transform:translateY(0);opacity:1}}
+.jeemoji{font-size:56px; animation:pop .4s}
+.jetitle{font-size:20px; font-weight:900; margin:6px 0 6px}
+.jetext{font-size:14px; color:var(--dim); line-height:1.5; margin-bottom:4px}
+.jecard .btn{margin-top:14px}
+
+/* ===== travel method / protection ===== */
+.opt{display:flex; align-items:center; gap:12px; background:var(--card); border:1px solid var(--line); border-radius:14px; padding:12px; margin-bottom:9px; transition:border-color .1s}
+.opt.on{border-color:var(--gold); background:var(--tap)}
+.opt .oem{font-size:24px; width:30px; text-align:center}
+.opt .omid{flex:1; min-width:0}
+.opt .onm{font-size:15px; font-weight:800}
+.opt .osub{font-size:12px; color:var(--dim); margin-top:2px}
+.opt .ock{width:24px; height:24px; border-radius:50%; border:2px solid var(--line); flex:0 0 auto; display:flex; align-items:center; justify-content:center; font-size:14px; color:#141005}
+.opt.on .ock{background:var(--gold); border-color:var(--gold)}
+.risk{display:inline-flex; gap:2px; align-items:center}
+.riskdot{width:7px;height:7px;border-radius:50%;background:var(--line)}
+.riskdot.on{background:var(--warn)}
+.riskdot.hi{background:var(--bad)}
+
+/* ===== event ===== */
+#event .scroll{display:flex; flex-direction:column; justify-content:center; text-align:center; padding-bottom:40px}
+.evemoji{font-size:70px; margin:6px 0 8px; animation:pop .4s}
+@keyframes pop{0%{transform:scale(.3);opacity:0}70%{transform:scale(1.1)}100%{transform:scale(1)}}
+.evtitle{font-size:23px; font-weight:900; margin-bottom:10px}
+.evtext{font-size:15px; color:var(--dim); line-height:1.6; margin-bottom:8px; padding:0 6px}
+.evbadge{display:inline-block; font-weight:800; font-size:15px; padding:6px 16px; border-radius:20px; margin:10px 0}
+.evbadge.good{color:var(--good); background:#5ec27a1a}
+.evbadge.bad{color:var(--bad); background:#e2604f1a}
+
+/* ===== misc ===== */
+.sectitle{font:800 13px Georgia,"Noto Serif Hebrew",serif; color:var(--gold); margin:4px 2px 10px; letter-spacing:.3px; opacity:.9}
+.lbl{font-size:13px; font-weight:700; color:var(--dim); margin-bottom:6px; display:block}
+input,select{width:100%; padding:13px; border-radius:12px; border:1px solid var(--line); background:var(--bg2); color:var(--text); font-size:16px; font-family:inherit}
+.chips{display:flex; gap:8px; flex-wrap:wrap}
+.chip{padding:9px 14px; border-radius:20px; border:1px solid var(--line); background:var(--card); font-size:14px; font-weight:700}
+.chip.on{border-color:var(--gold); color:var(--gold); background:var(--tap)}
+.palchip{width:34px; height:34px; border-radius:50%; border:2px solid var(--line); padding:0}
+.palchip.on{border-color:var(--text); box-shadow:0 0 0 2px var(--bg),0 0 0 4px var(--gold)}
+.kv{display:flex; justify-content:space-between; padding:9px 0; border-bottom:1px solid var(--line); font-size:14px}
+.kv:last-child{border:none}
+.kv b{font-weight:800}
+.small{font-size:12px; color:var(--dim); line-height:1.6}
+.foot{text-align:center; color:var(--dim); font-size:11px; padding:14px 0 4px; font-weight:700}
+.foot b{color:var(--gold)}
+.hofrow{display:flex; align-items:center; gap:12px; padding:11px; border:1px solid var(--line); border-radius:12px; margin-bottom:8px; background:var(--card)}
+.hofrank{font-size:20px; font-weight:900; color:var(--gold); width:34px; text-align:center}
+.hofmid{flex:1}
+.hofname{font-weight:800; font-size:15px}
+.hofsub{font-size:12px; color:var(--dim)}
+.hofscore{font-weight:900; color:var(--gold)}
+
+/* modal */
+.modal{position:absolute; inset:0; background:#000a; z-index:30; display:flex; align-items:flex-end; justify-content:center; opacity:0; pointer-events:none; transition:opacity .2s}
+.modal.on{opacity:1; pointer-events:auto}
+.sheet{width:100%; max-width:560px; background:var(--bg2); border-radius:20px 20px 0 0; border-top:1px solid var(--gold2); padding:18px 18px calc(20px + env(safe-area-inset-bottom)); transform:translateY(100%); transition:transform .25s}
+.modal.on .sheet{transform:none}
+.sheet h3{font-size:18px; font-weight:900; margin-bottom:4px}
+.qtybar{display:flex; align-items:center; gap:12px; margin:16px 0}
+.qtybar button{width:52px; height:52px; border-radius:14px; border:1px solid var(--gold2); background:var(--card); color:var(--gold); font-size:26px; font-weight:800}
+.qtybar .qv{flex:1; text-align:center; font-size:34px; font-weight:900}
+.qrange{width:100%; margin:6px 0 2px; accent-color:var(--gold)}
+.toast{position:absolute; bottom:74px; left:50%; transform:translateX(-50%) translateY(20px); background:var(--gold); color:#141005; font-weight:800; font-size:14px; padding:10px 18px; border-radius:30px; z-index:40; opacity:0; transition:.25s; white-space:nowrap; box-shadow:0 6px 20px -4px #000a}
+.toast.on{opacity:1; transform:translateX(-50%) translateY(0)}
+.disc{font-size:11px; color:var(--dim); line-height:1.6; border:1px solid var(--line); border-radius:12px; padding:12px; background:var(--card)}
+</style>
+</head>
+<body data-theme="night" data-pal="gold">
+<div id="app">
+
+  <!-- ================= HOME ================= -->
+  <section id="home" class="screen on">
+    <div class="scroll" style="padding-bottom:24px">
+      <div class="hero">
+        <img id="homeLogo" class="logo" alt="">
+        <div class="brand" id="homeBrand">סוחר הסם</div>
+        <div class="tagline" id="homeTag">חודש אחד. עולם שלם של הזדמנויות.</div>
+      </div>
+      <div class="menugrid">
+        <div class="menutile" onclick="startNewGame()"><span class="em">🎬</span><span class="lb" data-t="newgame">משחק חדש</span></div>
+        <div class="menutile" id="contTile" onclick="continueGame()"><span class="em">▶️</span><span class="lb" data-t="continue">המשך משחק</span></div>
+        <div class="menutile" onclick="show('hof')"><span class="em">🏆</span><span class="lb" data-t="hof">היכל התהילה</span></div>
+        <div class="menutile" onclick="show('guide')"><span class="em">📖</span><span class="lb" data-t="guide">מדריך</span></div>
+        <div class="menutile wide" onclick="show('settings')"><span class="em">⚙️</span><span class="lb" data-t="settings">הגדרות</span></div>
+        <div class="menutile wide" onclick="show('about')"><span class="em">ℹ️</span><span class="lb" data-t="about">אודות</span></div>
+      </div>
+      <div class="foot">AppNest · <b>© 2026</b> · v<span id="verHome"></span></div>
+    </div>
+  </section>
+
+  <!-- ================= GAME ================= -->
+  <section id="game" class="screen">
+    <div class="hud">
+      <div class="hudrow">
+        <button class="iconbtn" onclick="confirmQuit()">☰</button>
+        <h2><span id="hudLocFlag">🇮🇱</span> <span id="hudLoc">תל אביב</span></h2>
+        <span class="daypill"><span data-t="day">יום</span> <span id="hudDay">1</span>/<span id="hudMax">30</span></span>
+      </div>
+      <div class="stats">
+        <div class="stat cash"><div class="v" id="hudCash">$2,000</div><div class="k" data-t="cash">מזומן</div></div>
+        <div class="stat"><div class="v" id="hudBank">$0</div><div class="k" data-t="safe">כספת</div></div>
+        <div class="stat"><div class="v" id="hudCap">0/100</div><div class="k" data-t="stash">מטען</div></div>
+      </div>
+      <div id="hudLoan" class="hudloan" style="display:none"></div>
+    </div>
+    <div class="scroll" id="gameScroll"></div>
+    <div class="tabs">
+      <button class="tab on" data-tab="market" onclick="switchTab('market')"><span class="em">💰</span><span class="lb" data-t="market">שוק</span></button>
+      <button class="tab" data-tab="travel" onclick="switchTab('travel')"><span class="em">🌍</span><span class="lb" data-t="travel">מסע</span></button>
+      <button class="tab" data-tab="intel" onclick="switchTab('intel')"><span class="em">🗺️</span><span class="lb" data-t="intelTab">מודיעין</span></button>
+      <button class="tab" data-tab="bank" onclick="switchTab('bank')"><span class="em">🏦</span><span class="lb" data-t="bank">כספת</span></button>
+      <button class="tab" data-tab="black" onclick="switchTab('black')"><span class="em">🕶️</span><span class="lb" data-t="black">שוק שחור</span></button>
+    </div>
+  </section>
+
+  <!-- ================= EVENT ================= -->
+  <section id="event" class="screen">
+    <div class="scroll" style="display:flex;align-items:center;justify-content:center;padding:16px">
+      <div id="eventHost" style="width:100%;max-width:380px"></div>
+    </div>
+  </section>
+
+  <!-- ================= END ================= -->
+  <section id="end" class="screen">
+    <div class="scroll" style="text-align:center; padding-top:30px">
+      <div class="evemoji" id="endEmoji">🏁</div>
+      <div class="evtitle" data-t="monthOver">החודש נגמר!</div>
+      <div id="endRank" style="font-size:22px;font-weight:900;color:var(--gold);margin:6px 0 14px"></div>
+      <div class="card">
+        <div class="kv"><span data-t="startCash">התחלת עם</span><b id="endStart"></b></div>
+        <div class="kv" id="endDebtRow" style="display:none"><span data-t="debtAtEnd">חוב</span><b id="endDebt" style="color:var(--bad)"></b></div>
+        <div class="kv"><span data-t="finalWorth">שווי סופי</span><b id="endWorth" style="color:var(--gold)"></b></div>
+        <div class="kv"><span data-t="profit">רווח נקי</span><b id="endProfit"></b></div>
+      </div>
+      <div id="endGraph" class="endgraph"></div>
+      <div id="endMsg" class="evtext"></div>
+      <button class="btn primary" onclick="show('hof')" data-t="seeHof">להיכל התהילה</button>
+      <button class="btn" onclick="startNewGame()" data-t="playAgain">שוב!</button>
+      <button class="btn ghost" onclick="show('home')" data-t="toHome">לתפריט הראשי</button>
+    </div>
+  </section>
+
+  <!-- ================= HALL OF FAME ================= -->
+  <section id="hof" class="screen">
+    <div class="top"><button class="backbtn" onclick="goHome()">‹ <span data-t="home">בית</span></button><h2 data-t="hof">היכל התהילה</h2></div>
+    <div class="scroll"><div id="hofList"></div>
+      <button class="btn ghost danger sm" style="margin-top:14px" onclick="clearHof()" data-t="clearHof">מחק שיאים</button>
+    </div>
+  </section>
+
+  <!-- ================= GUIDE ================= -->
+  <section id="guide" class="screen">
+    <div class="top"><button class="backbtn" onclick="goHome()">‹ <span data-t="home">בית</span></button><h2 data-t="guide">מדריך</h2></div>
+    <div class="scroll" id="guideBody"></div>
+  </section>
+
+  <!-- ================= SETTINGS ================= -->
+  <section id="settings" class="screen">
+    <div class="top"><button class="backbtn" onclick="goHome()">‹ <span data-t="home">בית</span></button><h2 data-t="settings">הגדרות</h2></div>
+    <div class="scroll">
+      <div class="card">
+        <label class="lbl" data-t="username">שם משתמש</label>
+        <input id="setName" placeholder="..." oninput="setUsername(this.value)">
+      </div>
+      <div class="card">
+        <label class="lbl" data-t="language">שפה</label>
+        <div class="chips" id="langChips"></div>
+      </div>
+      <div class="card">
+        <label class="lbl" data-t="palette">ערכת צבע</label>
+        <div class="chips" id="palChips"></div>
+      </div>
+      <div class="card">
+        <div style="display:flex;align-items:center;justify-content:space-between">
+          <label class="lbl" style="margin:0" data-t="theme">מצב תצוגה</label>
+          <div class="chips">
+            <div class="chip" id="chNight" onclick="setTheme('night')">🌙</div>
+            <div class="chip" id="chDay" onclick="setTheme('day')">☀️</div>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div style="display:flex;align-items:center;justify-content:space-between">
+          <label class="lbl" style="margin:0" data-t="sound">צלילים</label>
+          <div class="chips">
+            <div class="chip" id="chSndOn" onclick="setSound(true)" data-t="on">פעיל</div>
+            <div class="chip" id="chSndOff" onclick="setSound(false)" data-t="off">כבוי</div>
+          </div>
+        </div>
+      </div>
+      <button class="btn danger" onclick="wipeAll()" data-t="wipe">מחק את כל הנתונים</button>
+      <div class="foot">v<span id="verSet"></span></div>
+    </div>
+  </section>
+
+  <!-- ================= ABOUT ================= -->
+  <section id="about" class="screen">
+    <div class="top"><button class="backbtn" onclick="goHome()">‹ <span data-t="home">בית</span></button><h2 data-t="about">אודות</h2></div>
+    <div class="scroll">
+      <div style="text-align:center;padding:14px 0 6px">
+        <img id="aboutLogo" class="logo" style="width:74px;height:74px" alt="">
+        <div class="brand" style="font-size:24px" id="aboutBrand">סוחר הסם</div>
+        <div class="tagline">v<span id="verAbout"></span></div>
+      </div>
+      <div class="card">
+        <div class="kv"><span data-t="version">גרסה</span><b id="aVer"></b></div>
+        <div class="kv"><span data-t="developer">פותח</span><b>Barak Aflalo</b></div>
+        <div class="kv"><span>פלטפורמה</span><b>PWA · HTML5</b></div>
+        <div class="kv"><span data-t="storage">אחסון</span><b data-t="onDevice">במכשיר בלבד</b></div>
+        <div class="kv"><span data-t="license">רישיון</span><b>© AppNest 2026</b></div>
+      </div>
+      <button class="btn ghost" onclick="shareApp()">🔗 <span data-t="shareApp">שתף את המשחק</span></button>
+      <button class="btn ghost" onclick="openLink('https://barakaflalo.github.io/appnest')">🏪 <span data-t="store">חנות AppNest</span></button>
+      <button class="btn ghost" onclick="location.href='mailto:appnest55@gmail.com?subject=Sam the Smuggler'">✉️ <span data-t="feedback">שלח משוב</span></button>
+      <button class="btn ghost" onclick="show('guide')">📖 <span data-t="guide">מדריך</span></button>
+      <div class="disc" id="discBox"></div>
+      <div class="foot">AppNest · <b>© 2026</b></div>
+    </div>
+  </section>
+
+  <!-- modal + toast -->
+  <div class="modal" id="modal"><div class="sheet" id="sheet"></div></div>
+  <div class="toast" id="toast"></div>
+</div>
+
+<script>
+"use strict";
+const VERSION="1.3.0";
+
+/* ---------- storage shim ---------- */
+const mem={};
+const store={
+  get(k){ try{return localStorage.getItem(k)}catch(e){return mem[k]??null} },
+  set(k,v){ try{localStorage.setItem(k,v)}catch(e){mem[k]=v} },
+  del(k){ try{localStorage.removeItem(k)}catch(e){delete mem[k]} }
+};
+const PFX="samtrader_";
+const load=(k,d)=>{const r=store.get(PFX+k); if(r==null)return d; try{return JSON.parse(r)}catch(e){return d}};
+const save=(k,v)=>store.set(PFX+k, JSON.stringify(v));
+
+/* ---------- settings ---------- */
+let S=load("settings",{name:"",lang:"he",pal:"gold",theme:"night",sound:true,seenGuide:false});
+function persistS(){save("settings",S)}
+
+/* ================= i18n ================= */
+const LANGS={he:"עברית",en:"English",ru:"Русский",es:"Español",ar:"العربية"};
+const RTL=["he","ar"];
+const L={};
+L.en={
+  newgame:"New Game", continue:"Continue", hof:"Hall of Fame", guide:"Guide", settings:"Settings", about:"About",
+  home:"Home", day:"Day", cash:"Cash", safe:"Safe", stash:"Cargo",
+  market:"Market", travel:"Travel", bank:"Safe", black:"Black Market",
+  username:"Player name", language:"Language", palette:"Color theme", theme:"Display mode", sound:"Sound",
+  on:"On", off:"Off", wipe:"Erase all data", version:"Version", developer:"Developer", storage:"Storage",
+  onDevice:"On device only", license:"License", shareApp:"Share the game", store:"AppNest store", feedback:"Send feedback",
+  continueBtn:"Continue", monthOver:"The month is over!", startCash:"Started with", finalWorth:"Final worth",
+  profit:"Net profit", seeHof:"Hall of Fame", playAgain:"Again!", toHome:"Main menu", clearHof:"Clear scores",
+  tagline:"One month. A whole world of opportunity.",
+  buy:"Buy", sell:"Sell", hold:"Have", cantAfford:"Not enough cash", noRoom:"No room in the cargo!",
+  bought:"Bought", sold:"Sold", each:"each",
+  pickDest:"Where to?", pickMethod:"How do you travel?", prep:"Prep for the road", depart:"Hit the road",
+  bySea:"By sea", byAir:"By air", byLand:"Land border",
+  seaDesc:"Cheap & roomy, but slow. Watch for storms & the coast guard.",
+  airDesc:"Fast but pricey. Customs love a good suitcase.",
+  landDesc:"Balanced. Border patrol and rival crews roam here.",
+  days:"days", cost:"cost", risk:"risk", here:"You are here",
+  guardName:"Bodyguard", guardDesc:"Muscle that scares off rival crews.",
+  bribeName:"An envelope for the officer", bribeDesc:"Cash that makes the police look away.",
+  docsName:"Fake documents", docsDesc:"Papers that lower your chance of being stopped.",
+  carName:"Getaway ride", carDesc:"A shot at escaping any trouble completely.",
+  protFor:"Protection for this trip only", noneSel:"No protection — feeling lucky?",
+  bankTitle:"Your safe", bankInfo:"Money in the safe can't be robbed on the road — but you can't spend it while traveling.",
+  deposit:"Deposit", withdraw:"Withdraw", inSafe:"In the safe", onHand:"On hand",
+  blackTitle:"Black market", capUpg:"Bigger bag", capDesc:"Increase how much cargo you can carry.",
+  buyUpg:"Upgrade", capNow:"Capacity now", quit:"Quit to menu?", quitInfo:"Your game is saved automatically — you can continue later.",
+  quitYes:"Quit", quitNo:"Keep playing", endEarly:"End the month now",
+  confiscate:"confiscated", stole:"stole", lost:"lost", found:"found", paid:"paid", earned:"earned",
+  seaStormT:"Storm at sea!", seaStormX:"Huge waves hit the boat. Some of your cargo went overboard.",
+  policeT:"Police checkpoint!", policeX:"They opened the trunk...", policeSafe:"Your papers checked out. Waved through with a smile.",
+  gangT:"Rival crew!", gangX:"They blocked the road and demanded a cut.", gangSafe:"Your bodyguard flexed. They backed off.",
+  customsT:"Customs at the airport!", customsX:"The scanner beeped on your suitcase.",
+  escapeT:"Clean getaway!", escapeX:"Trouble was waiting — but your ride left them in the dust.",
+  luckCargoT:"Lucky find!", luckCargoX:"You found an abandoned crate on the docks.",
+  luckCashT:"A generous fence", luckCashX:"An old contact overpaid you for a favor.",
+  quietT:"Quiet trip", quietX:"Nothing happened. Sometimes boring is beautiful.",
+  bribeWorked:"The envelope worked — they let you go.",
+  policeSit:"Lights flashing behind you. An officer signals you to pull over. What now?",
+  customsSit:"The scanner beeped on your suitcase. The agent eyes you. What now?",
+  gangSit:"A rival crew blocks the road, hands on their belts. What now?",
+  stormSit:"Black clouds and towering waves. The boat is taking on water. What now?",
+  chBribe:"Slip a bribe", chBribeReady:"Envelope ready — high odds", chPay:"pay",
+  chRun:"Make a run", chCarReady:"Getaway car — high odds", chRunRisky:"risky without a ride",
+  chComply:"Cooperate", chComplyHint:"lose a little, no surprises",
+  chPayGang:"Pay them off", chPayHint:"hand over some cash",
+  chFight:"Fight them", chGuardReady:"Bodyguard ready — high odds", chFightRisky:"risky bare-handed",
+  chJettison:"Dump cargo", chJettisonHint:"lose a little, stay safe",
+  chRide:"Ride it out", chRideHint:"maybe lose nothing… maybe a lot",
+  cantBribe:"Not enough cash to bribe!", policeGrab:"They grab what they can.",
+  bribeWorkedT:"Waved through", bribeFailT:"Bribe refused!", bribeFail:"The officer wasn't having it.",
+  caughtT:"Caught!", caughtX:"They ran you down and made you pay.",
+  complyT:"You cooperated", complyX:"They took their cut and let you go.",
+  paidGangT:"Protection paid", paidGangX:"They took the cash and melted away.", noCashGang:"You're short on cash — they took goods instead.",
+  wonFightT:"You won the fight!", wonFightX:"They scattered. Your cargo is safe.",
+  lootWinX:"You even grabbed some of their stash!",
+  lostFightT:"You lost the fight", lostFightX:"They roughed you up and took a cut.",
+  gangEscX:"You slipped away before they could react.",
+  caughtGangT:"They caught you", caughtGangX:"No escape — they took a cut.",
+  jettisonT:"Cargo dumped", jettisonX:"Lighter boat, safer passage.",
+  rodeOutT:"You rode it out!", rodeOutX:"The storm passed. Everything's dry.",
+  sunkT:"Waves won", sunkX:"Some cargo went overboard.",
+  loanOfferT:"The loan shark", loanOfferX:"Start with more capital? Borrow {amt} now — but it grows {rate} every day until you repay. Repay before the month ends, or it eats your score.",
+  loanTake:"Borrow", loanSkip:"No thanks, I'm good",
+  loanSharkT:"Loan shark 🦈", loanOwed:"You owe", loanRateLbl:"grows/day", borrow:"Borrow", repay:"Repay",
+  loanMaxed:"You're at your borrowing limit.", loanNone:"No debt — you're clean.", debtLbl:"Debt",
+  worthOverTime:"Net worth over the month", debtAtEnd:"Debt", grossWorth:"Cash + safe + cargo",
+  newDay:"arrived in", pricesShift:"Prices have shifted.",
+  intelTab:"Intel", intelTitle:"Market intel", city:"City",
+  intelInfo:"Prices you saw on your last visit to each city. They drift day to day, so treat them as a guide — not gospel. Cities you haven't visited stay hidden.",
+  intelLegend:"Green = cheap vs. usual · Red = pricey vs. usual · ? = never scouted. Numbers are the last price you saw there.",
+  cheapHere:"Cheap here", wantedHere:"In demand", openIntel:"Open market intel",
+  notScouted:"You've never scouted this city — trade blind, or go by its reputation above.",
+  knownPrices:"Last prices you saw here", profitNote:"Shown: your current price ➜ last price there. Prices drift, so this is an estimate.",
+  daysWord:"days", agoWord:"ago", dAgo:"d ago", nowTag:"just now", dayWord:"Day", arrivedAt:"Arrived in",
+  bestDealNow:"Best deal right now", buyHereShort:"buy here", perUnit:"per unit", upTo:"up to",
+  lastSeen:"seen", tapToPlan:"tap to plan the trip",
+  exploreToFind:"Visit other cities to uncover profitable deals — each city's specialty shows on the Travel screen.",
+  spike:"is spiking here!", crash:"has crashed here!",
+  namePrompt:"What's your name, smuggler?", start:"Start", diff:"Difficulty",
+  easy:"Chill", normal:"Normal", hard:"Cutthroat",
+  wipeConfirm:"Erase EVERYTHING? Scores, settings and current game will be gone.",
+  disclaimer:"“Sam the Smuggler” is a fictional satirical game. The goods, places and events are made up for laughs and have nothing to do with real life. It doesn’t encourage or teach anything illegal — it’s just a nostalgic trading game in the spirit of the old classics. Play for fun.",
+  emptyHof:"No scores yet. Go make some (fake) money!",
+  score:"score", back:"Back", full:"Cargo full", broke:"You're out of cash and cargo. Rough month.",
+  rankTitle:"Your title:"
+};
+L.he={
+  newgame:"משחק חדש", continue:"המשך משחק", hof:"היכל התהילה", guide:"מדריך", settings:"הגדרות", about:"אודות",
+  home:"בית", day:"יום", cash:"מזומן", safe:"כספת", stash:"מטען",
+  market:"שוק", travel:"מסע", bank:"כספת", black:"שוק שחור",
+  username:"שם השחקן", language:"שפה", palette:"ערכת צבע", theme:"מצב תצוגה", sound:"צלילים",
+  on:"פעיל", off:"כבוי", wipe:"מחק את כל הנתונים", version:"גרסה", developer:"פותח", storage:"אחסון",
+  onDevice:"במכשיר בלבד", license:"רישיון", shareApp:"שתף את המשחק", store:"חנות AppNest", feedback:"שלח משוב",
+  continueBtn:"המשך", monthOver:"החודש נגמר!", startCash:"התחלת עם", finalWorth:"שווי סופי",
+  profit:"רווח נקי", seeHof:"להיכל התהילה", playAgain:"שוב!", toHome:"לתפריט הראשי", clearHof:"מחק שיאים",
+  tagline:"חודש אחד. עולם שלם של הזדמנויות.",
+  buy:"קנייה", sell:"מכירה", hold:"ברשותך", cantAfford:"אין מספיק מזומן", noRoom:"אין מקום במטען!",
+  bought:"קנית", sold:"מכרת", each:"ליחידה",
+  pickDest:"לאן טסים?", pickMethod:"איך נוסעים?", prep:"היערכות לדרך", depart:"יוצאים לדרך",
+  bySea:"דרך הים", byAir:"דרך האוויר", byLand:"מעבר יבשתי",
+  seaDesc:"זול ומרווח, אבל איטי. היזהר מסערות וממשמר החופים.",
+  airDesc:"מהיר אבל יקר. המכס מת על מזוודה טובה.",
+  landDesc:"מאוזן. משמר הגבול וכנופיות יריבות מסתובבים כאן.",
+  days:"ימים", cost:"עלות", risk:"סיכון", here:"אתה כאן",
+  guardName:"מאבטח צמוד", guardDesc:"שריר שמבריח כנופיות יריבות.",
+  bribeName:"מעטפה לשוטר", bribeDesc:"קצת מזומן שגורם למשטרה להביט הצידה.",
+  docsName:"מסמכים מזויפים", docsDesc:"ניירת שמורידה את הסיכוי שיעצרו אותך.",
+  carName:"רכב בריחה", carDesc:"סיכוי לחמוק לגמרי מכל צרה.",
+  protFor:"הגנה לנסיעה הזו בלבד", noneSel:"בלי הגנה — מרגיש בר מזל?",
+  bankTitle:"הכספת שלך", bankInfo:"כסף בכספת לא ניתן לשוד בדרך — אבל אי אפשר לבזבז אותו בזמן נסיעה.",
+  deposit:"הפקדה", withdraw:"משיכה", inSafe:"בכספת", onHand:"במזומן",
+  blackTitle:"השוק השחור", capUpg:"תיק גדול יותר", capDesc:"הגדל את כמות הסחורה שאתה יכול לסחוב.",
+  buyUpg:"שדרג", capNow:"קיבולת נוכחית", quit:"לצאת לתפריט?", quitInfo:"המשחק נשמר אוטומטית — אפשר להמשיך אחר כך.",
+  quitYes:"צא", quitNo:"תמשיך לשחק", endEarly:"סיים את החודש עכשיו",
+  confiscate:"החרימו", stole:"גנבו", lost:"איבדת", found:"מצאת", paid:"שילמת", earned:"הרווחת",
+  seaStormT:"סערה בים!", seaStormX:"גלים ענקיים היכו בסירה. חלק מהמטען הלך למים.",
+  policeT:"מחסום משטרה!", policeX:"הם פתחו את התא האחורי...", policeSafe:"הניירת נראתה תקינה. העבירו אותך בחיוך.",
+  gangT:"כנופיה יריבה!", gangX:"הם חסמו את הדרך ודרשו נתח.", gangSafe:"המאבטח שלך הראה שריר. הם נסוגו.",
+  customsT:"מכס בשדה התעופה!", customsX:"הסורק צפצף על המזוודה שלך.",
+  escapeT:"בריחה מושלמת!", escapeX:"צרה חיכתה בדרך — אבל הרכב שלך השאיר אותם מאחור.",
+  luckCargoT:"מציאה!", luckCargoX:"מצאת ארגז נטוש על הרציף.",
+  luckCashT:"קונה נדיב", luckCashX:"מכר ותיק שילם לך ביד רחבה על טובה.",
+  quietT:"נסיעה שקטה", quietX:"שום דבר לא קרה. לפעמים משעמם זה יפה.",
+  bribeWorked:"המעטפה עבדה — הם שחררו אותך.",
+  policeSit:"אורות מהבהבים מאחוריך. שוטר מאותת לך לעצור. מה עושים?",
+  customsSit:"הסורק צפצף על המזוודה. פקיד המכס נועץ בך מבט. מה עושים?",
+  gangSit:"כנופיה יריבה חוסמת את הדרך, ידיים על החגורה. מה עושים?",
+  stormSit:"עננים שחורים וגלים ענקיים. הסירה מתחילה להתמלא במים. מה עושים?",
+  chBribe:"תשחד אותם", chBribeReady:"מעטפה מוכנה — סיכוי גבוה", chPay:"שלם",
+  chRun:"תברח", chCarReady:"רכב מילוט — סיכוי גבוה", chRunRisky:"מסוכן בלי רכב",
+  chComply:"שתף פעולה", chComplyHint:"תפסיד קצת, בלי הפתעות",
+  chPayGang:"שלם דמי חסות", chPayHint:"מסור קצת מזומן",
+  chFight:"תילחם בהם", chGuardReady:"מאבטח מוכן — סיכוי גבוה", chFightRisky:"מסוכן בידיים ריקות",
+  chJettison:"השלך מטען", chJettisonHint:"תפסיד קצת, תישאר בטוח",
+  chRide:"שוט דרך הסערה", chRideHint:"אולי לא תפסיד כלום… אולי הרבה",
+  cantBribe:"אין מספיק מזומן לשוחד!", policeGrab:"הם לקחו מה שיכלו.",
+  bribeWorkedT:"עברת בשלום", bribeFailT:"השוחד נדחה!", bribeFail:"השוטר לא הסכים לקחת.",
+  caughtT:"נתפסת!", caughtX:"הם השיגו אותך והכריחו אותך לשלם.",
+  complyT:"שיתפת פעולה", complyX:"הם לקחו את הנתח שלהם ושחררו אותך.",
+  paidGangT:"דמי חסות שולמו", paidGangX:"הם לקחו את המזומן ונעלמו.", noCashGang:"אין לך מספיק מזומן — הם לקחו סחורה במקום.",
+  wonFightT:"ניצחת בקרב!", wonFightX:"הם התפזרו. המטען שלך בטוח.",
+  lootWinX:"אפילו חטפת חלק מהמלאי שלהם!",
+  lostFightT:"הפסדת בקרב", lostFightX:"הם חבטו בך ולקחו נתח.",
+  gangEscX:"התחמקת לפני שהספיקו להגיב.",
+  caughtGangT:"הם תפסו אותך", caughtGangX:"אין בריחה — הם לקחו נתח.",
+  jettisonT:"מטען הושלך", jettisonX:"סירה קלה יותר, מעבר בטוח יותר.",
+  rodeOutT:"עברת את הסערה!", rodeOutX:"הסערה חלפה. הכול יבש.",
+  sunkT:"הגלים ניצחו", sunkX:"חלק מהמטען נפל למים.",
+  loanOfferT:"הכריש", loanOfferX:"רוצה להתחיל עם יותר הון? שאל {amt} עכשיו — אבל החוב גדל ב-{rate} כל יום עד שתחזיר. תחזיר לפני סוף החודש, אחרת זה יאכל לך את הניקוד.",
+  loanTake:"שאל", loanSkip:"לא תודה, אני בסדר",
+  loanSharkT:"כריש הלוואות 🦈", loanOwed:"אתה חייב", loanRateLbl:"גדל/יום", borrow:"שאל", repay:"החזר",
+  loanMaxed:"הגעת לתקרת ההלוואה.", loanNone:"אין חוב — אתה נקי.", debtLbl:"חוב",
+  worthOverTime:"שווי נקי לאורך החודש", debtAtEnd:"חוב", grossWorth:"מזומן + כספת + מטען",
+  newDay:"הגעת ל", pricesShift:"המחירים השתנו.",
+  intelTab:"מודיעין", intelTitle:"מודיעין שוק", city:"עיר",
+  intelInfo:"המחירים שראית בביקור האחרון שלך בכל עיר. הם משתנים מיום ליום, אז זה כיוון — לא הבטחה. ערים שלא ביקרת בהן נשארות מוסתרות.",
+  intelLegend:"ירוק = זול מהרגיל · אדום = יקר מהרגיל · ? = טרם ביקרת. המספרים הם המחיר האחרון שראית שם.",
+  cheapHere:"זול כאן", wantedHere:"מבוקש", openIntel:"פתח מודיעין שוק",
+  notScouted:"עוד לא ביקרת בעיר הזו — סחר בעיוור, או לך לפי המוניטין שלה למעלה.",
+  knownPrices:"מחירים אחרונים שראית כאן", profitNote:"מוצג: המחיר שלך כאן ➜ המחיר האחרון שם. המחירים משתנים, אז זו הערכה.",
+  daysWord:"ימים", agoWord:"אחורה", dAgo:" ימים", nowTag:"עכשיו", dayWord:"יום", arrivedAt:"הגעת ל",
+  bestDealNow:"העסקה הכי טובה כרגע", buyHereShort:"קנה כאן", perUnit:"ליחידה", upTo:"עד",
+  lastSeen:"נצפה לפני", tapToPlan:"הקש לתכנון הנסיעה",
+  exploreToFind:"בקר בערים אחרות כדי לגלות עסקאות רווחיות — ההתמחות של כל עיר מופיעה במסך המסע.",
+  spike:"מזנק כאן במחיר!", crash:"צונח כאן במחיר!",
+  namePrompt:"איך קוראים לך, מבריח?", start:"התחל", diff:"רמת קושי",
+  easy:"רגוע", normal:"רגיל", hard:"אכזרי",
+  wipeConfirm:"למחוק הכל? שיאים, הגדרות והמשחק הנוכחי יימחקו.",
+  disclaimer:"\"סוחר הסם\" הוא משחק סאטירה בדיוני. הסחורות, המקומות והאירועים מומצאים לשם הצחוק ואין להם קשר למציאות. המשחק אינו מעודד או מלמד שום דבר לא חוקי — זו פשוט נוסטלגיה של משחק סוחר ברוח הקלאסיקות הישנות. לשחק בשביל הכיף.",
+  emptyHof:"אין עדיין שיאים. לך תעשה קצת כסף (מדומה)!",
+  score:"ניקוד", back:"חזרה", full:"המטען מלא", broke:"נגמר לך המזומן והסחורה. חודש קשה.",
+  rankTitle:"התואר שלך:"
+};
+// ru/es/ar: core UI subset, fall back to English for flavor
+L.ru={ newgame:"Новая игра", continue:"Продолжить", hof:"Зал славы", guide:"Гид", settings:"Настройки", about:"О игре",
+  home:"Домой", day:"День", cash:"Наличные", safe:"Сейф", stash:"Груз", market:"Рынок", travel:"Поездка", bank:"Сейф", black:"Чёрный рынок",
+  username:"Имя игрока", language:"Язык", palette:"Цвет", theme:"Режим", sound:"Звук", on:"Вкл", off:"Выкл", wipe:"Стереть всё",
+  buy:"Купить", sell:"Продать", hold:"Есть", depart:"В путь", days:"дн.", cost:"цена", risk:"риск",
+  tagline:"Один месяц. Целый мир возможностей." };
+L.es={ newgame:"Nuevo juego", continue:"Continuar", hof:"Salón de la fama", guide:"Guía", settings:"Ajustes", about:"Acerca de",
+  home:"Inicio", day:"Día", cash:"Efectivo", safe:"Caja", stash:"Carga", market:"Mercado", travel:"Viaje", bank:"Caja", black:"Mercado negro",
+  username:"Nombre", language:"Idioma", palette:"Color", theme:"Modo", sound:"Sonido", on:"Sí", off:"No", wipe:"Borrar todo",
+  buy:"Comprar", sell:"Vender", hold:"Tienes", depart:"En marcha", days:"días", cost:"coste", risk:"riesgo",
+  tagline:"Un mes. Un mundo de oportunidades." };
+L.ar={ newgame:"لعبة جديدة", continue:"متابعة", hof:"قاعة المشاهير", guide:"دليل", settings:"الإعدادات", about:"حول",
+  home:"الرئيسية", day:"يوم", cash:"نقد", safe:"خزنة", stash:"شحنة", market:"السوق", travel:"سفر", bank:"خزنة", black:"السوق السوداء",
+  username:"اسم اللاعب", language:"اللغة", palette:"اللون", theme:"الوضع", sound:"الصوت", on:"تشغيل", off:"إيقاف", wipe:"مسح الكل",
+  buy:"شراء", sell:"بيع", hold:"لديك", depart:"انطلق", days:"أيام", cost:"تكلفة", risk:"خطر",
+  tagline:"شهر واحد. عالم من الفرص." };
+
+function T(k){ return (L[S.lang]&&L[S.lang][k]) || L.en[k] || k; }
+
+/* ---------- game data ---------- */
+const GOODS=[
+  {id:"grass",  em:"🌿", base:45,  vol:.55},
+  {id:"candy",  em:"🍬", base:130, vol:.55},
+  {id:"pills",  em:"💊", base:95,  vol:.6},
+  {id:"shrooms",em:"🍄", base:260, vol:.7},
+  {id:"dust",   em:"❄️", base:520, vol:.65},
+  {id:"diamond",em:"💎", base:1600,vol:.4},
+];
+const GN={
+  he:{grass:"עשב הפלא",candy:"סוכריות פלא",pills:"כדורי אושר",shrooms:"פטריות קסם",dust:"אבקת פיות",diamond:"יהלומי הברחה"},
+  en:{grass:"Wonder Weed",candy:"Magic Candy",pills:"Happy Pills",shrooms:"Enchanted Shrooms",dust:"Fairy Dust",diamond:"Smuggled Gems"},
+  ru:{grass:"Чудо-трава",candy:"Волш. конфеты",pills:"Пилюли счастья",shrooms:"Грибы",dust:"Пыль фей",diamond:"Алмазы"},
+  es:{grass:"Hierba mágica",candy:"Caramelos",pills:"Píldoras",shrooms:"Setas",dust:"Polvo de hadas",diamond:"Gemas"},
+  ar:{grass:"عشب العجائب",candy:"حلوى سحرية",pills:"حبوب السعادة",shrooms:"فطر",dust:"غبار الجن",diamond:"جواهر"}
+};
+const gname=id=>(GN[S.lang]&&GN[S.lang][id])||GN.en[id];
+
+const LOCS={
+  telaviv:  {em:"🇮🇱",x:57,y:38,heat:.35,bias:{grass:1,candy:1,pills:1,shrooms:1,dust:1,diamond:1}},
+  amsterdam:{em:"🇳🇱",x:50,y:24,heat:.30,bias:{grass:.5,candy:1.4,pills:1.1,shrooms:.9,dust:1.3,diamond:1.2}},
+  bogota:   {em:"🇨🇴",x:27,y:60,heat:.60,bias:{grass:.9,candy:1.1,pills:1.5,shrooms:1.2,dust:.4,diamond:1.3}},
+  bangkok:  {em:"🇹🇭",x:76,y:50,heat:.50,bias:{grass:1.1,candy:.8,pills:1.2,shrooms:.5,dust:1.4,diamond:.6}},
+  marrakech:{em:"🇲🇦",x:44,y:44,heat:.40,bias:{grass:.6,candy:.7,pills:1.3,shrooms:1.3,dust:1.5,diamond:1.1}},
+  moscow:   {em:"🇷🇺",x:62,y:19,heat:.80,bias:{grass:1.3,candy:1.2,pills:.5,shrooms:1.5,dust:1.2,diamond:.9},gang:1.3},
+  tijuana:  {em:"🇲🇽",x:15,y:45,heat:.70,bias:{grass:1,candy:1.1,pills:1.1,shrooms:1.1,dust:.5,diamond:1.2},gang:1.6},
+  dubai:    {em:"🇦🇪",x:64,y:44,heat:.85,bias:{grass:1.6,candy:1.5,pills:1.4,shrooms:1.4,dust:1.5,diamond:.5}},
+  miami:    {em:"🇺🇸",x:22,y:46,heat:.75,bias:{grass:1.4,candy:1.4,pills:1.3,shrooms:1.4,dust:1.4,diamond:1.4}},
+  kingston: {em:"🇯🇲",x:24,y:53,heat:.20,bias:{grass:.5,candy:.9,pills:1,shrooms:.5,dust:1.1,diamond:1},gang:.7},
+};
+const LOCNAMES={
+  he:{telaviv:"תל אביב",amsterdam:"אמסטרדם",bogota:"בוגוטה",bangkok:"בנגקוק",marrakech:"מרקש",moscow:"מוסקבה",tijuana:"טיחואנה",dubai:"דובאי",miami:"מיאמי",kingston:"קינגסטון"},
+  en:{telaviv:"Tel Aviv",amsterdam:"Amsterdam",bogota:"Bogotá",bangkok:"Bangkok",marrakech:"Marrakesh",moscow:"Moscow",tijuana:"Tijuana",dubai:"Dubai",miami:"Miami",kingston:"Kingston"},
+  ru:{telaviv:"Тель-Авив",amsterdam:"Амстердам",bogota:"Богота",bangkok:"Бангкок",marrakech:"Марракеш",moscow:"Москва",tijuana:"Тихуана",dubai:"Дубай",miami:"Майами",kingston:"Кингстон"},
+  es:{telaviv:"Tel Aviv",amsterdam:"Ámsterdam",bogota:"Bogotá",bangkok:"Bangkok",marrakech:"Marrakech",moscow:"Moscú",tijuana:"Tijuana",dubai:"Dubái",miami:"Miami",kingston:"Kingston"},
+  ar:{telaviv:"تل أبيب",amsterdam:"أمستردام",bogota:"بوغوتا",bangkok:"بانكوك",marrakech:"مراكش",moscow:"موسكو",tijuana:"تيخوانا",dubai:"دبي",miami:"ميامي",kingston:"كينغستون"}
+};
+const locname=id=>(LOCNAMES[S.lang]&&LOCNAMES[S.lang][id])||LOCNAMES.en[id];
+
+const METHODS={
+  sea: {em:"🚢",days:2,costMul:.6, storm:.5, police:.3, gang:.5, customs:0},
+  air: {em:"✈️",days:1,costMul:2.2,storm:0,  police:.2, gang:.15,customs:1},
+  land:{em:"🚗",days:2,costMul:1.1,storm:0,  police:.6, gang:1,  customs:0},
+};
+const PROTECTS={
+  guard:{em:"🛡️",cost:220},
+  bribe:{em:"💰",cost:190},
+  docs: {em:"🕶️",cost:300},
+  car:  {em:"🏎️",cost:260},
+};
+const DIFF={ easy:{cash:2500,cap:120,evt:.8,mul:.85}, normal:{cash:2000,cap:100,evt:1,mul:1}, hard:{cash:1400,cap:80,evt:1.25,mul:1.2} };
+
+/* ---------- game state ---------- */
+let G=load("game",null);
+let tab="market", travelSel=null, travelMethod=null, travelProt={};
+
+// loan shark: interest per day, borrow ceilings & opening offer per difficulty
+const LOAN={ rate:{easy:.04,normal:.05,hard:.06}, max:{easy:3500,normal:4500,hard:5500}, offer:{easy:2000,normal:3000,hard:4000} };
+// price pressure: buying pushes a good's local price up, selling pushes it down; decays back toward 1
+const PRESSURE={ buy:.018, sell:.015, upCap:2.4, dnCap:.45, decay:.16 };
+
+function money(n){ n=Math.round(n); const s=Math.abs(n).toLocaleString('en-US'); return (n<0?"-$":"$")+s; }
+function dist(a,b){ return Math.hypot(LOCS[a].x-LOCS[b].x, LOCS[a].y-LOCS[b].y); }
+function rnd(a,b){ return a+Math.random()*(b-a); }
+// total net worth = cash + safe + cargo (at current prices) − debt
+function netWorth(){ let g=0; if(G.market) for(const id in G.stash) g+=G.stash[id]*(G.market.prices[id]||0); return G.cash+G.bank+g-(G.loan||0); }
+function recordHistory(){ if(!G.history)G.history=[]; const last=G.history[G.history.length-1]; const w=Math.round(netWorth()); if(last&&last.day===G.day){ last.worth=w; } else { G.history.push({day:G.day, worth:w}); } }
+// advance the calendar; the loan compounds each day
+function advanceDays(n){ for(let i=0;i<n;i++){ G.day++; if(G.loan>0) G.loan=Math.round(G.loan*(1+(G.loanRate||0))); } }
+function beep(f=440,d=.08,t="sine",v=.05){ if(!S.sound)return; try{const c=beep.c||(beep.c=new (window.AudioContext||window.webkitAudioContext)()); const o=c.createOscillator(),g=c.createGain(); o.type=t; o.frequency.value=f; g.gain.value=v; o.connect(g); g.connect(c.destination); o.start(); g.gain.exponentialRampToValueAtTime(.0001,c.currentTime+d); o.stop(c.currentTime+d);}catch(e){} }
+
+/* ---------- market generation ---------- */
+const MKT={ compress:0.30, volMul:0.45, spikeP:0.4, spikeMin:1.5, spikeMax:2.2, crashMin:0.5, crashMax:0.7 };
+// how much your past trading in `loc` still moves prices, decayed by days since you last traded there
+function pressureFactor(loc,gid){
+  const P=G.pressure&&G.pressure[loc]; if(!P||!P.f||!P.f[gid])return 1;
+  const daysSince=Math.max(0,G.day-(P.day||G.day));
+  const decayed=1+(P.f[gid]-1)*Math.pow(1-PRESSURE.decay,daysSince);
+  return decayed;
+}
+function bumpPressure(loc,gid,dir,q){
+  if(!G.pressure)G.pressure={};
+  if(!G.pressure[loc])G.pressure[loc]={f:{},day:G.day};
+  const P=G.pressure[loc];
+  // decay existing to "now" first so repeated visits compound sanely
+  for(const k in P.f){ P.f[k]=1+(P.f[k]-1)*Math.pow(1-PRESSURE.decay, Math.max(0,G.day-P.day)); }
+  P.day=G.day;
+  let cur=P.f[gid]||1;
+  if(dir==="buy")  cur=Math.min(PRESSURE.upCap, cur*(1+PRESSURE.buy*q));
+  else             cur=Math.max(PRESSURE.dnCap, cur*(1-PRESSURE.sell*q));
+  P.f[gid]=cur;
+}
+function genMarket(loc){
+  const d=DIFF[G.diff], m={news:null,prices:{}};
+  let event=null;
+  if(Math.random()<MKT.spikeP){ const g=GOODS[Math.floor(Math.random()*GOODS.length)]; event={id:g.id,up:Math.random()<.5}; }
+  GOODS.forEach(g=>{
+    const rawBias=LOCS[loc].bias[g.id]||1;
+    const bias=1+(rawBias-1)*MKT.compress;            // pull location spreads toward 1
+    const v=g.vol*MKT.volMul;                         // day-to-day noise
+    let p=g.base*bias*rnd(1-v,1+v)*d.mul*pressureFactor(loc,g.id);
+    if(event&&event.id===g.id){ p*= event.up? rnd(MKT.spikeMin,MKT.spikeMax): rnd(MKT.crashMin,MKT.crashMax); }
+    m.prices[g.id]=Math.max(5,Math.round(p/5)*5);
+  });
+  m.news=event;
+  return m;
+}
+
+/* ================= flow ================= */
+function startNewGame(){
+  travelSel=travelMethod=null; travelProt={};
+  // difficulty picker via modal
+  openSheet(`
+    <h3>${T('namePrompt')}</h3>
+    <input id="nameIn" style="margin:12px 0" placeholder="..." value="${(S.name||'').replace(/"/g,'&quot;')}">
+    <label class="lbl">${T('diff')}</label>
+    <div class="chips" id="diffChips" style="margin-bottom:16px">
+      <div class="chip" data-d="easy">${T('easy')}</div>
+      <div class="chip on" data-d="normal">${T('normal')}</div>
+      <div class="chip" data-d="hard">${T('hard')}</div>
+    </div>
+    <button class="btn primary" onclick="reallyStart()">${T('start')} 🎬</button>
+  `);
+  let dsel="normal";
+  document.querySelectorAll('#diffChips .chip').forEach(c=>c.onclick=()=>{document.querySelectorAll('#diffChips .chip').forEach(x=>x.classList.remove('on'));c.classList.add('on');dsel=c.dataset.d;});
+  window.__dsel=()=>dsel;
+}
+function reallyStart(){
+  const nm=document.getElementById('nameIn').value.trim();
+  if(nm){ S.name=nm; persistS(); }
+  const diff=window.__dsel?window.__dsel():"normal";
+  const d=DIFF[diff];
+  G={ diff, day:1, maxDays:30, cash:d.cash, bank:0, cap:d.cap, startCash:d.cash,
+      loc:"telaviv", stash:{}, market:null, intel:{},
+      loan:0, loanRate:LOAN.rate[diff], history:[], pressure:{} };
+  G.market=genMarket("telaviv");
+  recordIntel("telaviv");
+  recordHistory();
+  save("game",G);
+  closeSheet(); tab="market";
+  show('game'); renderGame();
+  if(!S.seenGuide){ S.seenGuide=true; persistS(); }
+  beep(660,.1);
+  offerStartLoan();
+}
+function offerStartLoan(){
+  const amt=LOAN.offer[G.diff], rate=Math.round(G.loanRate*100);
+  openSheet(`<div style="text-align:center;font-size:40px">🦈</div>
+    <h3 style="text-align:center">${T('loanOfferT')}</h3>
+    <p class="small" style="margin:8px 2px 14px;text-align:center;line-height:1.6">${T('loanOfferX').replace('{amt}',money(amt)).replace('{rate}',rate+'%')}</p>
+    <button class="btn primary" onclick="takeStartLoan(${amt})">${T('loanTake')} ${money(amt)}</button>
+    <button class="btn ghost sm" style="margin-top:8px" onclick="closeSheet()">${T('loanSkip')}</button>`);
+}
+function takeStartLoan(amt){ G.cash+=amt; G.loan+=amt; recordHistory(); save("game",G); closeSheet(); updHUD(); switchTab('market'); toast(`🦈 +${money(amt)}`); }
+function continueGame(){ if(G){ if(!G.intel){ G.intel={}; recordIntel(G.loc); save("game",G); } show('game'); renderGame(); } else startNewGame(); }
+function confirmQuit(){
+  openSheet(`<h3>${T('quit')}</h3><p class="small" style="margin:8px 0 16px">${T('quitInfo')}</p>
+    <button class="btn danger" onclick="closeSheet();show('home');refreshHome()">${T('quitYes')}</button>
+    <button class="btn primary" onclick="closeSheet()">${T('quitNo')}</button>
+    <button class="btn ghost sm" style="margin-top:6px" onclick="closeSheet();endMonth()">${T('endEarly')}</button>`);
+}
+
+/* ---------- HUD ---------- */
+function stashCount(){ return Object.values(G.stash).reduce((a,b)=>a+b,0); }
+function updHUD(){
+  document.getElementById('hudLoc').textContent=locname(G.loc);
+  document.getElementById('hudLocFlag').textContent=LOCS[G.loc].em;
+  document.getElementById('hudDay').textContent=G.day;
+  document.getElementById('hudMax').textContent=G.maxDays;
+  document.getElementById('hudCash').textContent=money(G.cash);
+  document.getElementById('hudBank').textContent=money(G.bank);
+  document.getElementById('hudCap').textContent=stashCount()+"/"+G.cap;
+  const hl=document.getElementById('hudLoan');
+  if(hl){ if(G.loan>0){ hl.style.display='flex'; hl.innerHTML=`<span>🦈 ${T('debtLbl')}: <b>${money(G.loan)}</b></span><span class="hlrate">+${Math.round((G.loanRate||0)*100)}%/${T('dayWord')}</span>`; } else hl.style.display='none'; }
+}
+function renderGame(){ updHUD(); switchTab(tab); }
+function switchTab(t){
+  tab=t;
+  document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('on',x.dataset.tab===t));
+  const s=document.getElementById('gameScroll'); s.scrollTop=0;
+  if(t==="market")s.innerHTML=viewMarket();
+  else if(t==="travel"){ s.innerHTML=viewTravel(); drawMap(); }
+  else if(t==="intel")s.innerHTML=viewIntel();
+  else if(t==="bank")s.innerHTML=viewBank();
+  else if(t==="black")s.innerHTML=viewBlack();
+}
+
+/* ---------- MARKET ---------- */
+// find the most profitable "buy here → sell in a city you've scouted" move, from known prices
+function bestDeal(){
+  if(!G.intel) return null;
+  const known=Object.keys(G.intel).filter(l=>l!==G.loc);
+  if(!known.length) return null;
+  let best=null;
+  GOODS.forEach(g=>{
+    const here=G.market.prices[g.id];
+    known.forEach(loc=>{
+      const there=G.intel[loc].prices[g.id];
+      const profit=there-here;
+      if(profit>0 && (!best || profit>best.profit))
+        best={gid:g.id,em:g.em,loc,buy:here,sell:there,profit,age:G.day-G.intel[loc].day};
+    });
+  });
+  return best;
+}
+function dealBanner(){
+  const d=bestDeal();
+  if(!d){
+    return `<div class="deal none">💡 ${T('exploreToFind')}</div>`;
+  }
+  const room=G.cap-stashCount(), afford=Math.floor(G.cash/d.buy);
+  const canDo=Math.min(room,afford);
+  const ageTxt=d.age<=0?T('nowTag'):`${d.age}${T('dAgo')}`;
+  return `<div class="deal" onclick="dealGo('${d.loc}')">
+    <div class="dealhd">💡 ${T('bestDealNow')}</div>
+    <div class="dealbody">
+      <b>${d.em} ${gname(d.gid)}</b> — ${T('buyHereShort')} ${money(d.buy)} ➜ ${locname(d.loc)} ~${money(d.sell)}
+    </div>
+    <div class="dealfoot">
+      <span class="dealprofit">+${money(d.profit)} ${T('perUnit')}${canDo>0?` · ${T('upTo')} ${canDo}`:''}</span>
+      <span class="dealage">${T('lastSeen')} ${ageTxt} · ${T('tapToPlan')} ➜</span>
+    </div>
+  </div>`;
+}
+function dealGo(loc){ travelSel=loc; travelMethod=null; travelProt={}; switchTab('travel'); }
+function viewMarket(){
+  let html=dealBanner();
+  const n=G.market.news;
+  if(n){ const g=GOODS.find(x=>x.id===n.id);
+    html+=`<div class="news">${g.em} <span>${gname(n.id)} ${n.up?T('spike'):T('crash')}</span></div>`; }
+  GOODS.forEach(g=>{
+    const p=G.market.prices[g.id], have=G.stash[g.id]||0;
+    html+=`<div class="goodrow">
+      <div class="gem">${g.em}</div>
+      <div class="gmid">
+        <div class="gname">${gname(g.id)}</div>
+        <div class="gsub"><span class="price">${money(p)}</span>${have?`<span class="hold">· ${T('hold')} ${have}</span>`:''}</div>
+      </div>
+      <div class="gbtns">
+        <button class="minibtn" onclick="openTrade('${g.id}','buy')" ${p>G.cash?'disabled':''}>${T('buy')}</button>
+        <button class="minibtn sell" onclick="openTrade('${g.id}','sell')" ${have?'':'disabled'}>${T('sell')}</button>
+      </div></div>`;
+  });
+  return html;
+}
+function openTrade(id,mode){
+  const g=GOODS.find(x=>x.id===id), p=G.market.prices[id];
+  let max;
+  if(mode==="buy"){ const room=G.cap-stashCount(); max=Math.min(Math.floor(G.cash/p), room); }
+  else max=G.stash[id]||0;
+  if(max<=0){ toast(mode==="buy"?(G.cap-stashCount()<=0?T('noRoom'):T('cantAfford')):''); return; }
+  let q=max;
+  openSheet(`
+    <h3>${g.em} ${gname(id)}</h3>
+    <div class="small">${money(p)} ${T('each')} · ${mode==='buy'?T('buy'):T('sell')} · max ${max}</div>
+    <div class="qtybar">
+      <button onclick="tq(-1)">−</button>
+      <div class="qv" id="qv">${q}</div>
+      <button onclick="tq(1)">＋</button>
+    </div>
+    <input type="range" class="qrange" id="qr" min="1" max="${max}" value="${q}" oninput="tqSet(this.value)">
+    <div class="kv" style="margin:6px 0 14px"><span>${mode==='buy'?T('cost'):T('earned')}</span><b id="qtot" style="color:var(--gold)">${money(p*q)}</b></div>
+    <button class="btn primary" onclick="doTrade('${id}','${mode}')">${mode==='buy'?T('buy'):T('sell')}</button>
+  `);
+  window.__tq={id,mode,p,max,q,get(){return this.q},set(v){this.q=Math.max(1,Math.min(this.max,v|0)); document.getElementById('qv').textContent=this.q; document.getElementById('qr').value=this.q; document.getElementById('qtot').textContent=money(this.p*this.q);}};
+}
+function tq(d){ const o=window.__tq; o.set(o.q+d); }
+function tqSet(v){ window.__tq.set(+v); }
+function doTrade(id,mode){
+  const o=window.__tq, q=o.q, p=o.p;
+  const pf0=pressureFactor(G.loc,id);
+  if(mode==="buy"){ G.cash-=p*q; G.stash[id]=(G.stash[id]||0)+q; bumpPressure(G.loc,id,"buy",q); toast(`${T('bought')} ${q} ${GOODS.find(g=>g.id===id).em}`); }
+  else { G.cash+=p*q; G.stash[id]-=q; if(G.stash[id]<=0)delete G.stash[id]; bumpPressure(G.loc,id,"sell",q); toast(`${T('sold')} ${q} · +${money(p*q)}`); }
+  // reflect the pressure you just created in this city's live price (market slippage), keeping any spike/noise
+  const pf1=pressureFactor(G.loc,id);
+  G.market.prices[id]=Math.max(5, Math.round(G.market.prices[id]*(pf1/pf0)/5)*5);
+  recordIntel(G.loc);
+  beep(mode==="buy"?330:550,.07);
+  save("game",G); closeSheet(); updHUD(); switchTab('market');
+}
+
+/* ---------- MARKET INTEL (price memory + city specialties) ---------- */
+function recordIntel(loc){
+  if(!G.intel) G.intel={};
+  G.intel[loc]={ prices:{...G.market.prices}, day:G.day };
+}
+// permanent, always-visible strategic hint per city: which goods are typically cheap / in demand
+function citySpecialty(loc){
+  const b=LOCS[loc].bias;
+  const arr=GOODS.map(g=>({id:g.id,em:g.em,v:b[g.id]||1})).sort((a,z)=>a.v-z.v);
+  const cheap=arr.filter(x=>x.v<=.7).slice(0,2);
+  const hot=arr.filter(x=>x.v>=1.35).sort((a,z)=>z.v-a.v).slice(0,2);
+  return {cheap,hot};
+}
+function specialtyTags(loc){
+  const s=citySpecialty(loc); let h="";
+  if(s.cheap.length) h+=`<span class="tag cheap">🔻 ${T('cheapHere')}: ${s.cheap.map(x=>x.em+gname(x.id)).join(", ")}</span>`;
+  if(s.hot.length)   h+=`<span class="tag hot">🔺 ${T('wantedHere')}: ${s.hot.map(x=>x.em+gname(x.id)).join(", ")}</span>`;
+  return h?`<div class="tags">${h}</div>`:"";
+}
+// world intel table: cities × goods, last known prices (or ?)
+function viewIntel(){
+  let h=dealBanner();
+  h+=`<div class="sectitle">${T('intelTitle')} 🗺️</div>
+    <p class="small" style="margin:-4px 2px 10px">${T('intelInfo')}</p>`;
+  h+=`<div class="intelwrap"><table class="intel"><thead><tr><th>${T('city')}</th>`;
+  GOODS.forEach(g=>h+=`<th>${g.em}</th>`);
+  h+=`</tr></thead><tbody>`;
+  for(const id in LOCS){
+    const seen=G.intel&&G.intel[id];
+    const age = seen ? (G.day-G.intel[id].day) : null;
+    const ageTxt = seen ? (age<=0?T('nowTag'):`${age}${T('dAgo')}`) : "";
+    h+=`<tr class="${id===G.loc?'cur':''}"><td class="cty">${LOCS[id].em} ${locname(id)}${seen?`<span class="age">${ageTxt}</span>`:''}</td>`;
+    GOODS.forEach(g=>{
+      if(!seen){ h+=`<td class="unk">?</td>`; return; }
+      const p=G.intel[id].prices[g.id], base=g.base;
+      const cls = p<=base*.8?"lo":(p>=base*1.25?"hi":"");
+      h+=`<td class="${cls}">${money(p).replace('$','')}</td>`;
+    });
+    h+=`</tr>`;
+  }
+  h+=`</tbody></table></div>
+    <p class="small" style="margin:12px 2px;opacity:.75">${T('intelLegend')}</p>`;
+  return h;
+}
+
+/* ---------- TRAVEL ---------- */
+function viewTravel(){
+  let pins="";
+  for(const id in LOCS){
+    const l=LOCS[id], cls=(id===G.loc?"here":(travelSel===id?"sel":""));
+    pins+=`<div class="pin ${cls}" style="left:${l.x}%;top:${l.y}%" onclick="selDest('${id}')">
+      <span class="dot">${l.em}</span><span class="pn">${locname(id)}</span></div>`;
+  }
+  let body=`<div class="mapwrap"><div class="mapgrid"></div><svg id="routeSvg" viewBox="0 0 100 52.5" preserveAspectRatio="none"></svg>${pins}</div>`;
+  if(!travelSel){
+    body+=`<div class="sectitle">${T('pickDest')} 🌍</div>
+      <p class="small" style="text-align:center;padding:2px 6px 6px">${T('here')}: ${LOCS[G.loc].em} ${locname(G.loc)}</p>
+      ${specialtyTags(G.loc)}
+      <button class="btn ghost sm" style="margin:6px auto 2px;display:block" onclick="switchTab('intel')">🗺️ ${T('openIntel')}</button>`;
+    return body;
+  }
+  // ----- destination intel -----
+  body+=`<div class="desthead"><b>${LOCS[travelSel].em} ${locname(travelSel)}</b></div>`;
+  body+=specialtyTags(travelSel);
+  body+=destProfitPanel(travelSel);
+  // method selection
+  body+=`<div class="sectitle">${T('pickMethod')}</div>`;
+  for(const mk in METHODS){
+    const m=METHODS[mk], c=Math.round(travelCost(travelSel,mk));
+    const rl=riskLevel(travelSel,mk);
+    const nm={sea:T('bySea'),air:T('byAir'),land:T('byLand')}[mk];
+    const ds={sea:T('seaDesc'),air:T('airDesc'),land:T('landDesc')}[mk];
+    body+=`<div class="opt ${travelMethod===mk?'on':''}" onclick="selMethod('${mk}')">
+      <div class="oem">${m.em}</div>
+      <div class="omid"><div class="onm">${nm}</div>
+        <div class="osub">${money(c)} · ${m.days} ${T('days')} · ${T('risk')} <span class="risk">${riskDots(rl)}</span></div>
+        <div class="osub">${ds}</div></div>
+      <div class="ock">✓</div></div>`;
+  }
+  if(travelMethod){
+    body+=`<div class="sectitle" style="margin-top:8px">${T('prep')} 🧰</div>
+      <p class="small" style="margin:-4px 2px 10px">${T('protFor')}</p>`;
+    for(const pk in PROTECTS){
+      const pr=PROTECTS[pk], on=!!travelProt[pk];
+      const nm={guard:T('guardName'),bribe:T('bribeName'),docs:T('docsName'),car:T('carName')}[pk];
+      const ds={guard:T('guardDesc'),bribe:T('bribeDesc'),docs:T('docsDesc'),car:T('carDesc')}[pk];
+      body+=`<div class="opt ${on?'on':''}" onclick="toggleProt('${pk}')">
+        <div class="oem">${pr.em}</div>
+        <div class="omid"><div class="onm">${nm} · ${money(pr.cost)}</div><div class="osub">${ds}</div></div>
+        <div class="ock">✓</div></div>`;
+    }
+    const protCost=Object.keys(travelProt).reduce((a,k)=>a+PROTECTS[k].cost,0);
+    const total=Math.round(travelCost(travelSel,travelMethod))+protCost;
+    body+=`<div class="card" style="margin-top:8px"><div class="kv"><span>${T('cost')}</span><b>${money(Math.round(travelCost(travelSel,travelMethod)))}</b></div>
+      <div class="kv"><span>${T('prep')}</span><b>${money(protCost)}</b></div>
+      <div class="kv"><span><b>${T('depart')}</b></span><b style="color:var(--gold)">${money(total)}</b></div></div>
+      <button class="btn primary" ${total>G.cash?'disabled':''} onclick="depart()">${T('depart')} ${METHODS[travelMethod].em}${total>G.cash?' · '+T('cantAfford'):''}</button>
+      <div style="height:20px"></div>`;
+  }
+  return body;
+}
+function travelCost(dest,mk){ return Math.max(40,(dist(G.loc,dest)*4+25)*METHODS[mk].costMul*DIFF[G.diff].mul); }
+function riskLevel(dest,mk){
+  const m=METHODS[mk], heat=LOCS[dest].heat, gang=(LOCS[dest].gang||1);
+  let r=(m.storm*.4+m.police*heat+m.gang*.3*gang+m.customs*heat)*DIFF[G.diff].evt;
+  return Math.min(.8, r/2.0);
+}
+function riskDots(r){ let h=""; for(let i=0;i<4;i++){ const on=r> i/4; const hi=r>.62&&i>=2; h+=`<span class="riskdot ${on?(hi?'hi':'on'):''}"></span>`; } return h; }
+function drawMap(){
+  const svg=document.getElementById('routeSvg'); if(!svg)return; svg.innerHTML="";
+  if(travelSel&&travelSel!==G.loc){
+    const a=LOCS[G.loc], b=LOCS[travelSel];
+    const mx=(a.x+b.x)/2, my=Math.min(a.y,b.y)-8;
+    const p=document.createElementNS("http://www.w3.org/2000/svg","path");
+    p.setAttribute("d",`M ${a.x} ${a.y/1.905*1} Q ${mx} ${my/1.905} ${b.x} ${b.y/1.905}`);
+    // viewBox is 0..52.5 tall; convert y% (0..100)*0.525
+    p.setAttribute("d",`M ${a.x} ${a.y*.525} Q ${mx} ${Math.max(2,my)*.525} ${b.x} ${b.y*.525}`);
+    p.setAttribute("class","dash"); svg.appendChild(p);
+  }
+}
+function selDest(id){ if(id===G.loc){travelSel=null;} else {travelSel=id; travelMethod=null; travelProt={};} switchTab('travel'); }
+// profit preview at destination using last known prices there vs current local prices
+function destProfitPanel(dest){
+  const seen=G.intel&&G.intel[dest];
+  if(!seen){
+    return `<div class="intelcard none">🕵️ ${T('notScouted')}</div>`;
+  }
+  const age=G.day-G.intel[dest].day;
+  const ageTxt = age<=0?T('nowTag'):`${age} ${T('daysWord')} ${T('agoWord')}`;
+  const open=!!window.__pricesOpen;
+  let rows="";
+  GOODS.forEach(g=>{
+    const here=G.market.prices[g.id];
+    const there=G.intel[dest].prices[g.id];
+    const have=G.stash[g.id]||0;
+    const diff=there-here;
+    const cls=diff>0?"up":(diff<0?"down":"");
+    const arrow=diff>0?"▲":(diff<0?"▼":"–");
+    rows+=`<div class="pr ${have?'own':''}">
+      <span class="pg">${g.em} ${gname(g.id)}${have?` <b class="hq">×${have}</b>`:''}</span>
+      <span class="pp">${money(here)} <span class="ar ${cls}">${arrow}</span> ${money(there)}</span>
+      <span class="pd ${cls}">${diff>0?'+':''}${money(diff)}${have?` <small>(${diff>0?'+':''}${money(diff*have)})</small>`:''}</span>
+    </div>`;
+  });
+  return `<div class="intelcard">
+    <button class="ichead ictoggle" onclick="togglePrices()">
+      <span>💹 ${T('knownPrices')} <span class="age">· ${ageTxt}</span></span>
+      <span class="chev">${open?'▾':'▸'}</span>
+    </button>
+    ${open?`${rows}<div class="icnote">${T('profitNote')}</div>`:''}
+  </div>`;
+}
+function togglePrices(){ window.__pricesOpen=!window.__pricesOpen; switchTab('travel'); }
+function selMethod(mk){ travelMethod=mk; switchTab('travel'); }
+function toggleProt(pk){ if(travelProt[pk])delete travelProt[pk]; else travelProt[pk]=true; switchTab('travel'); }
+
+function depart(){
+  const cost=Math.round(travelCost(travelSel,travelMethod));
+  const protCost=Object.keys(travelProt).reduce((a,k)=>a+PROTECTS[k].cost,0);
+  const total=cost+protCost;
+  if(total>G.cash){ toast(T('cantAfford')); return; }
+  G.cash-=total;
+  const from=G.loc, dest=travelSel, mk=travelMethod, prot={...travelProt};
+  advanceDays(METHODS[mk].days);
+  beep(520,.12);
+  const ev=rollEvent(dest,mk,prot);          // resolves loot/loss now
+  travelSel=travelMethod=null; travelProt={};
+  const arrive=()=>{
+    G.loc=dest; G.market=genMarket(dest); recordIntel(dest); recordHistory(); save("game",G);
+    if(G.day>G.maxDays){ endMonth(); return; }
+    tab="market"; renderGame();
+    toast(`${METHODS[mk].em} ${T('arrivedAt')} ${locname(dest)}`);
+  };
+  startJourney(from,dest,mk,ev,arrive);
+}
+
+/* ---------- JOURNEY ANIMATION ---------- */
+function startJourney(from,dest,mk,ev,done){
+  const a=LOCS[from], b=LOCS[dest], m=METHODS[mk];
+  const quiet = !ev || ev.type==="quiet";
+  const ov=document.createElement('div');
+  ov.className='journey'; ov.id='journeyOv';
+  let pins="";
+  for(const id in LOCS){ const l=LOCS[id]; const role=id===from?'from':(id===dest?'to':'dim');
+    pins+=`<div class="jpin ${role}" style="left:${l.x}%;top:${l.y}%"><span class="jdot">${l.em}</span>${(role!=='dim')?`<span class="jpn">${locname(id)}</span>`:''}</div>`; }
+  ov.innerHTML=`
+    <div class="jbar"><span class="jem">${m.em}</span> <b>${locname(from)}</b> <span class="jarr">➜</span> <b>${locname(dest)}</b> <span class="jday">· ${T('dayWord')} ${G.day}</span></div>
+    <div class="jmap"><div class="mapgrid"></div>
+      <svg id="jsvg" viewBox="0 0 100 52.5" preserveAspectRatio="none">
+        <path id="jpath" class="jroute"/>
+        <path id="jtrail" class="jtrail"/>
+      </svg>
+      ${pins}
+      <div id="jtoken" class="jtoken">${m.em}</div>
+      <div id="jflash" class="jflash"></div>
+    </div>
+    <div id="jevent" class="jevent"></div>`;
+  document.body.appendChild(ov);
+  const path=ov.querySelector('#jpath'), trail=ov.querySelector('#jtrail');
+  const mx=(a.x+b.x)/2, my=Math.max(2,Math.min(a.y,b.y)-8);
+  const d=`M ${a.x} ${a.y*.525} Q ${mx} ${my*.525} ${b.x} ${b.y*.525}`;
+  path.setAttribute('d',d); trail.setAttribute('d',d);
+  const svg=ov.querySelector('#jsvg'), token=ov.querySelector('#jtoken');
+  const L=path.getTotalLength();
+  trail.style.strokeDasharray=L; trail.style.strokeDashoffset=L;
+  const stopAt = quiet?1 : rnd(.42,.62);
+  const DUR=1100*Math.max(1,m.days);   // total ms for the whole route
+  let phase=1, start=null;
+  function place(t){
+    const pt=path.getPointAtLength(L*t);
+    token.style.left=pt.x+'%'; token.style.top=(pt.y/52.5*100)+'%';
+    trail.style.strokeDashoffset=L*(1-t);
+  }
+  place(0);
+  function frame(ts){
+    if(!start)start=ts;
+    const el=ts-start;
+    if(phase===1){
+      const dur=Math.max(1,DUR*stopAt);
+      const t=Math.min(stopAt, (el/dur)*stopAt);
+      place(t);
+      if(el>=dur){
+        place(stopAt);
+        if(quiet){ finish(); return; }
+        token.classList.add('halt');
+        const flash=ov.querySelector('#jflash');
+        flash.style.left=token.style.left; flash.style.top=token.style.top;
+        const badCls = ev.choose===true || (eventVisual(ev).badge&&eventVisual(ev).badge.cls==='bad');
+        flash.className='jflash show '+(badCls?'bad':'good');
+        beep(badCls?200:600,.15, badCls?"sawtooth":"sine");
+        showJourneyEvent(ev,()=>{ token.classList.remove('halt'); flash.className='jflash'; phase=2; start=null; requestAnimationFrame(frame); });
+        return;
+      }
+      requestAnimationFrame(frame);
+    } else {
+      const dur=Math.max(1,DUR*(1-stopAt));
+      const t=stopAt+Math.min(1,el/dur)*(1-stopAt);
+      place(t);
+      if(el>=dur){ finish(); return; }
+      requestAnimationFrame(frame);
+    }
+  }
+  function finish(){ place(1); token.classList.add('arrived'); setTimeout(()=>{ ov.remove(); done(); }, 420); }
+  requestAnimationFrame(frame);
+}
+// shared event flow: situation → choices → outcome (or straight to outcome for auto events)
+function renderEventFlow(host, ev, after){
+  const cardHtml=(emoji,title,text,badge,footer)=>`
+    <div class="jecard ${badge?badge.cls:''}">
+      <div class="jeemoji">${emoji}</div>
+      <div class="jetitle">${title}</div>
+      <div class="jetext">${text}</div>
+      ${badge?`<div class="evbadge ${badge.cls}">${badge.txt}</div>`:''}
+      ${footer}
+    </div>`;
+  const cont=`<button class="btn primary" data-ev="cont">${T('continueBtn')}</button>`;
+  function outcome(R){
+    host.innerHTML=cardHtml(R.emoji,R.title,R.text,R.badge,cont);
+    host.querySelector('[data-ev="cont"]').onclick=after;
+  }
+  if(!ev.choose){ outcome(eventVisual(ev)); return; }
+  const sit=eventSituation(ev), chs=eventChoices(ev);
+  const btns=chs.map(c=>`<button class="btn evchoice" data-cid="${c.id}">
+      <span class="che">${c.em}</span>
+      <span class="chl"><b>${c.label}</b><small>${c.hint}</small></span></button>`).join('');
+  host.innerHTML=cardHtml(sit.emoji,sit.title,sit.text,null,`<div class="evchoices">${btns}</div>`);
+  host.querySelectorAll('[data-cid]').forEach(b=>b.onclick=()=>{
+    const R=applyChoice(ev,b.dataset.cid); save('game',G);
+    beep(R.badge&&R.badge.cls==='bad'?200:600,.15, R.badge&&R.badge.cls==='bad'?'sawtooth':'sine');
+    outcome(R);
+  });
+}
+function showJourneyEvent(ev,after){
+  const box=document.getElementById('jevent');
+  box.classList.add('show');
+  renderEventFlow(box, ev, ()=>{ box.classList.remove('show'); box.innerHTML=''; after(); });
+}
+
+/* ---------- events (choice-based) ---------- */
+// rollEvent now only DECIDES what happens; it does not mutate cargo/cash.
+// Bad events carry choices resolved by the player via applyChoice().
+function rollEvent(dest,mk,prot){
+  const m=METHODS[mk], base=riskLevel(dest,mk);
+  const carried=stashCount(); const attention=Math.min(.15, carried/ (G.cap*3));
+  let chance=Math.min(.6, base*.7 + attention);
+  if(prot.docs)chance*=.5;
+  const bad=Math.random()<chance;
+  if(!bad){
+    if(Math.random()<.22){ return luckyEvent(); }
+    return {type:"quiet"};
+  }
+  const pool=[];
+  if(m.storm>0 && Object.keys(G.stash).length) pool.push("storm");
+  if(m.police>0) pool.push("police");
+  if(m.customs>0) pool.push("customs");
+  if(m.gang>0) pool.push("gang");
+  if(!pool.length) return {type:"quiet"};
+  const type=pool[Math.floor(Math.random()*pool.length)];
+  const ids=Object.keys(G.stash);
+  const atRisk = ids.length? ids[Math.floor(Math.random()*ids.length)] : null;
+  return { type, choose:true, good:atRisk, prot:{...prot}, resolved:false };
+}
+function luckyEvent(){
+  if(Math.random()<.5){
+    const g=GOODS[Math.floor(Math.random()*4)];
+    const q=Math.floor(rnd(2,7)); const room=G.cap-stashCount();
+    const add=Math.min(q,room);
+    if(add>0){ G.stash[g.id]=(G.stash[g.id]||0)+add; return {type:"luckCargo",good:g.id,q:add}; }
+    return {type:"quiet"};
+  } else {
+    const cash=Math.round(rnd(200,900)*DIFF[G.diff].mul); G.cash+=cash; return {type:"luckCash",cash};
+  }
+}
+// the threat shown BEFORE the player chooses
+function eventSituation(ev){
+  switch(ev.type){
+    case "police":  return {emoji:"🚔", title:T('policeT'),  text:T('policeSit')};
+    case "customs": return {emoji:"🛃", title:T('customsT'), text:T('customsSit')};
+    case "gang":    return {emoji:"🔫", title:T('gangT'),    text:T('gangSit')};
+    case "storm":   return {emoji:"🌊", title:T('seaStormT'),text:T('stormSit')};
+  }
+  return {emoji:"🌤️",title:T('quietT'),text:T('quietX')};
+}
+// the options offered, tuned by pre-bought protection
+function eventChoices(ev){
+  const p=ev.prot||{}, has=stashCount()>0;
+  if(ev.type==="police"||ev.type==="customs"){
+    const bribeFee = p.bribe?0:Math.round(rnd(150,350)*DIFF[G.diff].mul);
+    return [
+      {id:"bribe", em:"💰", label:T('chBribe'), hint:p.bribe?T('chBribeReady'):`${T('chPay')} ${money(bribeFee)}`, fee:bribeFee},
+      {id:"run",   em:"🏃", label:T('chRun'),   hint:p.car?T('chCarReady'):T('chRunRisky')},
+      {id:"comply",em:"🙇", label:T('chComply'),hint:T('chComplyHint')}
+    ];
+  }
+  if(ev.type==="gang"){
+    return [
+      {id:"pay",  em:"🤝", label:T('chPayGang'), hint:T('chPayHint')},
+      {id:"fight",em:"🥊", label:T('chFight'),   hint:p.guard?T('chGuardReady'):T('chFightRisky')},
+      {id:"run",  em:"🏃", label:T('chRun'),     hint:p.car?T('chCarReady'):T('chRunRisky')}
+    ];
+  }
+  if(ev.type==="storm"){
+    return [
+      {id:"jettison",em:"📤", label:T('chJettison'),hint:T('chJettisonHint')},
+      {id:"ride",    em:"🌊", label:T('chRide'),    hint:T('chRideHint')}
+    ];
+  }
+  return [];
+}
+// resolve the player's choice — mutate state, return {emoji,title,text,badge}
+function applyChoice(ev, id){
+  const p=ev.prot||{}, mul=DIFF[G.diff].mul;
+  const good=ev.good && G.stash[ev.good]?ev.good:Object.keys(G.stash)[0];
+  const takeFrom=(gid,frac)=>{ if(!gid||!G.stash[gid])return 0; const t=Math.max(1,Math.round(G.stash[gid]*frac)); G.stash[gid]-=t; if(G.stash[gid]<=0)delete G.stash[gid]; return t; };
+  const fineCash=(lo,hi)=>{ const f=Math.min(G.cash,Math.round(rnd(lo,hi)*mul)); G.cash-=f; return f; };
+  const gLabel=gid=>`${GOODS.find(g=>g.id===gid).em} ${gname(gid)}`;
+  ev.resolved=true;
+  const R={emoji:"🌤️",title:"",text:"",badge:null};
+
+  if(ev.type==="police"||ev.type==="customs"){
+    R.emoji = ev.type==="customs"?"🛃":"🚔";
+    if(id==="bribe"){
+      const fee=p.bribe?0:Math.round(rnd(150,350)*mul);
+      if(!p.bribe && fee>G.cash){ // can't afford → forced comply
+        const t=good?takeFrom(good,rnd(.2,.4)):0; const f=good?0:fineCash(120,300);
+        R.title=T('cantBribe'); R.text=T('policeGrab');
+        R.badge=good?{cls:"bad",txt:`${T('confiscate')} ${t} ${gLabel(good)}`}:{cls:"bad",txt:`${T('paid')} ${money(f)}`}; return R;
+      }
+      if(!p.bribe) G.cash-=fee;
+      const success=Math.random()<(p.bribe?.9:.62);
+      if(success){ R.emoji="💰🤝"; R.title=T('bribeWorkedT'); R.text=T('bribeWorked'); R.badge={cls:"good",txt:p.bribe?"✔":`−${money(fee)}`}; }
+      else { const t=good?takeFrom(good,rnd(.25,.4)):0; R.title=T('bribeFailT'); R.text=T('bribeFail');
+        R.badge=good?{cls:"bad",txt:`${T('confiscate')} ${t} ${gLabel(good)}${p.bribe?"":` · −${money(fee)}`}`}:{cls:"bad",txt:`−${money(fee)}`}; }
+      return R;
+    }
+    if(id==="run"){
+      const esc=Math.random()<(p.car?.8:.35);
+      if(esc){ R.emoji=p.car?"🏎️💨":"🏃💨"; R.title=T('escapeT'); R.text=T('escapeX'); R.badge={cls:"good",txt:"✔"}; }
+      else { const t=good?takeFrom(good,rnd(.4,.6)):0; const f=good?0:fineCash(200,500);
+        R.title=T('caughtT'); R.text=T('caughtX');
+        R.badge=good?{cls:"bad",txt:`${T('confiscate')} ${t} ${gLabel(good)}`}:{cls:"bad",txt:`${T('paid')} ${money(f)}`}; }
+      return R;
+    }
+    // comply
+    const t=good?takeFrom(good,rnd(.18,.3)):0; const f=good?0:fineCash(120,300);
+    R.title=T('complyT'); R.text=T('complyX');
+    R.badge=good?{cls:"bad",txt:`${T('confiscate')} ${t} ${gLabel(good)}`}:{cls:"bad",txt:`${T('paid')} ${money(f)}`};
+    return R;
+  }
+
+  if(ev.type==="gang"){
+    R.emoji="🔫";
+    if(id==="pay"){
+      if(G.cash>=80){ const f=fineCash(150,400); R.title=T('paidGangT'); R.text=T('paidGangX'); R.badge={cls:"bad",txt:`−${money(f)}`}; }
+      else { const t=takeFrom(good,rnd(.3,.5)); R.title=T('paidGangT'); R.text=T('noCashGang'); R.badge=good?{cls:"bad",txt:`${T('stole')} ${t} ${gLabel(good)}`}:{cls:"bad",txt:"—"}; }
+      return R;
+    }
+    if(id==="fight"){
+      const win=Math.random()<(p.guard?.8:.35);
+      if(win){
+        R.emoji=p.guard?"🛡️💪":"👊"; R.title=T('wonFightT');
+        if(Math.random()<.45){ // grab their loot!
+          const g=GOODS[Math.floor(Math.random()*4)], room=G.cap-stashCount(), add=Math.min(Math.floor(rnd(2,6)),room);
+          if(add>0){ G.stash[g.id]=(G.stash[g.id]||0)+add; R.text=T('lootWinX'); R.badge={cls:"good",txt:`+${add} ${gLabel(g.id)}`}; }
+          else { R.text=T('wonFightX'); R.badge={cls:"good",txt:"✔"}; }
+        } else { R.text=T('wonFightX'); R.badge={cls:"good",txt:"✔"}; }
+      } else { const t=good?takeFrom(good,rnd(.35,.5)):0; const f=t?0:fineCash(100,300);
+        R.title=T('lostFightT'); R.text=T('lostFightX');
+        R.badge=good?{cls:"bad",txt:`${T('stole')} ${t} ${gLabel(good)}`}:{cls:"bad",txt:`−${money(f)}`}; }
+      return R;
+    }
+    // run
+    const esc=Math.random()<(p.car?.75:.4);
+    if(esc){ R.emoji=p.car?"🏎️💨":"🏃💨"; R.title=T('escapeT'); R.text=T('gangEscX'); R.badge={cls:"good",txt:"✔"}; }
+    else { const t=good?takeFrom(good,rnd(.3,.45)):0; R.title=T('caughtGangT'); R.text=T('caughtGangX');
+      R.badge=good?{cls:"bad",txt:`${T('stole')} ${t} ${gLabel(good)}`}:{cls:"bad",txt:"—"}; }
+    return R;
+  }
+
+  if(ev.type==="storm"){
+    R.emoji="🌊";
+    if(id==="jettison"){ const t=good?takeFrom(good,rnd(.1,.2)):0; R.title=T('jettisonT'); R.text=T('jettisonX'); R.badge=good?{cls:"bad",txt:`${T('lost')} ${t} ${gLabel(good)}`}:{cls:"good",txt:"✔"}; }
+    else { if(Math.random()<.55){ R.emoji="⛵"; R.title=T('rodeOutT'); R.text=T('rodeOutX'); R.badge={cls:"good",txt:"✔"}; }
+      else { const t=good?takeFrom(good,rnd(.3,.5)):0; R.title=T('sunkT'); R.text=T('sunkX'); R.badge=good?{cls:"bad",txt:`${T('lost')} ${t} ${gLabel(good)}`}:{cls:"bad",txt:"—"}; } }
+    return R;
+  }
+  return R;
+}
+function eventVisual(ev){
+  const E={emoji:"🌤️",title:T('quietT'),text:T('quietX'),badge:null};
+  switch(ev.type){
+    case "quiet": break;
+    case "luckCargo": E.emoji="📦✨"; E.title=T('luckCargoT'); E.text=T('luckCargoX');
+      E.badge={cls:"good",txt:`+${ev.q} ${GOODS.find(g=>g.id===ev.good).em} ${gname(ev.good)}`}; break;
+    case "luckCash": E.emoji="🤑"; E.title=T('luckCashT'); E.text=T('luckCashX');
+      E.badge={cls:"good",txt:`+${money(ev.cash)}`}; break;
+  }
+  return E;
+}
+function showEvent(ev,after){
+  window.__afterEvent=after; show('event');
+  const host=document.getElementById('eventHost');
+  renderEventFlow(host, ev, ()=>closeEvent());
+}
+function closeEvent(){ const f=window.__afterEvent; window.__afterEvent=null; if(f)f(); }
+
+/* ---------- BANK ---------- */
+function viewBank(){
+  const rate=Math.round((G.loanRate||0)*100), maxLoan=LOAN.max[G.diff], room=Math.max(0,maxLoan-(G.loan||0));
+  let loanCard;
+  if(G.loan>0){
+    loanCard=`<div class="card loanCard">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px"><div style="font-size:30px">🦈</div>
+        <div style="flex:1"><div style="font-weight:900">${T('loanSharkT')}</div>
+        <div class="small">${T('loanRateLbl')}: <b style="color:var(--bad)">${rate}%</b></div></div></div>
+      <div class="kv"><span>${T('loanOwed')}</span><b style="color:var(--bad)">${money(G.loan)}</b></div>
+      <div class="row" style="margin-top:10px">
+        <button class="btn" onclick="loanMove('repay')" ${G.cash<=0?'disabled':''}>${T('repay')}</button>
+        <button class="btn ghost" onclick="loanMove('borrow')" ${room<=0?'disabled':''}>${T('borrow')}</button>
+      </div></div>`;
+  } else {
+    loanCard=`<div class="card loanCard">
+      <div style="display:flex;align-items:center;gap:10px">
+        <div style="font-size:30px">🦈</div>
+        <div style="flex:1"><div style="font-weight:900">${T('loanSharkT')}</div><div class="small">${T('loanNone')} · ${T('loanRateLbl')} ${rate}%</div></div>
+        <button class="btn ghost sm" style="width:auto;padding:8px 14px" onclick="loanMove('borrow')" ${room<=0?'disabled':''}>${T('borrow')}</button>
+      </div></div>`;
+  }
+  return `<div class="card">
+    <div style="text-align:center;font-size:44px">🏦</div>
+    <h3 style="text-align:center;font-weight:900;font-size:18px;margin:4px 0 6px">${T('bankTitle')}</h3>
+    <p class="small" style="text-align:center;margin-bottom:14px">${T('bankInfo')}</p>
+    <div class="kv"><span>${T('onHand')}</span><b>${money(G.cash)}</b></div>
+    <div class="kv"><span>${T('inSafe')}</span><b style="color:var(--gold)">${money(G.bank)}</b></div>
+  </div>
+  <div class="row">
+    <button class="btn" onclick="bankMove('dep')" ${G.cash<=0?'disabled':''}>⬇️ ${T('deposit')}</button>
+    <button class="btn" onclick="bankMove('wd')" ${G.bank<=0?'disabled':''}>⬆️ ${T('withdraw')}</button>
+  </div>
+  ${loanCard}`;
+}
+function loanMove(dir){
+  const maxLoan=LOAN.max[G.diff];
+  const max = dir==="borrow" ? Math.max(0,maxLoan-(G.loan||0)) : Math.min(G.cash, G.loan||0);
+  if(max<=0){ toast(dir==="borrow"?T('loanMaxed'):''); return; }
+  let q=max;
+  openSheet(`<div style="text-align:center;font-size:34px">🦈</div>
+    <h3>${dir==='borrow'?T('borrow'):T('repay')}</h3>
+    <div class="qtybar"><button onclick="lq(-100)">−</button><div class="qv" id="qv">${q}</div><button onclick="lq(100)">＋</button></div>
+    <input type="range" class="qrange" id="qr" min="0" max="${max}" value="${q}" oninput="lqSet(this.value)">
+    <button class="btn primary" style="margin-top:10px" onclick="doLoan('${dir}')">${dir==='borrow'?T('borrow'):T('repay')} <span id="qtot">${money(q)}</span></button>`);
+  window.__lq={max,q,set(v){this.q=Math.max(0,Math.min(this.max,v|0));document.getElementById('qv').textContent=this.q;document.getElementById('qr').value=this.q;document.getElementById('qtot').textContent=money(this.q);}};
+}
+function lq(d){window.__lq.set(window.__lq.q+d)}
+function lqSet(v){window.__lq.set(+v)}
+function doLoan(dir){ const q=window.__lq.q; if(q<=0){closeSheet();return;} if(dir==="borrow"){G.cash+=q;G.loan+=q;}else{G.cash-=q;G.loan-=q;if(G.loan<0)G.loan=0;} beep(dir==='borrow'?300:560,.08); recordHistory(); save("game",G); closeSheet(); updHUD(); switchTab('bank'); }
+function bankMove(dir){
+  const max=dir==="dep"?G.cash:G.bank; if(max<=0)return;
+  let q=max;
+  openSheet(`<h3>${dir==='dep'?T('deposit'):T('withdraw')}</h3>
+    <div class="qtybar"><button onclick="bq(-100)">−</button><div class="qv" id="qv">${q}</div><button onclick="bq(100)">＋</button></div>
+    <input type="range" class="qrange" id="qr" min="0" max="${max}" value="${q}" oninput="bqSet(this.value)">
+    <button class="btn primary" style="margin-top:10px" onclick="doBank('${dir}')">${dir==='dep'?T('deposit'):T('withdraw')} <span id="qtot">${money(q)}</span></button>`);
+  window.__bq={max,q,set(v){this.q=Math.max(0,Math.min(this.max,v|0));document.getElementById('qv').textContent=this.q;document.getElementById('qr').value=this.q;document.getElementById('qtot').textContent=money(this.q);}};
+}
+function bq(d){window.__bq.set(window.__bq.q+d)}
+function bqSet(v){window.__bq.set(+v)}
+function doBank(dir){ const q=window.__bq.q; if(dir==="dep"){G.cash-=q;G.bank+=q;}else{G.bank-=q;G.cash+=q;} beep(500,.06); save("game",G); closeSheet(); updHUD(); switchTab('bank'); }
+
+/* ---------- BLACK MARKET (upgrades) ---------- */
+function upgCost(){ return Math.round(400*Math.pow(1.6, Math.max(0,(G.cap-DIFF[G.diff].cap)/40))); }
+function viewBlack(){
+  const c=upgCost();
+  return `<div class="sectitle">${T('blackTitle')} 🕶️</div>
+  <div class="card">
+    <div style="display:flex;align-items:center;gap:12px">
+      <div style="font-size:34px">🎒</div>
+      <div style="flex:1"><div style="font-weight:900;font-size:16px">${T('capUpg')} (+40)</div>
+      <div class="small">${T('capDesc')}</div>
+      <div class="small">${T('capNow')}: <b style="color:var(--gold)">${G.cap}</b></div></div>
+    </div>
+    <button class="btn primary sm" style="margin-top:12px" ${c>G.cash?'disabled':''} onclick="buyCap()">${T('buyUpg')} · ${money(c)}</button>
+  </div>`;
+}
+function buyCap(){ const c=upgCost(); if(c>G.cash)return; G.cash-=c; G.cap+=40; beep(440,.1); save("game",G); updHUD(); switchTab('black'); toast(`🎒 +40`); }
+
+/* ---------- END / SCORE ---------- */
+const RANKS_HE=[[3500,"חובבן שכונה 🥴"],[8000,"מבריח מתחיל 🚬"],[18000,"סוחר מכובד 😎"],[45000,"ברון מקומי 👑"],[Infinity,"אל הקרטל 🐐"]];
+const RANKS_EN=[[3500,"Street rookie 🥴"],[8000,"Rising smuggler 🚬"],[18000,"Respected dealer 😎"],[45000,"Local baron 👑"],[Infinity,"Cartel legend 🐐"]];
+function rankFor(worth){ const R=S.lang==="he"?RANKS_HE:RANKS_EN; for(const[t,n]of R)if(worth<t)return n; return R[R.length-1][1]; }
+function worthGraphSVG(hist, startCash){
+  if(!hist||hist.length<2) return "";
+  const W=300,H=120,pad=6;
+  const days=hist.map(p=>p.day), ws=hist.map(p=>p.worth);
+  const dmin=Math.min(...days), dmax=Math.max(...days);
+  const vmin=Math.min(startCash,...ws), vmax=Math.max(startCash,...ws);
+  const sx=d=>pad+(dmax===dmin?0:(d-dmin)/(dmax-dmin))*(W-2*pad);
+  const sy=v=>H-pad-(vmax===vmin?.5:(v-vmin)/(vmax-vmin))*(H-2*pad);
+  const pts=hist.map(p=>`${sx(p.day).toFixed(1)},${sy(p.worth).toFixed(1)}`).join(" ");
+  const y0=sy(startCash).toFixed(1);
+  const area=`${pad},${H-pad} ${pts} ${(W-pad)},${H-pad}`;
+  const up=ws[ws.length-1]>=startCash;
+  const col=up?"var(--good)":"var(--bad)";
+  return `<div class="graphhd">📈 ${T('worthOverTime')}</div>
+  <svg viewBox="0 0 ${W} ${H}" class="wgraph" preserveAspectRatio="none">
+    <polygon points="${area}" fill="${up?'#5ec27a18':'#e2604f18'}"/>
+    <line x1="${pad}" y1="${y0}" x2="${W-pad}" y2="${y0}" stroke="var(--line)" stroke-width="1" stroke-dasharray="4 3"/>
+    <polyline points="${pts}" fill="none" stroke="${col}" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"/>
+  </svg>
+  <div class="graphax"><span>${T('dayWord')} ${dmin}</span><span>${T('dayWord')} ${dmax}</span></div>`;
+}
+function endMonth(){
+  recordHistory();
+  const worth=Math.round(netWorth()), profit=worth-G.startCash;
+  const rank=rankFor(worth);
+  document.getElementById('endEmoji').textContent= profit>0?"🎉":"💀";
+  document.getElementById('endRank').textContent=T('rankTitle')+" "+rank;
+  document.getElementById('endStart').textContent=money(G.startCash);
+  const dr=document.getElementById('endDebtRow');
+  if(G.loan>0){ dr.style.display='flex'; document.getElementById('endDebt').textContent="−"+money(G.loan); } else dr.style.display='none';
+  document.getElementById('endWorth').textContent=money(worth);
+  const pe=document.getElementById('endProfit'); pe.textContent=(profit>=0?"+":"")+money(profit); pe.style.color=profit>=0?"var(--good)":"var(--bad)";
+  document.getElementById('endMsg').textContent= profit<=0?T('broke'):"";
+  document.getElementById('endGraph').innerHTML=worthGraphSVG(G.history,G.startCash);
+  const hof=load("hof",[]);
+  hof.push({name:S.name||"???", worth, rank, date:new Date().toISOString().slice(0,10), diff:G.diff});
+  hof.sort((a,b)=>b.worth-a.worth); hof.splice(20);
+  save("hof",hof);
+  G=null; store.del(PFX+"game");
+  refreshHome();
+  beep(profit>0?720:160,.3); if(profit>0){setTimeout(()=>beep(900,.3),120);}
+  show('end');
+}
+
+/* ---------- HALL OF FAME ---------- */
+function renderHof(){
+  const hof=load("hof",[]), el=document.getElementById('hofList');
+  if(!hof.length){ el.innerHTML=`<p class="small" style="text-align:center;padding:30px">${T('emptyHof')}</p>`; return; }
+  const medals=["🥇","🥈","🥉"];
+  el.innerHTML=hof.map((h,i)=>`<div class="hofrow">
+    <div class="hofrank">${medals[i]||(i+1)}</div>
+    <div class="hofmid"><div class="hofname">${(h.name||'???').replace(/</g,'&lt;')}</div>
+      <div class="hofsub">${h.rank||''} · ${h.date}</div></div>
+    <div class="hofscore">${money(h.worth)}</div></div>`).join("");
+}
+function clearHof(){ if(confirm(T('clearHof')+"?")){ save("hof",[]); renderHof(); } }
+
+/* ================= navigation / chrome ================= */
+function show(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.toggle('on',s.id===id));
+  if(id==='hof')renderHof();
+  if(id==='settings')syncSettings();
+  if(id==='about')syncAbout();
+  if(id==='guide')renderGuide();
+  if(id==='home')refreshHome();
+  window.scrollTo(0,0);
+}
+function goHome(){ show('home'); }
+function refreshHome(){
+  document.getElementById('contTile').style.display= G?'':'none';
+  document.getElementById('verHome').textContent=VERSION;
+}
+function openSheet(html){ document.getElementById('sheet').innerHTML=html; document.getElementById('modal').classList.add('on'); }
+function closeSheet(){ document.getElementById('modal').classList.remove('on'); }
+document.getElementById('modal').addEventListener('click',e=>{ if(e.target.id==='modal')closeSheet(); });
+let toastT;
+function toast(m){ if(!m)return; const t=document.getElementById('toast'); t.textContent=m; t.classList.add('on'); clearTimeout(toastT); toastT=setTimeout(()=>t.classList.remove('on'),1600); }
+
+/* ---------- settings ---------- */
+function syncSettings(){
+  document.getElementById('setName').value=S.name||"";
+  const lc=document.getElementById('langChips'); lc.innerHTML="";
+  for(const k in LANGS){ const c=document.createElement('div'); c.className="chip"+(S.lang===k?" on":""); c.textContent=LANGS[k]; c.onclick=()=>setLang(k); lc.appendChild(c); }
+  const pc=document.getElementById('palChips'); pc.innerHTML="";
+  const pals={gold:"#e8c25a",emerald:"#4fd1a5",ruby:"#f0607a",sapphire:"#5aa9f0",violet:"#b07af0"};
+  for(const k in pals){ const c=document.createElement('div'); c.className="chip palchip"+(S.pal===k?" on":""); c.style.background=pals[k]; c.onclick=()=>setPal(k); pc.appendChild(c); }
+  document.getElementById('chNight').classList.toggle('on',S.theme==='night');
+  document.getElementById('chDay').classList.toggle('on',S.theme==='day');
+  document.getElementById('chSndOn').classList.toggle('on',S.sound);
+  document.getElementById('chSndOff').classList.toggle('on',!S.sound);
+  document.getElementById('verSet').textContent=VERSION;
+}
+function setUsername(v){ S.name=v; persistS(); }
+function setLang(k){ S.lang=k; persistS(); applyLang(); syncSettings(); }
+function setPal(k){ S.pal=k; persistS(); document.body.dataset.pal=k; syncSettings(); }
+function setTheme(t){ S.theme=t; persistS(); document.body.dataset.theme=t; document.querySelector('meta[name=theme-color]').content= t==='day'?'#f3efe6':'#0a0a0a'; syncSettings(); }
+function setSound(v){ S.sound=v; persistS(); syncSettings(); if(v)beep(600,.08); }
+function wipeAll(){ if(confirm(T('wipeConfirm'))){ store.del(PFX+"game"); store.del(PFX+"hof"); store.del(PFX+"settings"); location.reload(); } }
+
+function syncAbout(){
+  document.getElementById('aVer').textContent=VERSION;
+  document.getElementById('verAbout').textContent=VERSION;
+  document.getElementById('discBox').textContent=T('disclaimer');
+}
+function applyLang(){
+  const rtl=RTL.includes(S.lang);
+  document.documentElement.lang=S.lang; document.documentElement.dir=rtl?"rtl":"ltr";
+  document.querySelectorAll('[data-t]').forEach(el=>{ const k=el.dataset.t; const v=(L[S.lang]&&L[S.lang][k])||L.en[k]; if(v)el.textContent=v; });
+  document.getElementById('homeTag').textContent=T('tagline');
+  if(document.getElementById('about').classList.contains('on'))syncAbout();
+  if(G&&document.getElementById('game').classList.contains('on'))renderGame();
+}
+
+/* ---------- guide ---------- */
+function renderGuide(){
+  const steps=S.lang==="he"?[
+    ["🎬","המטרה","יש לך <b>30 ימים</b> (חודש אחד) לעשות כמה שיותר כסף. בסוף החודש נמדד השווי שלך ומקבלים תואר."],
+    ["💰","קונים ומוכרים","בכל מקום בעולם המחירים שונים. קנה סחורה במקום זול ומכור אותה במקום שבו היא יקרה. שים לב ל<b>חדשות השוק</b> — מחיר שמזנק או צונח."],
+    ["🗺️","מודיעין שוק","לכל עיר יש <b>התמחות</b> גלויה (מה זול ומה מבוקש שם) — כך תכננ מסלול רווחי כבר מההתחלה. וב<b>לשונית מודיעין</b> נשמרים המחירים שראית בכל עיר שביקרת, כדי שתוכל להשוות רווחים לפני שאתה יוצא לדרך."],
+    ["🌍","נוסעים בעולם","עבור ליעד חדש דרך <b>ים 🚢</b> (זול ואיטי), <b>אוויר ✈️</b> (יקר ומהיר) או <b>יבשה 🚗</b>. כל נסיעה מקדמת את היומן."],
+    ["🧰","נערכים לדרך","לפני כל נסיעה אפשר לקנות <b>הגנה</b>: מאבטח מול כנופיות, מעטפה לשוטר, מסמכים מזויפים ורכב בריחה. ההגנה תקפה לנסיעה אחת בלבד."],
+    ["🚔","אירועי דרך","בדרך עלולים לחכות משטרה, מכס, כנופיות או סערה. עכשיו <b>אתה בוחר</b> איך להגיב — לשחד, לברוח, להילחם או לשתף פעולה. ההגנה שקנית מחזקת את הסיכויים שלך."],
+    ["🦈","הכריש","אפשר <b>לשאול כסף</b> מהכריש כדי להתחיל בגדול — אבל החוב <b>גדל כל יום</b> עד שתחזיר. מנוף מצוין, אבל אם תשכח להחזיר הוא יאכל לך את הרווח. שלם אותו בכספת לפני סוף החודש."],
+    ["🏦","כספת","כסף בכספת מוגן משוד בדרך. הפקד רווחים לפני נסיעה מסוכנת — אבל זכור שאי אפשר לבזבז אותו בזמן נסיעה."]
+  ]:[
+    ["🎬","The goal","You have <b>30 days</b> (one month) to make as much money as possible. At month's end your net worth earns you a title."],
+    ["💰","Buy & sell","Prices differ everywhere. Buy where a good is cheap, sell where it's expensive. Watch the <b>market news</b> for a spike or crash."],
+    ["🗺️","Market intel","Every city shows its <b>specialty</b> (what's cheap and what's in demand there), so you can plan a profitable route from day one. The <b>Intel tab</b> also remembers the prices you saw in each city you've visited, so you can compare profits before you set off."],
+    ["🌍","Travel the world","Move to a new city by <b>sea 🚢</b> (cheap, slow), <b>air ✈️</b> (fast, pricey) or <b>land 🚗</b>. Each trip advances the calendar."],
+    ["🧰","Prep for the road","Before a trip buy <b>protection</b>: a bodyguard vs crews, an envelope for police, fake papers, a getaway ride. It lasts one trip only."],
+    ["🚔","Road events","Police, customs, rival crews or storms may hit. Now <b>you choose</b> how to react — bribe, run, fight or cooperate. The protection you bought improves your odds."],
+    ["🦈","The loan shark","You can <b>borrow cash</b> to start big — but the debt <b>grows every day</b> until you repay. Great leverage, but forget to repay and it eats your profit. Pay it off at the bank before the month ends."],
+    ["🏦","The safe","Money in the safe can't be robbed on the road. Bank your profit before a risky trip — but you can't spend it while traveling."]
+  ];
+  document.getElementById('guideBody').innerHTML=steps.map(s=>`<div class="card" style="display:flex;gap:14px;align-items:flex-start">
+    <div style="font-size:30px">${s[0]}</div><div><div style="font-weight:900;font-size:16px;margin-bottom:4px">${s[1]}</div>
+    <div class="small">${s[2]}</div></div></div>`).join("")+`<div class="disc" style="margin-top:6px">${T('disclaimer')}</div>`;
+}
+
+/* ---------- share ---------- */
+function shareApp(){ const url=location.href.split('#')[0]; const txt=(S.name?S.name+": ":"")+"🎬 "+ (S.lang==='he'?'שיחקתי בסוחר הסם':'Playing Sam the Smuggler'); if(navigator.share){navigator.share({title:'Sam the Smuggler',text:txt,url}).catch(()=>{});} else { navigator.clipboard&&navigator.clipboard.writeText(url); toast('🔗'); } }
+function openLink(u){ window.open(u,'_blank'); }
+
+/* ---------- icons (draw fallback) ---------- */
+function drawIcon(){
+  // simple gold globe + pin on black, used if png missing
+  const c=document.createElement('canvas'); c.width=c.height=192; const x=c.getContext('2d');
+  x.fillStyle="#0a0a0a"; roundRect(x,0,0,192,192,42); x.fill();
+  x.strokeStyle="#e8c25a"; x.lineWidth=7; x.beginPath(); x.arc(96,100,52,0,7); x.stroke();
+  x.lineWidth=3.5; x.beginPath(); x.ellipse(96,100,22,52,0,0,7); x.stroke(); x.beginPath(); x.moveTo(44,100); x.lineTo(148,100); x.moveTo(52,74); x.lineTo(140,74); x.moveTo(52,126); x.lineTo(140,126); x.stroke();
+  x.fillStyle="#e8c25a"; x.font="bold 40px sans-serif"; x.textAlign="center"; x.fillText("$",96,152);
+  const url=c.toDataURL();
+  document.getElementById('homeLogo').src=url; document.getElementById('aboutLogo').src=url;
+}
+function roundRect(x,a,b,w,h,r){ x.beginPath(); x.moveTo(a+r,b); x.arcTo(a+w,b,a+w,b+h,r); x.arcTo(a+w,b+h,a,b+h,r); x.arcTo(a,b+h,a,b,r); x.arcTo(a,b,a+w,b,r); x.closePath(); }
+(function(){ const i=new Image(); i.onload=()=>{document.getElementById('homeLogo').src="icon-192.png";document.getElementById('aboutLogo').src="icon-192.png";}; i.onerror=drawIcon; i.src="icon-192.png"; })();
+
+/* ---------- boot ---------- */
+document.body.dataset.theme=S.theme; document.body.dataset.pal=S.pal;
+document.querySelector('meta[name=theme-color]').content=S.theme==='day'?'#f3efe6':'#0a0a0a';
+applyLang(); refreshHome();
+if('serviceWorker' in navigator){ window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{})); }
+</script>
+</body>
+</html>
