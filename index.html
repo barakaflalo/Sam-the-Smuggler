@@ -482,7 +482,7 @@ input,select{width:100%; padding:13px; border-radius:12px; border:1px solid var(
 
 <script>
 "use strict";
-const VERSION="1.4.1";
+const VERSION="1.4.2";
 
 /* ---------- storage shim ---------- */
 const mem={};
@@ -773,7 +773,7 @@ let tab="market", travelSel=null, travelMethod=null, travelProt={};
 // bank pays daily interest on a CAPPED balance (so you can't just park and win); loan shark charges a DYNAMIC daily rate by leverage
 const BANK={ rate:0.05, capMul:1.2 };            // interest only on the first (startCash*capMul) in the safe
 const LOANC={ floor:0.06, ceil:0.25, k:0.5 };    // rate = clamp(k*loan/equity, floor, ceil) — capped so it can't death-spiral
-const BM={ capPct:0.10, capBase:320, capGrow:1.4, priceIntel:1000, routeIntel:500, routeDays:4 };
+const BM={ capPct:0.40, capBase:320, capGrow:1.4, capMaxCost:1000000, priceIntel:1000, routeIntel:500, routeDays:4 };
 // your liquid equity = cash + safe − debt (cargo excluded; it's illiquid)
 function equity(){ return G.cash + G.bank - (G.loan||0); }
 // how much more you may borrow: total loan can't exceed your equity
@@ -1521,7 +1521,7 @@ function doBank(dir){ const q=window.__bq.q; if(dir==="dep"){G.cash-=q;G.bank+=q
 
 /* ---------- BLACK MARKET (upgrades + intel purchases) ---------- */
 function upgCap(){ return Math.max(10, Math.round(G.cap*BM.capPct)); }              // +10% of current
-function upgCost(){ return Math.round(BM.capBase*Math.pow(BM.capGrow, G.capBuys||0)); }
+function upgCost(){ return Math.min(BM.capMaxCost, Math.round(BM.capBase*Math.pow(BM.capGrow, G.capBuys||0))); }
 function viewBlack(){
   const c=upgCost(), add=upgCap();
   const routeActive=(G.routeUntil||0)>=G.day;
