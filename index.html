@@ -482,7 +482,7 @@ input,select{width:100%; padding:13px; border-radius:12px; border:1px solid var(
 
 <script>
 "use strict";
-const VERSION="1.4.0";
+const VERSION="1.4.1";
 
 /* ---------- storage shim ---------- */
 const mem={};
@@ -773,7 +773,7 @@ let tab="market", travelSel=null, travelMethod=null, travelProt={};
 // bank pays daily interest on a CAPPED balance (so you can't just park and win); loan shark charges a DYNAMIC daily rate by leverage
 const BANK={ rate:0.05, capMul:1.2 };            // interest only on the first (startCash*capMul) in the safe
 const LOANC={ floor:0.06, ceil:0.25, k:0.5 };    // rate = clamp(k*loan/equity, floor, ceil) — capped so it can't death-spiral
-const BM={ capPct:0.10, capBase:380, capGrow:1.5, priceIntel:1000, routeIntel:500, routeDays:4 };
+const BM={ capPct:0.10, capBase:320, capGrow:1.4, priceIntel:1000, routeIntel:500, routeDays:4 };
 // your liquid equity = cash + safe − debt (cargo excluded; it's illiquid)
 function equity(){ return G.cash + G.bank - (G.loan||0); }
 // how much more you may borrow: total loan can't exceed your equity
@@ -858,7 +858,7 @@ function reallyStart(){
   const d=DIFF[diff];
   G={ diff, day:1, maxDays:30, cash:d.cash, bank:0, cap:d.cap, startCash:d.cash,
       loc:"telaviv", stash:{}, market:null, intel:{},
-      loan:0, bankRate:BANK.rate, history:[], pressure:{}, routeUntil:0 };
+      loan:0, bankRate:BANK.rate, history:[], pressure:{}, routeUntil:0, capBuys:0 };
   G.market=genMarket("telaviv");
   recordIntel("telaviv");
   recordHistory();
@@ -878,7 +878,7 @@ function offerStartLoan(){
     <button class="btn ghost sm" style="margin-top:8px" onclick="closeSheet()">${T('loanSkip')}</button>`);
 }
 function takeStartLoan(amt){ G.cash+=amt; G.loan+=amt; recordHistory(); save("game",G); closeSheet(); updHUD(); switchTab('market'); toast(`🦈 +${money(amt)}`); }
-function continueGame(){ if(G){ if(!G.intel){ G.intel={}; recordIntel(G.loc); } if(G.bankRate==null)G.bankRate=BANK.rate; if(G.routeUntil==null)G.routeUntil=0; if(G.loan==null)G.loan=0; save("game",G); show('game'); renderGame(); } else startNewGame(); }
+function continueGame(){ if(G){ if(!G.intel){ G.intel={}; recordIntel(G.loc); } if(G.bankRate==null)G.bankRate=BANK.rate; if(G.routeUntil==null)G.routeUntil=0; if(G.loan==null)G.loan=0; if(G.capBuys==null)G.capBuys=0; save("game",G); show('game'); renderGame(); } else startNewGame(); }
 function confirmQuit(){
   openSheet(`<h3>${T('quit')}</h3><p class="small" style="margin:8px 0 16px">${T('quitInfo')}</p>
     <button class="btn danger" onclick="closeSheet();show('home');refreshHome()">${T('quitYes')}</button>
@@ -1521,7 +1521,7 @@ function doBank(dir){ const q=window.__bq.q; if(dir==="dep"){G.cash-=q;G.bank+=q
 
 /* ---------- BLACK MARKET (upgrades + intel purchases) ---------- */
 function upgCap(){ return Math.max(10, Math.round(G.cap*BM.capPct)); }              // +10% of current
-function upgCost(){ const steps=Math.max(0,Math.round((G.cap-DIFF[G.diff].cap)/Math.max(1,DIFF[G.diff].cap*BM.capPct))); return Math.round(BM.capBase*Math.pow(BM.capGrow,steps)); }
+function upgCost(){ return Math.round(BM.capBase*Math.pow(BM.capGrow, G.capBuys||0)); }
 function viewBlack(){
   const c=upgCost(), add=upgCap();
   const routeActive=(G.routeUntil||0)>=G.day;
@@ -1553,7 +1553,7 @@ function viewBlack(){
     <button class="btn sm" style="margin-top:12px" ${BM.routeIntel>G.cash?'disabled':''} onclick="buyRouteIntel()">${T('buyBtn')} · ${money(BM.routeIntel)}</button>
   </div>`;
 }
-function buyCap(){ const c=upgCost(); if(c>G.cash)return; const add=upgCap(); G.cash-=c; G.cap+=add; beep(440,.1); save("game",G); updHUD(); switchTab('black'); toast(`🎒 +${add}`); }
+function buyCap(){ const c=upgCost(); if(c>G.cash)return; const add=upgCap(); G.cash-=c; G.cap+=add; G.capBuys=(G.capBuys||0)+1; beep(440,.1); save("game",G); updHUD(); switchTab('black'); toast(`🎒 +${add}`); }
 function buyPriceIntel(){
   if(BM.priceIntel>G.cash){ toast(T('cantAfford')); return; }
   // choose a city (other than current) to get a fresh price snapshot
