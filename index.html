@@ -238,7 +238,17 @@ table.intel td.hi{color:var(--bad); font-weight:800}
 .hudloan b{color:var(--bad)}
 .hudloan .hlrate{font-size:11px; opacity:.85}
 .loanCard{margin-top:12px; border-color:#e2604f44}
-/* end-screen net-worth graph */
+/* route forecast */
+.rtag{font-size:10px; font-weight:800; color:var(--good); background:#5ec27a1a; padding:2px 7px; border-radius:10px; margin-inline-start:6px}
+.fcline{font-weight:700}
+.fcline.hi{color:var(--bad)} .fcline.mid{color:var(--warn)} .fcline.lo{color:var(--good)}
+.fcline .fcd{letter-spacing:1px}
+.fcboard{display:flex; flex-direction:column; gap:6px}
+.fcrow{display:flex; align-items:center; justify-content:space-between; gap:8px; padding:9px 11px; background:var(--bg2); border:1px solid var(--line); border-radius:12px; font-size:13px}
+.fcrow .fcname{font-weight:800}
+.fcrow .fcthreat{color:var(--dim); font-size:12px; flex:1; text-align:center}
+.fcrow .fcdanger{letter-spacing:1px; font-weight:900}
+.fcrow .fcdanger.hi{color:var(--bad)} .fcrow .fcdanger.mid{color:var(--warn)} .fcrow .fcdanger.lo{color:var(--good)}/* end-screen net-worth graph */
 .endgraph{margin:14px 0 6px}
 .graphhd{font:800 12px Georgia,serif; color:var(--gold); margin-bottom:8px; text-align:center}
 .wgraph{width:100%; height:120px; display:block; background:var(--bg2); border:1px solid var(--line); border-radius:14px}
@@ -472,7 +482,7 @@ input,select{width:100%; padding:13px; border-radius:12px; border:1px solid var(
 
 <script>
 "use strict";
-const VERSION="1.3.0";
+const VERSION="1.4.0";
 
 /* ---------- storage shim ---------- */
 const mem={};
@@ -560,6 +570,15 @@ L.en={
   loanSharkT:"Loan shark 🦈", loanOwed:"You owe", loanRateLbl:"grows/day", borrow:"Borrow", repay:"Repay",
   loanMaxed:"You're at your borrowing limit.", loanNone:"No debt — you're clean.", debtLbl:"Debt",
   worthOverTime:"Net worth over the month", debtAtEnd:"Debt", grossWorth:"Cash + safe + cargo",
+  loanOfferX2:"Want more capital to start big? The shark lends up to your own worth — but the more you borrow relative to what you have, the steeper the daily interest. Repay before the month ends, or it eats your score.",
+  loanOpen:"Talk to the shark", loanRateNote:"scales with how much you owe vs. your worth",
+  loanDynNote:"rate scales with leverage", loanRateAfter:"Daily rate after this", bankRateLbl:"Safe interest",
+  buyPricesT:"Buy current prices 📡", buyPricesDesc:"A fresh price snapshot of any city — right now.",
+  buyBtn:"Buy", pickCityIntel:"Pick a city — {c} for today's prices there.",
+  buyRouteT:"Route intel 🛰️", buyRouteDesc:"Scout what's waiting on the roads out of here — for a few days.",
+  routeActive:"Active until", routeBoardT:"Route forecast", routeBoardInfo:"What's likely on each route. A forecast, not a certainty. Valid until day {d}.",
+  toTravel:"To the map", routeOnTag:"forecast on", cityNeutral:"neutral market",
+  fcGang:"gang country", fcCustoms:"heavy customs", fcPolice:"police active", fcStorm:"rough seas", fcClear:"looks clear",
   newDay:"arrived in", pricesShift:"Prices have shifted.",
   intelTab:"Intel", intelTitle:"Market intel", city:"City",
   intelInfo:"Prices you saw on your last visit to each city. They drift day to day, so treat them as a guide — not gospel. Cities you haven't visited stay hidden.",
@@ -647,6 +666,15 @@ L.he={
   loanSharkT:"כריש הלוואות 🦈", loanOwed:"אתה חייב", loanRateLbl:"גדל/יום", borrow:"שאל", repay:"החזר",
   loanMaxed:"הגעת לתקרת ההלוואה.", loanNone:"אין חוב — אתה נקי.", debtLbl:"חוב",
   worthOverTime:"שווי נקי לאורך החודש", debtAtEnd:"חוב", grossWorth:"מזומן + כספת + מטען",
+  loanOfferX2:"רוצה יותר הון כדי להתחיל בגדול? הכריש מלווה עד גובה השווי שלך — אבל ככל שתשאל יותר ביחס למה שיש לך, הריבית היומית תלולה יותר. תחזיר לפני סוף החודש, אחרת זה יאכל לך את הניקוד.",
+  loanOpen:"דבר עם הכריש", loanRateNote:"משתנה לפי כמה אתה חייב מול השווי שלך",
+  loanDynNote:"הריבית משתנה לפי המינוף", loanRateAfter:"ריבית יומית אחרי הפעולה", bankRateLbl:"ריבית על הכספת",
+  buyPricesT:"קניית מחירים עדכניים 📡", buyPricesDesc:"תמונת מחירים טרייה של עיר לבחירתך — עכשיו.",
+  buyBtn:"קנה", pickCityIntel:"בחר עיר — {c} עבור המחירים שם היום.",
+  buyRouteT:"מודיעין מסלולים 🛰️", buyRouteDesc:"גלה מה מחכה בדרכים מכאן — לכמה ימים.",
+  routeActive:"פעיל עד", routeBoardT:"תחזית מסלולים", routeBoardInfo:"מה צפוי בכל מסלול. תחזית, לא ודאות. בתוקף עד יום {d}.",
+  toTravel:"למפה", routeOnTag:"תחזית פעילה", cityNeutral:"שוק ניטרלי",
+  fcGang:"שטח כנופיות", fcCustoms:"מכס כבד", fcPolice:"משטרה פעילה", fcStorm:"ים סוער", fcClear:"נראה נקי",
   newDay:"הגעת ל", pricesShift:"המחירים השתנו.",
   intelTab:"מודיעין", intelTitle:"מודיעין שוק", city:"עיר",
   intelInfo:"המחירים שראית בביקור האחרון שלך בכל עיר. הם משתנים מיום ליום, אז זה כיוון — לא הבטחה. ערים שלא ביקרת בהן נשארות מוסתרות.",
@@ -742,8 +770,18 @@ const DIFF={ easy:{cash:2500,cap:120,evt:.8,mul:.85}, normal:{cash:2000,cap:100,
 let G=load("game",null);
 let tab="market", travelSel=null, travelMethod=null, travelProt={};
 
-// loan shark: interest per day, borrow ceilings & opening offer per difficulty
-const LOAN={ rate:{easy:.04,normal:.05,hard:.06}, max:{easy:3500,normal:4500,hard:5500}, offer:{easy:2000,normal:3000,hard:4000} };
+// bank pays daily interest on a CAPPED balance (so you can't just park and win); loan shark charges a DYNAMIC daily rate by leverage
+const BANK={ rate:0.05, capMul:1.2 };            // interest only on the first (startCash*capMul) in the safe
+const LOANC={ floor:0.06, ceil:0.25, k:0.5 };    // rate = clamp(k*loan/equity, floor, ceil) — capped so it can't death-spiral
+const BM={ capPct:0.10, capBase:380, capGrow:1.5, priceIntel:1000, routeIntel:500, routeDays:4 };
+// your liquid equity = cash + safe − debt (cargo excluded; it's illiquid)
+function equity(){ return G.cash + G.bank - (G.loan||0); }
+// how much more you may borrow: total loan can't exceed your equity
+function borrowRoom(){ return Math.max(0, equity() - (G.loan||0)); }
+// dynamic daily loan rate: more leverage → steeper rate (capped)
+function loanRate(){ if(!G.loan || G.loan<=0) return LOANC.floor; const e=Math.max(1,equity()); return Math.min(LOANC.ceil, Math.max(LOANC.floor, LOANC.k*G.loan/e)); }
+// only the first (startCash*capMul) of banked money earns interest — keeps the safe useful without making parking a winning strategy
+function bankInterestBase(){ return Math.min(G.bank, Math.round((G.startCash||2000)*BANK.capMul)); }
 // price pressure: buying pushes a good's local price up, selling pushes it down; decays back toward 1
 const PRESSURE={ buy:.018, sell:.015, upCap:2.4, dnCap:.45, decay:.16 };
 
@@ -754,7 +792,7 @@ function rnd(a,b){ return a+Math.random()*(b-a); }
 function netWorth(){ let g=0; if(G.market) for(const id in G.stash) g+=G.stash[id]*(G.market.prices[id]||0); return G.cash+G.bank+g-(G.loan||0); }
 function recordHistory(){ if(!G.history)G.history=[]; const last=G.history[G.history.length-1]; const w=Math.round(netWorth()); if(last&&last.day===G.day){ last.worth=w; } else { G.history.push({day:G.day, worth:w}); } }
 // advance the calendar; the loan compounds each day
-function advanceDays(n){ for(let i=0;i<n;i++){ G.day++; if(G.loan>0) G.loan=Math.round(G.loan*(1+(G.loanRate||0))); } }
+function advanceDays(n){ for(let i=0;i<n;i++){ G.day++; if(G.bank>0 && G.bankRate){ const earn=Math.round(bankInterestBase()*G.bankRate); G.bank+=earn; } if(G.loan>0) G.loan=Math.round(G.loan*(1+loanRate())); } }
 function beep(f=440,d=.08,t="sine",v=.05){ if(!S.sound)return; try{const c=beep.c||(beep.c=new (window.AudioContext||window.webkitAudioContext)()); const o=c.createOscillator(),g=c.createGain(); o.type=t; o.frequency.value=f; g.gain.value=v; o.connect(g); g.connect(c.destination); o.start(); g.gain.exponentialRampToValueAtTime(.0001,c.currentTime+d); o.stop(c.currentTime+d);}catch(e){} }
 
 /* ---------- market generation ---------- */
@@ -820,7 +858,7 @@ function reallyStart(){
   const d=DIFF[diff];
   G={ diff, day:1, maxDays:30, cash:d.cash, bank:0, cap:d.cap, startCash:d.cash,
       loc:"telaviv", stash:{}, market:null, intel:{},
-      loan:0, loanRate:LOAN.rate[diff], history:[], pressure:{} };
+      loan:0, bankRate:BANK.rate, history:[], pressure:{}, routeUntil:0 };
   G.market=genMarket("telaviv");
   recordIntel("telaviv");
   recordHistory();
@@ -832,15 +870,15 @@ function reallyStart(){
   offerStartLoan();
 }
 function offerStartLoan(){
-  const amt=LOAN.offer[G.diff], rate=Math.round(G.loanRate*100);
+  const rate=Math.round(loanRate()*100), cap=borrowRoom();
   openSheet(`<div style="text-align:center;font-size:40px">🦈</div>
     <h3 style="text-align:center">${T('loanOfferT')}</h3>
-    <p class="small" style="margin:8px 2px 14px;text-align:center;line-height:1.6">${T('loanOfferX').replace('{amt}',money(amt)).replace('{rate}',rate+'%')}</p>
-    <button class="btn primary" onclick="takeStartLoan(${amt})">${T('loanTake')} ${money(amt)}</button>
+    <p class="small" style="margin:8px 2px 14px;text-align:center;line-height:1.6">${T('loanOfferX2')}</p>
+    <button class="btn primary" onclick="closeSheet();switchTab('bank');loanMove('borrow')">${T('loanOpen')}</button>
     <button class="btn ghost sm" style="margin-top:8px" onclick="closeSheet()">${T('loanSkip')}</button>`);
 }
 function takeStartLoan(amt){ G.cash+=amt; G.loan+=amt; recordHistory(); save("game",G); closeSheet(); updHUD(); switchTab('market'); toast(`🦈 +${money(amt)}`); }
-function continueGame(){ if(G){ if(!G.intel){ G.intel={}; recordIntel(G.loc); save("game",G); } show('game'); renderGame(); } else startNewGame(); }
+function continueGame(){ if(G){ if(!G.intel){ G.intel={}; recordIntel(G.loc); } if(G.bankRate==null)G.bankRate=BANK.rate; if(G.routeUntil==null)G.routeUntil=0; if(G.loan==null)G.loan=0; save("game",G); show('game'); renderGame(); } else startNewGame(); }
 function confirmQuit(){
   openSheet(`<h3>${T('quit')}</h3><p class="small" style="margin:8px 0 16px">${T('quitInfo')}</p>
     <button class="btn danger" onclick="closeSheet();show('home');refreshHome()">${T('quitYes')}</button>
@@ -859,7 +897,7 @@ function updHUD(){
   document.getElementById('hudBank').textContent=money(G.bank);
   document.getElementById('hudCap').textContent=stashCount()+"/"+G.cap;
   const hl=document.getElementById('hudLoan');
-  if(hl){ if(G.loan>0){ hl.style.display='flex'; hl.innerHTML=`<span>🦈 ${T('debtLbl')}: <b>${money(G.loan)}</b></span><span class="hlrate">+${Math.round((G.loanRate||0)*100)}%/${T('dayWord')}</span>`; } else hl.style.display='none'; }
+  if(hl){ if(G.loan>0){ hl.style.display='flex'; hl.innerHTML=`<span>🦈 ${T('debtLbl')}: <b>${money(G.loan)}</b></span><span class="hlrate">+${Math.round(loanRate()*100)}%/${T('dayWord')}</span>`; } else hl.style.display='none'; }
 }
 function renderGame(){ updHUD(); switchTab(tab); }
 function switchTab(t){
@@ -1033,17 +1071,20 @@ function viewTravel(){
   body+=specialtyTags(travelSel);
   body+=destProfitPanel(travelSel);
   // method selection
-  body+=`<div class="sectitle">${T('pickMethod')}</div>`;
+  const routeOn=(G.routeUntil||0)>=G.day;
+  body+=`<div class="sectitle">${T('pickMethod')}${routeOn?` <span class="rtag">🛰️ ${T('routeOnTag')}</span>`:''}</div>`;
   for(const mk in METHODS){
     const m=METHODS[mk], c=Math.round(travelCost(travelSel,mk));
     const rl=riskLevel(travelSel,mk);
     const nm={sea:T('bySea'),air:T('byAir'),land:T('byLand')}[mk];
     const ds={sea:T('seaDesc'),air:T('airDesc'),land:T('landDesc')}[mk];
+    let fc="";
+    if(routeOn){ const f=methodForecast(travelSel,mk); fc=`<div class="osub fcline ${f.cls}">${f.em} ${f.label} · <span class="fcd">${f.dots}</span></div>`; }
     body+=`<div class="opt ${travelMethod===mk?'on':''}" onclick="selMethod('${mk}')">
       <div class="oem">${m.em}</div>
       <div class="omid"><div class="onm">${nm}</div>
         <div class="osub">${money(c)} · ${m.days} ${T('days')} · ${T('risk')} <span class="risk">${riskDots(rl)}</span></div>
-        <div class="osub">${ds}</div></div>
+        ${fc||`<div class="osub">${ds}</div>`}</div>
       <div class="ock">✓</div></div>`;
   }
   if(travelMethod){
@@ -1415,13 +1456,13 @@ function closeEvent(){ const f=window.__afterEvent; window.__afterEvent=null; if
 
 /* ---------- BANK ---------- */
 function viewBank(){
-  const rate=Math.round((G.loanRate||0)*100), maxLoan=LOAN.max[G.diff], room=Math.max(0,maxLoan-(G.loan||0));
+  const brate=Math.round((G.bankRate||0)*100), lrate=Math.round(loanRate()*100), room=borrowRoom();
   let loanCard;
   if(G.loan>0){
     loanCard=`<div class="card loanCard">
       <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px"><div style="font-size:30px">🦈</div>
         <div style="flex:1"><div style="font-weight:900">${T('loanSharkT')}</div>
-        <div class="small">${T('loanRateLbl')}: <b style="color:var(--bad)">${rate}%</b></div></div></div>
+        <div class="small">${T('loanRateLbl')}: <b style="color:var(--bad)">${lrate}%</b> · ${T('loanRateNote')}</div></div></div>
       <div class="kv"><span>${T('loanOwed')}</span><b style="color:var(--bad)">${money(G.loan)}</b></div>
       <div class="row" style="margin-top:10px">
         <button class="btn" onclick="loanMove('repay')" ${G.cash<=0?'disabled':''}>${T('repay')}</button>
@@ -1431,16 +1472,17 @@ function viewBank(){
     loanCard=`<div class="card loanCard">
       <div style="display:flex;align-items:center;gap:10px">
         <div style="font-size:30px">🦈</div>
-        <div style="flex:1"><div style="font-weight:900">${T('loanSharkT')}</div><div class="small">${T('loanNone')} · ${T('loanRateLbl')} ${rate}%</div></div>
+        <div style="flex:1"><div style="font-weight:900">${T('loanSharkT')}</div><div class="small">${T('loanNone')} · ${T('loanDynNote')}</div></div>
         <button class="btn ghost sm" style="width:auto;padding:8px 14px" onclick="loanMove('borrow')" ${room<=0?'disabled':''}>${T('borrow')}</button>
       </div></div>`;
   }
   return `<div class="card">
     <div style="text-align:center;font-size:44px">🏦</div>
     <h3 style="text-align:center;font-weight:900;font-size:18px;margin:4px 0 6px">${T('bankTitle')}</h3>
-    <p class="small" style="text-align:center;margin-bottom:14px">${T('bankInfo')}</p>
+    <p class="small" style="text-align:center;margin-bottom:12px">${T('bankInfo')}</p>
     <div class="kv"><span>${T('onHand')}</span><b>${money(G.cash)}</b></div>
     <div class="kv"><span>${T('inSafe')}</span><b style="color:var(--gold)">${money(G.bank)}</b></div>
+    <div class="kv"><span>💹 ${T('bankRateLbl')}</span><b style="color:var(--good)">+${brate}%/${T('dayWord')}</b></div>
   </div>
   <div class="row">
     <button class="btn" onclick="bankMove('dep')" ${G.cash<=0?'disabled':''}>⬇️ ${T('deposit')}</button>
@@ -1449,16 +1491,17 @@ function viewBank(){
   ${loanCard}`;
 }
 function loanMove(dir){
-  const maxLoan=LOAN.max[G.diff];
-  const max = dir==="borrow" ? Math.max(0,maxLoan-(G.loan||0)) : Math.min(G.cash, G.loan||0);
+  const max = dir==="borrow" ? borrowRoom() : Math.min(G.cash, G.loan||0);
   if(max<=0){ toast(dir==="borrow"?T('loanMaxed'):''); return; }
   let q=max;
+  const rateAt=v=>{ const e=Math.max(1,equity()); return Math.min(LOANC.ceil,Math.max(LOANC.floor,LOANC.k*((G.loan||0)+(dir==='borrow'?v:-v))/e)); };
   openSheet(`<div style="text-align:center;font-size:34px">🦈</div>
     <h3>${dir==='borrow'?T('borrow'):T('repay')}</h3>
     <div class="qtybar"><button onclick="lq(-100)">−</button><div class="qv" id="qv">${q}</div><button onclick="lq(100)">＋</button></div>
     <input type="range" class="qrange" id="qr" min="0" max="${max}" value="${q}" oninput="lqSet(this.value)">
-    <button class="btn primary" style="margin-top:10px" onclick="doLoan('${dir}')">${dir==='borrow'?T('borrow'):T('repay')} <span id="qtot">${money(q)}</span></button>`);
-  window.__lq={max,q,set(v){this.q=Math.max(0,Math.min(this.max,v|0));document.getElementById('qv').textContent=this.q;document.getElementById('qr').value=this.q;document.getElementById('qtot').textContent=money(this.q);}};
+    <div class="small" style="text-align:center;margin:8px 0 2px">${T('loanRateAfter')}: <b id="lrate" style="color:var(--bad)">${Math.round(rateAt(q)*100)}%</b>/${T('dayWord')}</div>
+    <button class="btn primary" style="margin-top:8px" onclick="doLoan('${dir}')">${dir==='borrow'?T('borrow'):T('repay')} <span id="qtot">${money(q)}</span></button>`);
+  window.__lq={max,q,dir,set(v){this.q=Math.max(0,Math.min(this.max,v|0));document.getElementById('qv').textContent=this.q;document.getElementById('qr').value=this.q;document.getElementById('qtot').textContent=money(this.q);const lr=document.getElementById('lrate');if(lr)lr.textContent=Math.round(rateAt(this.q)*100)+'%';}};
 }
 function lq(d){window.__lq.set(window.__lq.q+d)}
 function lqSet(v){window.__lq.set(+v)}
@@ -1476,22 +1519,108 @@ function bq(d){window.__bq.set(window.__bq.q+d)}
 function bqSet(v){window.__bq.set(+v)}
 function doBank(dir){ const q=window.__bq.q; if(dir==="dep"){G.cash-=q;G.bank+=q;}else{G.bank-=q;G.cash+=q;} beep(500,.06); save("game",G); closeSheet(); updHUD(); switchTab('bank'); }
 
-/* ---------- BLACK MARKET (upgrades) ---------- */
-function upgCost(){ return Math.round(400*Math.pow(1.6, Math.max(0,(G.cap-DIFF[G.diff].cap)/40))); }
+/* ---------- BLACK MARKET (upgrades + intel purchases) ---------- */
+function upgCap(){ return Math.max(10, Math.round(G.cap*BM.capPct)); }              // +10% of current
+function upgCost(){ const steps=Math.max(0,Math.round((G.cap-DIFF[G.diff].cap)/Math.max(1,DIFF[G.diff].cap*BM.capPct))); return Math.round(BM.capBase*Math.pow(BM.capGrow,steps)); }
 function viewBlack(){
-  const c=upgCost();
+  const c=upgCost(), add=upgCap();
+  const routeActive=(G.routeUntil||0)>=G.day;
   return `<div class="sectitle">${T('blackTitle')} 🕶️</div>
   <div class="card">
     <div style="display:flex;align-items:center;gap:12px">
-      <div style="font-size:34px">🎒</div>
-      <div style="flex:1"><div style="font-weight:900;font-size:16px">${T('capUpg')} (+40)</div>
+      <div style="font-size:32px">🎒</div>
+      <div style="flex:1"><div style="font-weight:900;font-size:16px">${T('capUpg')} (+${add})</div>
       <div class="small">${T('capDesc')}</div>
       <div class="small">${T('capNow')}: <b style="color:var(--gold)">${G.cap}</b></div></div>
     </div>
     <button class="btn primary sm" style="margin-top:12px" ${c>G.cash?'disabled':''} onclick="buyCap()">${T('buyUpg')} · ${money(c)}</button>
+  </div>
+  <div class="card">
+    <div style="display:flex;align-items:center;gap:12px">
+      <div style="font-size:32px">📡</div>
+      <div style="flex:1"><div style="font-weight:900;font-size:16px">${T('buyPricesT')}</div>
+      <div class="small">${T('buyPricesDesc')}</div></div>
+    </div>
+    <button class="btn sm" style="margin-top:12px" ${BM.priceIntel>G.cash?'disabled':''} onclick="buyPriceIntel()">${T('buyBtn')} · ${money(BM.priceIntel)}</button>
+  </div>
+  <div class="card">
+    <div style="display:flex;align-items:center;gap:12px">
+      <div style="font-size:32px">🛰️</div>
+      <div style="flex:1"><div style="font-weight:900;font-size:16px">${T('buyRouteT')}</div>
+      <div class="small">${T('buyRouteDesc')}</div>
+      ${routeActive?`<div class="small" style="color:var(--good)">${T('routeActive')} · ${T('dayWord')} ${G.routeUntil}</div>`:''}</div>
+    </div>
+    <button class="btn sm" style="margin-top:12px" ${BM.routeIntel>G.cash?'disabled':''} onclick="buyRouteIntel()">${T('buyBtn')} · ${money(BM.routeIntel)}</button>
   </div>`;
 }
-function buyCap(){ const c=upgCost(); if(c>G.cash)return; G.cash-=c; G.cap+=40; beep(440,.1); save("game",G); updHUD(); switchTab('black'); toast(`🎒 +40`); }
+function buyCap(){ const c=upgCost(); if(c>G.cash)return; const add=upgCap(); G.cash-=c; G.cap+=add; beep(440,.1); save("game",G); updHUD(); switchTab('black'); toast(`🎒 +${add}`); }
+function buyPriceIntel(){
+  if(BM.priceIntel>G.cash){ toast(T('cantAfford')); return; }
+  // choose a city (other than current) to get a fresh price snapshot
+  const rows=Object.keys(LOCS).filter(l=>l!==G.loc).map(id=>
+    `<button class="btn evchoice" onclick="doPriceIntel('${id}')"><span class="che">${LOCS[id].em}</span><span class="chl"><b>${locname(id)}</b><small>${specialtyLine(id)}</small></span></button>`).join('');
+  openSheet(`<div style="text-align:center;font-size:32px">📡</div><h3>${T('buyPricesT')}</h3>
+    <p class="small" style="text-align:center;margin:6px 2px 12px">${T('pickCityIntel').replace('{c}',money(BM.priceIntel))}</p>
+    <div class="evchoices">${rows}</div>`);
+}
+function doPriceIntel(id){
+  if(BM.priceIntel>G.cash){ toast(T('cantAfford')); closeSheet(); return; }
+  G.cash-=BM.priceIntel;
+  const savedLoc=G.loc; // genMarket reads G.diff + pressure(loc); build a fresh snapshot for `id`
+  const snap=genMarket(id);
+  G.intel[id]={prices:{...snap.prices}, day:G.day};
+  beep(620,.1); save("game",G); closeSheet(); updHUD(); tab='intel'; switchTab('intel');
+  toast(`📡 ${locname(id)}`);
+}
+function buyRouteIntel(){
+  if(BM.routeIntel>G.cash){ toast(T('cantAfford')); return; }
+  G.cash-=BM.routeIntel; G.routeUntil=G.day+BM.routeDays;
+  beep(620,.1); save("game",G); updHUD();
+  // show the forecast board immediately
+  const rows=Object.keys(LOCS).filter(l=>l!==G.loc).map(id=>{
+    const f=routeForecast(id);
+    return `<div class="fcrow"><span class="fcname">${LOCS[id].em} ${locname(id)}</span><span class="fcthreat">${f.em} ${f.label}</span><span class="fcdanger ${f.cls}">${f.dots}</span></div>`;
+  }).join('');
+  openSheet(`<div style="text-align:center;font-size:32px">🛰️</div><h3>${T('routeBoardT')}</h3>
+    <p class="small" style="text-align:center;margin:6px 2px 12px">${T('routeBoardInfo').replace('{d}',G.routeUntil)}</p>
+    <div class="fcboard">${rows}</div>
+    <button class="btn primary" style="margin-top:12px" onclick="closeSheet();switchTab('travel')">${T('toTravel')}</button>`);
+}
+// probabilistic forecast for a route to `dest`: dominant threat + danger level (from riskLevel across methods)
+function routeForecast(dest){
+  const heat=LOCS[dest].heat, gang=LOCS[dest].gang||1;
+  // aggregate danger across methods
+  let dmax=0; for(const mk of ['sea','air','land']) dmax=Math.max(dmax, riskLevel(dest,mk));
+  // dominant threat by dest profile
+  let em,label,type;
+  if(gang>1.2){ em='🔫'; label=T('fcGang'); type='gang'; }
+  else if(heat>=0.8){ em='🛃'; label=T('fcCustoms'); type='customs'; }
+  else if(heat>=0.55){ em='🚔'; label=T('fcPolice'); type='police'; }
+  else { em='🌊'; label=T('fcStorm'); type='storm'; }
+  const lvl = dmax>=.42?3:(dmax>=.28?2:1);
+  const dots = '●'.repeat(lvl)+'○'.repeat(3-lvl);
+  const cls = lvl>=3?'hi':(lvl===2?'mid':'lo');
+  return {em,label,type,dots,cls,lvl,danger:dmax};
+}
+// per-method threat forecast (dominant threat possible on THIS method + danger level)
+function methodForecast(dest,mk){
+  const m=METHODS[mk], heat=LOCS[dest].heat, gang=LOCS[dest].gang||1, dmax=riskLevel(dest,mk);
+  const cand=[];
+  if(m.storm>0) cand.push(['storm','🌊',T('fcStorm'), m.storm*.4]);
+  if(m.police>0) cand.push(['police','🚔',T('fcPolice'), m.police*heat]);
+  if(m.customs>0) cand.push(['customs','🛃',T('fcCustoms'), m.customs*heat]);
+  if(m.gang>0) cand.push(['gang','🔫',T('fcGang'), m.gang*.3*gang]);
+  cand.sort((a,b)=>b[3]-a[3]);
+  const top=cand[0]||['quiet','🌤️',T('fcClear'),0];
+  const lvl = dmax>=.42?3:(dmax>=.26?2:1);
+  return {type:top[0],em:top[1],label:top[2],dots:'●'.repeat(lvl)+'○'.repeat(3-lvl),cls:lvl>=3?'hi':(lvl===2?'mid':'lo'),lvl};
+}
+function specialtyLine(id){
+  const s=citySpecialty(id), parts=[];
+  if(s.cheap.length)parts.push(`🔻${s.cheap.map(x=>x.em).join('')}`);
+  if(s.hot.length)parts.push(`🔺${s.hot.map(x=>x.em).join('')}`);
+  return parts.join(' · ')||T('cityNeutral');
+}
 
 /* ---------- END / SCORE ---------- */
 const RANKS_HE=[[3500,"חובבן שכונה 🥴"],[8000,"מבריח מתחיל 🚬"],[18000,"סוחר מכובד 😎"],[45000,"ברון מקומי 👑"],[Infinity,"אל הקרטל 🐐"]];
@@ -1620,7 +1749,8 @@ function renderGuide(){
     ["🧰","נערכים לדרך","לפני כל נסיעה אפשר לקנות <b>הגנה</b>: מאבטח מול כנופיות, מעטפה לשוטר, מסמכים מזויפים ורכב בריחה. ההגנה תקפה לנסיעה אחת בלבד."],
     ["🚔","אירועי דרך","בדרך עלולים לחכות משטרה, מכס, כנופיות או סערה. עכשיו <b>אתה בוחר</b> איך להגיב — לשחד, לברוח, להילחם או לשתף פעולה. ההגנה שקנית מחזקת את הסיכויים שלך."],
     ["🦈","הכריש","אפשר <b>לשאול כסף</b> מהכריש כדי להתחיל בגדול — אבל החוב <b>גדל כל יום</b> עד שתחזיר. מנוף מצוין, אבל אם תשכח להחזיר הוא יאכל לך את הרווח. שלם אותו בכספת לפני סוף החודש."],
-    ["🏦","כספת","כסף בכספת מוגן משוד בדרך. הפקד רווחים לפני נסיעה מסוכנת — אבל זכור שאי אפשר לבזבז אותו בזמן נסיעה."]
+    ["🏦","כספת וריבית","כסף בכספת מוגן משוד — ו<b>צובר ריבית כל יום</b>. הפקד רווחים לפני נסיעה מסוכנת. (אי אפשר לבזבז אותו בזמן נסיעה, והריבית מוגבלת לסכום מסוים כדי שהמשחק יישאר על סחר.)"],
+    ["🛰️","שוק שחור","שם אפשר להגדיל את התיק, <b>לקנות מחירים עדכניים</b> של עיר רחוקה (כדי לדעת מה כדאי להביא), ו<b>לקנות תחזית מסלולים</b> שמראה מה מחכה בדרך — כנופיות, מכס או משטרה — לפני שיוצאים."]
   ]:[
     ["🎬","The goal","You have <b>30 days</b> (one month) to make as much money as possible. At month's end your net worth earns you a title."],
     ["💰","Buy & sell","Prices differ everywhere. Buy where a good is cheap, sell where it's expensive. Watch the <b>market news</b> for a spike or crash."],
@@ -1629,7 +1759,8 @@ function renderGuide(){
     ["🧰","Prep for the road","Before a trip buy <b>protection</b>: a bodyguard vs crews, an envelope for police, fake papers, a getaway ride. It lasts one trip only."],
     ["🚔","Road events","Police, customs, rival crews or storms may hit. Now <b>you choose</b> how to react — bribe, run, fight or cooperate. The protection you bought improves your odds."],
     ["🦈","The loan shark","You can <b>borrow cash</b> to start big — but the debt <b>grows every day</b> until you repay. Great leverage, but forget to repay and it eats your profit. Pay it off at the bank before the month ends."],
-    ["🏦","The safe","Money in the safe can't be robbed on the road. Bank your profit before a risky trip — but you can't spend it while traveling."]
+    ["🏦","Safe & interest","Money in the safe can't be robbed — and it <b>earns interest every day</b>. Bank your profit before a risky trip. (You can't spend it while traveling, and interest is capped so the game stays about trading.)"],
+    ["🛰️","Black market","There you can grow your bag, <b>buy current prices</b> of a far city (to know what to bring), and <b>buy route intel</b> that shows what's waiting on the roads — gangs, customs or police — before you set off."]
   ];
   document.getElementById('guideBody').innerHTML=steps.map(s=>`<div class="card" style="display:flex;gap:14px;align-items:flex-start">
     <div style="font-size:30px">${s[0]}</div><div><div style="font-weight:900;font-size:16px;margin-bottom:4px">${s[1]}</div>
