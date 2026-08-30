@@ -1,5 +1,5 @@
 /* Sam the Smuggler — AppNest service worker (network-first shell) */
-const VERSION = "samtrader-v7";
+const VERSION = "samtrader-v8";
 const CORE = ["./", "./index.html", "./manifest.json", "./icon-192.png", "./icon-512.png"];
 
 self.addEventListener("install", e => {
