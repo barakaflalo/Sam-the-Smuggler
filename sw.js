@@ -20,8 +20,60 @@
 })();
 
 /* Sam the Smuggler — AppNest service worker (network-first shell) */
-const VERSION = "samtrader-v9";
-const CORE = ["./", "./manifest.json", "./icon-192.png", "./icon-512.png"];
+const VERSION = "samtrader-v10";
+const CORE = ["./", "./manifest.json", "./icon-192.png", "./icon-512.png",
+  "./art/bm_bag.webp",
+  "./art/bm_prices.webp",
+  "./art/bm_route.webp",
+  "./art/char_cop.webp",
+  "./art/char_customs.webp",
+  "./art/char_dealer.webp",
+  "./art/char_gang.webp",
+  "./art/char_hacker.webp",
+  "./art/char_sam.webp",
+  "./art/char_shark.webp",
+  "./art/city_amsterdam.webp",
+  "./art/city_bangkok.webp",
+  "./art/city_bogota.webp",
+  "./art/city_dubai.webp",
+  "./art/city_kingston.webp",
+  "./art/city_marrakech.webp",
+  "./art/city_miami.webp",
+  "./art/city_moscow.webp",
+  "./art/city_telaviv.webp",
+  "./art/city_tijuana.webp",
+  "./art/end_broke.webp",
+  "./art/end_win.webp",
+  "./art/ev_customs.webp",
+  "./art/ev_escape.webp",
+  "./art/ev_fight_win.webp",
+  "./art/ev_gang.webp",
+  "./art/ev_lucky_cash.webp",
+  "./art/ev_lucky_crate.webp",
+  "./art/ev_police.webp",
+  "./art/ev_quiet.webp",
+  "./art/ev_storm.webp",
+  "./art/good_candy.webp",
+  "./art/good_diamond.webp",
+  "./art/good_dust.webp",
+  "./art/good_grass.webp",
+  "./art/good_pills.webp",
+  "./art/good_shrooms.webp",
+  "./art/home_hero.webp",
+  "./art/map_world.webp",
+  "./art/prot_bribe.webp",
+  "./art/prot_car.webp",
+  "./art/prot_docs.webp",
+  "./art/prot_guard.webp",
+  "./art/rank_1.webp",
+  "./art/rank_2.webp",
+  "./art/rank_3.webp",
+  "./art/rank_4.webp",
+  "./art/rank_5.webp",
+  "./art/veh_car.webp",
+  "./art/veh_plane.webp",
+  "./art/veh_ship.webp"
+];
 
 self.addEventListener("install", e => {
   e.waitUntil(caches.open(VERSION).then(c => c.addAll(CORE)).catch(()=>{}));
