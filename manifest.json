@@ -2,7 +2,7 @@
   "name": "סוחר הסם — Sam the Smuggler",
   "short_name": "סוחר הסם",
   "description": "A funny AppNest trading game — one month, a whole world of contraband.",
-  "start_url": "./index.html",
+  "start_url": "./",
   "scope": "./",
   "display": "standalone",
   "orientation": "portrait",

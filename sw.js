@@ -1,6 +1,27 @@
+/* ── AppNest · Cloudflare Pages fix (Oct 2026) ──
+   Cloudflare redirects *.html to clean URLs (/index.html -> /). Chrome refuses a
+   "redirected" response that a Service Worker hands to a page load (ERR_FAILED).
+   This strips the redirect flag from every response the SW fetches or reads from cache. */
+(function(){
+  var NB={101:1,204:1,205:1,304:1};
+  function clean(r){
+    if(!r||!r.redirected||NB[r.status])return r;
+    return r.blob().then(function(b){return new Response(b,{status:r.status,statusText:r.statusText,headers:r.headers});});
+  }
+  var _fetch=self.fetch.bind(self);
+  self.fetch=function(input,init){
+    if(input&&typeof input==='object'&&input.mode==='navigate')input=input.url;
+    return _fetch(input,init).then(clean);
+  };
+  var cm=Cache.prototype.match;
+  Cache.prototype.match=function(){return cm.apply(this,arguments).then(clean);};
+  var sm=CacheStorage.prototype.match;
+  CacheStorage.prototype.match=function(){return sm.apply(this,arguments).then(clean);};
+})();
+
 /* Sam the Smuggler — AppNest service worker (network-first shell) */
-const VERSION = "samtrader-v8";
-const CORE = ["./", "./index.html", "./manifest.json", "./icon-192.png", "./icon-512.png"];
+const VERSION = "samtrader-v9";
+const CORE = ["./", "./manifest.json", "./icon-192.png", "./icon-512.png"];
 
 self.addEventListener("install", e => {
   e.waitUntil(caches.open(VERSION).then(c => c.addAll(CORE)).catch(()=>{}));
@@ -28,6 +49,6 @@ self.addEventListener("fetch", e => {
         caches.open(VERSION).then(c => c.put(req, copy)).catch(()=>{});
         return res;
       })
-      .catch(() => caches.match(req).then(r => r || caches.match("./index.html")))
+      .catch(() => caches.match(req, {ignoreSearch:true}).then(r => r || (req.mode === "navigate" ? caches.match("./") : undefined)))
   );
 });
