@@ -447,6 +447,34 @@ input,select{width:100%; padding:13px; border-radius:12px; border:1px solid var(
 .hofchips{margin-bottom:12px; flex-wrap:wrap}
 .hofrow.top{border-color:var(--gold2); background:linear-gradient(90deg,var(--tap),var(--card) 70%)}
 
+/* ===== v1.7 ===== */
+.hudrival{display:flex; justify-content:space-between; align-items:center; gap:8px; margin-top:7px; padding:5px 11px; border:1px solid var(--line); background:var(--card); border-radius:10px; font-size:12px; font-weight:700; cursor:pointer}
+.hudrival .up{color:var(--good); font-size:11px} .hudrival .down{color:var(--bad); font-size:11px}
+.rivalnote{margin-bottom:12px} .rivalnote .say{margin-bottom:4px} .rnfx{font-size:12px; font-weight:800; color:var(--warn); padding:0 60px}
+.newsbox{border:1px solid var(--line); background:linear-gradient(180deg,var(--card),var(--bg2)); border-radius:14px; padding:9px 12px; margin-bottom:12px}
+.newsbox .nbhd{font:800 12px Georgia,serif; color:var(--gold); margin-bottom:5px}
+.nbrow{display:flex; justify-content:space-between; gap:8px; font-size:12.5px; font-weight:700; padding:4px 0; border-top:1px solid var(--line)}
+.nbrow:first-of-type{border-top:none} .nbrow small{color:var(--dim); white-space:nowrap}
+.nbrow.strike span,.nbrow.crackdown span{color:var(--bad)} .nbrow.festival span,.nbrow.glut span{color:var(--good)} .nbrow.shortage span{color:var(--warn)}
+.pin.closed .dot{background:var(--bad); box-shadow:0 0 0 1px var(--bad)} .pin.closed .pn{opacity:.7}
+.fleetcard .fchd,.whcard .fchd{font:800 14px Georgia,serif; color:var(--gold); margin-bottom:4px}
+.fleetrow{display:flex; align-items:center; gap:10px; padding:8px 0; border-top:1px solid var(--line)}
+.fleetrow .bmico .ico{width:40px; height:40px} .fleetrow .bmico .artfb{font-size:28px}
+.pips{display:flex; gap:4px; margin-top:4px} .pips i{width:18px; height:6px; border-radius:4px; background:var(--line)} .pips i.on{background:var(--gold)}
+.maxtag{font-size:11px; font-weight:900; color:var(--good); border:1px solid var(--good); border-radius:10px; padding:3px 8px}
+.whcard.dim{opacity:.92}
+.whrow{display:flex; justify-content:space-between; align-items:center; gap:8px; padding:6px 0; font-size:13px; border-top:1px solid var(--line)}
+.whsep{font-size:11px; color:var(--dim); font-weight:800; margin-top:8px}
+.whothers{margin:-4px 2px 12px}
+.storycard{grid-column:1/3; background:linear-gradient(135deg,var(--tap),var(--card) 60%); border:1px solid var(--gold2); border-radius:var(--radius); padding:13px 14px; cursor:pointer; transition:transform .06s}
+.storycard:active{transform:scale(.98)}
+.storycard .dtop{display:flex; justify-content:space-between; align-items:center} .storycard .dt{font-weight:900; font-size:15px} .storycard .dstreak{font-weight:900; color:var(--gold); font-size:13px}
+.storycard .dfoot{display:flex; justify-content:space-between; align-items:center; font-size:12px; color:var(--dim)} .storycard .dgo{color:var(--gold); font-weight:900}
+.spips{display:flex; gap:6px; margin:10px 0} .spips i{flex:1; height:7px; border-radius:5px; background:var(--line)} .spips i.on{background:var(--gold)} .spips i.cur{background:linear-gradient(90deg,var(--gold),var(--line)); animation:pulseRed 1.6s infinite}
+.goalbox{text-align:center; font-size:14px; background:var(--bg2); border:1px solid var(--gold2); border-radius:12px; padding:9px}
+.storyres{margin-top:12px; text-align:center} .storyres.win{border-color:var(--good)} .storyres.lose{border-color:var(--bad)}
+.rivalend{margin-top:12px; text-align:start} .rivalend.win{border-color:#5ec27a66} .rivalend.lose{border-color:#e2604f66}
+#shareBtn{margin-top:12px}
 @media (prefers-reduced-motion: reduce){ *{animation:none !important; transition:none !important} }
 </style>
 </head>
@@ -466,6 +494,7 @@ input,select{width:100%; padding:13px; border-radius:12px; border:1px solid var(
         <div class="menutile hot" onclick="startNewGame()"><span class="em">🎬</span><span class="lb" data-t="newgame">משחק חדש</span></div>
         <div class="menutile" id="contTile" onclick="continueGame()"><span class="em">▶️</span><span class="lb" data-t="continue">המשך משחק</span><span class="sub" id="contSub"></span></div>
         <div class="dailycard" id="dailyCard" onclick="openDaily()"></div>
+        <div class="storycard" id="storyCard" onclick="openStory()"></div>
         <div class="menutile" onclick="show('hof')"><span class="em">🏆</span><span class="lb" data-t="hof">היכל התהילה</span></div>
         <div class="menutile" onclick="show('ach')"><span class="em">🏅</span><span class="lb" data-t="achTitle">הישגים</span><span class="sub" id="achSub"></span></div>
         <div class="menutile" onclick="show('guide')"><span class="em">📖</span><span class="lb" data-t="guide">מדריך</span></div>
@@ -491,6 +520,7 @@ input,select{width:100%; padding:13px; border-radius:12px; border:1px solid var(
         <div class="stat"><div class="v" id="hudCap">0/100</div><div class="k" data-t="stash">מטען</div></div>
       </div>
       <div id="hudLoan" class="hudloan" style="display:none"></div>
+      <div id="hudRival" class="hudrival" style="display:none" onclick="rivalInfo()"></div>
     </div>
     <div class="scroll" id="gameScroll"></div>
     <div class="tabs">
@@ -522,7 +552,10 @@ input,select{width:100%; padding:13px; border-radius:12px; border:1px solid var(
         <div class="kv"><span data-t="profit">רווח נקי</span><b id="endProfit"></b></div>
       </div>
       <div id="endGraph" class="endgraph"></div>
+      <div id="endRival"></div>
       <div id="endStats"></div>
+      <div id="endStory"></div>
+      <button class="btn" id="shareBtn" onclick="shareResult()">📤 <span data-t="shareResult">שתף את התוצאה</span></button>
       <div id="endMsg" class="evtext"></div>
       <button class="btn primary" onclick="show('hof')" data-t="seeHof">להיכל התהילה</button>
       <button class="btn" onclick="startNewGame()" data-t="playAgain">שוב!</button>
@@ -593,6 +626,15 @@ input,select{width:100%; padding:13px; border-radius:12px; border:1px solid var(
           </div>
         </div>
       </div>
+      <div class="card">
+        <div style="display:flex;align-items:center;justify-content:space-between">
+          <label class="lbl" style="margin:0" data-t="music">מוזיקה</label>
+          <div class="chips">
+            <div class="chip" id="chMusOn" onclick="setMusic(true)" data-t="on">פעיל</div>
+            <div class="chip" id="chMusOff" onclick="setMusic(false)" data-t="off">כבוי</div>
+          </div>
+        </div>
+      </div>
       <button class="btn danger" onclick="wipeAll()" data-t="wipe">מחק את כל הנתונים</button>
       <div class="foot">v<span id="verSet"></span></div>
     </div>
@@ -631,7 +673,7 @@ input,select{width:100%; padding:13px; border-radius:12px; border:1px solid var(
 
 <script>
 "use strict";
-const VERSION="1.6.0";
+const VERSION="1.7.0";
 
 /* ---------- storage shim ---------- */
 const mem={};
@@ -728,6 +770,31 @@ L.en={
   routeActive:"Active until", routeBoardT:"Route forecast", routeBoardInfo:"What's likely on each route. A forecast, not a certainty. Valid until day {d}.",
   toTravel:"To the map", routeOnTag:"forecast on", cityNeutral:"neutral market",
   fcGang:"gang country", fcCustoms:"heavy customs", fcPolice:"police active", fcStorm:"rough seas", fcClear:"looks clear",
+  appName:"Sam the Smuggler", shareResult:"Share your result", savedImage:"Image saved", music:"Music", you:"You",
+  portClosed:"Port closed (strike)", hiddenSaved:"hidden compartment saved", worldNews:"World news",
+  news_strike:"Port strike in {c} — no arrivals", news_festival:"Festival in {c} — {g} in hot demand", news_crackdown:"Police crackdown in {c}",
+  news_shortage:"Global shortage of {g} — prices up everywhere", news_glut:"Global glut of {g} — prices down everywhere",
+  fleetTitle:"Your fleet", fleetInfo:"Permanent upgrades: cheaper and safer trips, for every month to come.",
+  fleet_sea:"Your own boat", fleetd_sea:"Sea trips: −18% cost, −12% risk per level",
+  fleet_air:"Your own plane", fleetd_air:"Air trips: −18% cost, −12% risk per level",
+  fleet_land:"Your own car", fleetd_land:"Land trips: −18% cost, −12% risk per level",
+  fleet_hidden:"Hidden compartment", fleetd_hidden:"Saves part of any cargo taken on the road",
+  whTitle:"Your warehouse", whTake:"Take", whEmpty:"Empty. Store goods here to keep them safe.", whFromBag:"From your bag:", whStore:"Store",
+  whRent:"Rent a warehouse here", whInfo:"Park goods in this city — safe from the road, ready when prices rise.", whElsewhere:"Stored elsewhere", whRented:"Warehouse rented",
+  rivalName:"Big Moshe", youLead:"you lead", heLeads:"he leads", rivalBought:"Moshe bought up", rivalDumped:"Moshe dumped", rivalSnatched:"and grabbed your contract!",
+  rivalLostLine:"Fine, fine… you got me this month. Next month is mine. 😤", rivalWonLine:"Better luck next month, kid. 😎",
+  storyTitle:"Story mode", chapter:"Chapter", storyDoneShort:"Story complete", goal:"Goal", storyStart:"Start",
+  storyDoneT:"You bought out the shark!", storyDoneX:"From a street rookie to the man who owns the loan shark. The world is yours, Sam.", storyRestart:"Start the story again",
+  inDays:"in {d} days", noDebtGoal:"no debt", letsGo:"Let's go", chDone:"complete!", nextChapter:"Chapter", chFailed:"Goal not reached", retryChapter:"Retry the chapter",
+  ch1T:"Neighbourhood hustle", ch1X:"Sam starts small: six cities around the Mediterranean and Europe. Prove you can turn a profit.", ch1Q:"Six cities, one bag, big dreams. How hard can it be?",
+  ch2T:"Across the ocean", ch2X:"The Americas open up: Miami, Kingston, Bogotá and Tijuana. Longer trips, bigger margins, tougher crews.", ch2Q:"Pack the sunglasses. We're going west.",
+  ch3T:"The Far East", ch3X:"Bangkok and Hong Kong join the map. Gems, pills and neon — and customs that never sleep.", ch3Q:"I hear Hong Kong pays in diamonds…",
+  ch4T:"Southern routes", ch4X:"Rio and Cape Town complete the map. The whole world is your market now.", ch4Q:"Samba, safaris, and a very full suitcase.",
+  ch5T:"The shark", ch5X:"The loan shark runs the whole underworld. Reach the goal with zero debt and buy him out.", ch5Q:"So, little Sam wants to buy ME? Let's see you try. 🦷",
+  ach_beatMoshe:"Moshe who?", achd_beatMoshe:"Finish a month ahead of Big Moshe.",
+  ach_storyDone:"Shark owner", achd_storyDone:"Complete the story mode.",
+  ach_fleet1:"Captain", achd_fleet1:"Buy your first fleet upgrade.",
+  ach_warehouse1:"Landlord", achd_warehouse1:"Rent your first warehouse.",
   credits:"Credits", creditsTxt:"Art: made with OpenAI image tools · Map: Natural Earth (public domain)", destWord:"destination",
   finishEventFirst:"Finish what's happening on the road first", pressAgainExit:"Press back again to exit", gameScreen:"Game",
   achTitle:"Achievements", logAxis:"log scale", profitWord:"profit", paidAvg:"you paid", vibe:"Vibration",
@@ -865,6 +932,31 @@ L.he={
   routeActive:"פעיל עד", routeBoardT:"תחזית מסלולים", routeBoardInfo:"מה צפוי בכל מסלול. תחזית, לא ודאות. בתוקף עד יום {d}.",
   toTravel:"למפה", routeOnTag:"תחזית פעילה", cityNeutral:"שוק ניטרלי",
   fcGang:"שטח כנופיות", fcCustoms:"מכס כבד", fcPolice:"משטרה פעילה", fcStorm:"ים סוער", fcClear:"נראה נקי",
+  appName:"סוחר הסם", shareResult:"שתף את התוצאה", savedImage:"התמונה נשמרה", music:"מוזיקה", you:"אתה",
+  portClosed:"הנמל סגור (שביתה)", hiddenSaved:"התא הסודי הציל", worldNews:"חדשות העולם",
+  news_strike:"שביתת נמל ב{c} — אין כניסה", news_festival:"פסטיבל ב{c} — ביקוש מטורף ל{g}", news_crackdown:"מבצע משטרתי ב{c}",
+  news_shortage:"מחסור עולמי ב{g} — המחירים עולים בכל מקום", news_glut:"הצפה עולמית של {g} — המחירים יורדים בכל מקום",
+  fleetTitle:"הצי שלך", fleetInfo:"שדרוגים קבועים: נסיעות זולות ובטוחות יותר, לכל החודשים הבאים.",
+  fleet_sea:"סירה משלך", fleetd_sea:"נסיעות בים: −18% עלות, −12% סיכון לכל דרגה",
+  fleet_air:"מטוס משלך", fleetd_air:"טיסות: −18% עלות, −12% סיכון לכל דרגה",
+  fleet_land:"רכב משלך", fleetd_land:"נסיעות ביבשה: −18% עלות, −12% סיכון לכל דרגה",
+  fleet_hidden:"תא סודי", fleetd_hidden:"מציל חלק מכל מטען שלוקחים לך בדרך",
+  whTitle:"המחסן שלך", whTake:"הוצא", whEmpty:"ריק. אחסן כאן סחורה כדי לשמור עליה.", whFromBag:"מהתיק שלך:", whStore:"אחסן",
+  whRent:"שכור מחסן כאן", whInfo:"שמור סחורה בעיר הזו — בטוחה מהדרך, מחכה שהמחיר יעלה.", whElsewhere:"מאוחסן בערים אחרות", whRented:"המחסן שלך!",
+  rivalName:"מוישה הגדול", youLead:"אתה מוביל", heLeads:"הוא מוביל", rivalBought:"מוישה קנה את כל", rivalDumped:"מוישה הציף את השוק ב", rivalSnatched:"וגם חטף לך את החוזה!",
+  rivalLostLine:"טוב, טוב… הפעם ניצחת. החודש הבא שלי. 😤", rivalWonLine:"בהצלחה בחודש הבא, ילד. 😎",
+  storyTitle:"מצב סיפור", chapter:"פרק", storyDoneShort:"הסיפור הושלם", goal:"יעד", storyStart:"התחל",
+  storyDoneT:"קנית את הכריש!", storyDoneX:"מחובבן שכונה לאיש שקנה את הכריש בעצמו. העולם שלך, סם.", storyRestart:"התחל את הסיפור מחדש",
+  inDays:"תוך {d} ימים", noDebtGoal:"בלי חובות", letsGo:"יאללה", chDone:"הושלם!", nextChapter:"לפרק", chFailed:"לא הגעת ליעד", retryChapter:"נסה שוב את הפרק",
+  ch1T:"עסקים של שכונה", ch1X:"סם מתחיל בקטן: שש ערים סביב הים התיכון ואירופה. תוכיח שאתה יודע להרוויח.", ch1Q:"שש ערים, תיק אחד, חלומות גדולים. כמה קשה זה כבר יכול להיות?",
+  ch2T:"מעבר לים", ch2X:"אמריקה נפתחת: מיאמי, קינגסטון, בוגוטה וטיחואנה. נסיעות ארוכות יותר, רווחים גדולים יותר, כנופיות קשוחות יותר.", ch2Q:"תארוז את המשקפי שמש. אנחנו טסים מערבה.",
+  ch3T:"המזרח הרחוק", ch3X:"בנגקוק והונג קונג מצטרפות למפה. יהלומים, כדורים וניאון — ומכס שאף פעם לא ישן.", ch3Q:"שמעתי שבהונג קונג משלמים ביהלומים…",
+  ch4T:"הדרכים הדרומיות", ch4X:"ריו וקייפטאון משלימות את המפה. כל העולם הוא השוק שלך עכשיו.", ch4Q:"סמבה, ספארי ומזוודה מאוד מלאה.",
+  ch5T:"הכריש", ch5X:"הכריש מנהל את כל העולם התחתון. תגיע ליעד בלי שום חוב — ותקנה אותו.", ch5Q:"אז סם הקטן רוצה לקנות *אותי*? בוא נראה אותך. 🦷",
+  ach_beatMoshe:"מוישה מי?", achd_beatMoshe:"סיים חודש לפני מוישה הגדול.",
+  ach_storyDone:"בעל הכריש", achd_storyDone:"השלם את מצב הסיפור.",
+  ach_fleet1:"קפטן", achd_fleet1:"קנה את שדרוג הצי הראשון שלך.",
+  ach_warehouse1:"בעל נכסים", achd_warehouse1:"שכור את המחסן הראשון שלך.",
   credits:"קרדיטים", creditsTxt:"איורים: נוצרו עם כלי התמונות של OpenAI · מפה: Natural Earth (נחלת הכלל)", destWord:"יעד",
   finishEventFirst:"קודם תסיים את מה שקורה בדרך", pressAgainExit:"לחץ שוב כדי לצאת", gameScreen:"משחק",
   achTitle:"הישגים", logAxis:"סולם לוגריתמי", profitWord:"רווח", paidAvg:"שילמת", vibe:"רטט",
@@ -964,7 +1056,7 @@ const GN={
 const gname=id=>(GN[S.lang]&&GN[S.lang][id])||GN.en[id];
 
 const LOCS={
-  telaviv:  {em:"🇮🇱",x:67.2,y:32.2,lp:"up",heat:.35,bias:{grass:1,candy:1,pills:1,shrooms:1,dust:1,diamond:1}},
+  telaviv:  {em:"🇮🇱",x:67.2,y:32.2,lp:"dl",heat:.35,bias:{grass:1,candy:1,pills:1,shrooms:1,dust:1,diamond:1}},
   amsterdam:{em:"🇳🇱",x:55.7,y:17.3,lp:"left",heat:.30,bias:{grass:.5,candy:1.4,pills:1.1,shrooms:.9,dust:1.3,diamond:1.2}},
   bogota:   {em:"🇨🇴",x:25.4,y:52.2,heat:.60,bias:{grass:.9,candy:1.1,pills:1.5,shrooms:1.2,dust:.4,diamond:1.3}},
   bangkok:  {em:"🇹🇭",x:92.5,y:45.6,heat:.50,bias:{grass:1.1,candy:.8,pills:1.2,shrooms:.5,dust:1.4,diamond:.6}},
@@ -974,13 +1066,17 @@ const LOCS={
   dubai:    {em:"🇦🇪",x:75.1,y:37.2,lp:"right",heat:.85,bias:{grass:1.6,candy:1.5,pills:1.4,shrooms:1.4,dust:1.5,diamond:.5}},
   miami:    {em:"🇺🇸",x:23.0,y:36.8,lp:"up",heat:.75,bias:{grass:1.4,candy:1.4,pills:1.3,shrooms:1.4,dust:1.4,diamond:1.4}},
   kingston: {em:"🇯🇲",x:24.3,y:42.5,lp:"right",heat:.20,bias:{grass:.5,candy:.9,pills:1,shrooms:.5,dust:1.1,diamond:1},gang:.7},
+  istanbul: {em:"🇹🇷",x:65.0,y:25.6,lp:"left",heat:.50,bias:{grass:1.2,candy:.7,pills:1.3,shrooms:1,dust:1.2,diamond:1.1}},
+  hongkong: {em:"🇭🇰",x:97.8,y:39.3,lp:"left",heat:.65,bias:{grass:1.4,candy:1.2,pills:.6,shrooms:1.3,dust:1.3,diamond:.8}},
+  rio:      {em:"🇧🇷",x:37.2,y:72.5,heat:.55,bias:{grass:.6,candy:1.4,pills:1.2,shrooms:.7,dust:1.3,diamond:1.2},gang:1.3},
+  capetown: {em:"🇿🇦",x:60.9,y:80.5,heat:.40,bias:{grass:.8,candy:1.2,pills:1.1,shrooms:1.2,dust:1.3,diamond:.45}},
 };
 const LOCNAMES={
-  he:{telaviv:"תל אביב",amsterdam:"אמסטרדם",bogota:"בוגוטה",bangkok:"בנגקוק",marrakech:"מרקש",moscow:"מוסקבה",tijuana:"טיחואנה",dubai:"דובאי",miami:"מיאמי",kingston:"קינגסטון"},
-  en:{telaviv:"Tel Aviv",amsterdam:"Amsterdam",bogota:"Bogotá",bangkok:"Bangkok",marrakech:"Marrakesh",moscow:"Moscow",tijuana:"Tijuana",dubai:"Dubai",miami:"Miami",kingston:"Kingston"},
-  ru:{telaviv:"Тель-Авив",amsterdam:"Амстердам",bogota:"Богота",bangkok:"Бангкок",marrakech:"Марракеш",moscow:"Москва",tijuana:"Тихуана",dubai:"Дубай",miami:"Майами",kingston:"Кингстон"},
-  es:{telaviv:"Tel Aviv",amsterdam:"Ámsterdam",bogota:"Bogotá",bangkok:"Bangkok",marrakech:"Marrakech",moscow:"Moscú",tijuana:"Tijuana",dubai:"Dubái",miami:"Miami",kingston:"Kingston"},
-  ar:{telaviv:"تل أبيب",amsterdam:"أمستردام",bogota:"بوغوتا",bangkok:"بانكوك",marrakech:"مراكش",moscow:"موسكو",tijuana:"تيخوانا",dubai:"دبي",miami:"ميامي",kingston:"كينغستون"}
+  he:{istanbul:"איסטנבול",hongkong:"הונג קונג",rio:"ריו",capetown:"קייפטאון",telaviv:"תל אביב",amsterdam:"אמסטרדם",bogota:"בוגוטה",bangkok:"בנגקוק",marrakech:"מרקש",moscow:"מוסקבה",tijuana:"טיחואנה",dubai:"דובאי",miami:"מיאמי",kingston:"קינגסטון"},
+  en:{istanbul:"Istanbul",hongkong:"Hong Kong",rio:"Rio",capetown:"Cape Town",telaviv:"Tel Aviv",amsterdam:"Amsterdam",bogota:"Bogotá",bangkok:"Bangkok",marrakech:"Marrakesh",moscow:"Moscow",tijuana:"Tijuana",dubai:"Dubai",miami:"Miami",kingston:"Kingston"},
+  ru:{istanbul:"Стамбул",hongkong:"Гонконг",rio:"Рио",capetown:"Кейптаун",telaviv:"Тель-Авив",amsterdam:"Амстердам",bogota:"Богота",bangkok:"Бангкок",marrakech:"Марракеш",moscow:"Москва",tijuana:"Тихуана",dubai:"Дубай",miami:"Майами",kingston:"Кингстон"},
+  es:{istanbul:"Estambul",hongkong:"Hong Kong",rio:"Río",capetown:"Ciudad del Cabo",telaviv:"Tel Aviv",amsterdam:"Ámsterdam",bogota:"Bogotá",bangkok:"Bangkok",marrakech:"Marrakech",moscow:"Moscú",tijuana:"Tijuana",dubai:"Dubái",miami:"Miami",kingston:"Kingston"},
+  ar:{istanbul:"إسطنبول",hongkong:"هونغ كونغ",rio:"ريو",capetown:"كيب تاون",telaviv:"تل أبيب",amsterdam:"أمستردام",bogota:"بوغوتا",bangkok:"بانكوك",marrakech:"مراكش",moscow:"موسكو",tijuana:"تيخوانا",dubai:"دبي",miami:"ميامي",kingston:"كينغستون"}
 };
 const locname=id=>(LOCNAMES[S.lang]&&LOCNAMES[S.lang][id])||LOCNAMES.en[id];
 
@@ -1028,10 +1124,10 @@ function dist(a,b){ return Math.hypot(LOCS[a].x-LOCS[b].x, LOCS[a].y-LOCS[b].y);
 function RND(){ if(G&&G.daily&&typeof G.rs==='number'){ G.rs=(G.rs+0x6D2B79F5)|0; let t=G.rs; t=Math.imul(t^(t>>>15),t|1); t^=t+Math.imul(t^(t>>>7),t|61); return ((t^(t>>>14))>>>0)/4294967296; } return Math.random(); }
 function rnd(a,b){ return a+RND()*(b-a); }
 // total net worth = cash + safe + cargo (at current prices) − debt
-function netWorth(){ let g=0; if(G.market) for(const id in G.stash) g+=G.stash[id]*(G.market.prices[id]||0); return G.cash+G.bank+g-(G.loan||0); }
+function netWorth(){ let g=0; if(G.market) for(const id in G.stash) g+=G.stash[id]*(G.market.prices[id]||0); return G.cash+G.bank+g+whValue()-(G.loan||0); }
 function recordHistory(){ if(!G.history)G.history=[]; const last=G.history[G.history.length-1]; const w=Math.round(netWorth()); if(last&&last.day===G.day){ last.worth=w; } else { G.history.push({day:G.day, worth:w}); } }
 // advance the calendar; the loan compounds each day
-function advanceDays(n){ for(let i=0;i<n;i++){ G.day++; if(G.bank>0 && G.bankRate){ const earn=Math.round(bankInterestBase()*G.bankRate); G.bank+=earn; } if(G.loan>0) G.loan=Math.round(G.loan*(1+loanRate())); if(G.heat>0) G.heat=Math.max(0,G.heat-HEAT.decay); } }
+function advanceDays(n){ for(let i=0;i<n;i++){ G.day++; if(G.bank>0 && G.bankRate){ const earn=Math.round(bankInterestBase()*G.bankRate); G.bank+=earn; } if(G.loan>0) G.loan=Math.round(G.loan*(1+loanRate())); if(G.heat>0) G.heat=Math.max(0,G.heat-HEAT.decay); rivalDay(); } }
 // wanted level: risky trips raise heat; heat raises the odds of trouble; it cools off day by day (or faster if you lie low)
 const HEAT={ decay:3, lieLow:18, maxEvtBoost:.7 };
 function wanted(){ return Math.min(5, Math.ceil((G.heat||0)/20)); }
@@ -1068,7 +1164,7 @@ function genMarket(loc){
     const rawBias=LOCS[loc].bias[g.id]||1;
     const bias=1+(rawBias-1)*MKT.compress;            // pull location spreads toward 1
     const v=g.vol*MKT.volMul;                         // day-to-day noise
-    let p=g.base*bias*rnd(1-v,1+v)*d.mul*pressureFactor(loc,g.id);
+    let p=g.base*bias*rnd(1-v,1+v)*d.mul*pressureFactor(loc,g.id)*newsMult(loc,g.id);
     if(event&&event.id===g.id){ p*= event.up? rnd(MKT.spikeMin,MKT.spikeMax)*(vol?1.3:1): rnd(MKT.crashMin,MKT.crashMax)*(vol?.75:1); }
     m.prices[g.id]=Math.max(5,Math.round(p/5)*5);
   });
@@ -1106,12 +1202,14 @@ function newGameState(diff,daily){
   const g={ diff, day:1, maxDays:30, cash:d.cash, bank:0, cap:d.cap, startCash:d.cash,
       loc:"telaviv", stash:{}, market:null, intel:{},
       loan:0, bankRate:BANK.rate, history:[], pressure:{}, routeUntil:0, capBuys:0,
-      heat:0, contracts:[], offer:null, basis:{}, stats:newStats() };
+      heat:0, contracts:[], offer:null, basis:{}, stats:newStats(),
+      fleet:{sea:0,air:0,land:0,hidden:0}, wh:{}, news:[], rival:null };
+  g.rival=newRival(g.cash,diff);
   if(daily){ g.daily=true; g.ddate=daily.date; g.rs=hashStr('samtrader|'+daily.date)|0; g.mods=daily.mods.slice(); applyMods(g); }
   return g;
 }
 function beginGame(g){
-  G=g; travelSel=travelMethod=null; travelProt={};
+  G=g; travelSel=travelMethod=null; travelProt={}; ensureV17();
   G.market=genMarket("telaviv");
   recordIntel("telaviv");
   recordHistory();
@@ -1120,7 +1218,8 @@ function beginGame(g){
   show('game'); renderGame();
   if(!S.seenGuide){ S.seenGuide=true; persistS(); }
   sfx('good');
-  if(!(G.mods&&G.mods.includes('noshark'))) setTimeout(offerStartLoan,350);
+  if(G.story) setTimeout(()=>showChapterIntro(G.story),350);
+  else if(!(G.mods&&G.mods.includes('noshark'))) setTimeout(offerStartLoan,350);
 }
 function offerStartLoan(){
   const rate=Math.round(loanRate()*100), cap=borrowRoom();
@@ -1131,7 +1230,7 @@ function offerStartLoan(){
     <button class="btn ghost sm" style="margin-top:8px" onclick="closeSheet()">${T('loanSkip')}</button>`);
 }
 function takeStartLoan(amt){ G.cash+=amt; G.loan+=amt; recordHistory(); save("game",G); closeSheet(); updHUD(); switchTab('market'); toast(`🦈 +${money(amt)}`); }
-function continueGame(){ if(G){ if(!G.intel){ G.intel={}; recordIntel(G.loc); } if(G.bankRate==null)G.bankRate=BANK.rate; if(G.routeUntil==null)G.routeUntil=0; if(G.loan==null)G.loan=0; if(G.capBuys==null)G.capBuys=0; if(G.heat==null)G.heat=0; if(!G.contracts)G.contracts=[]; if(!G.basis)G.basis={}; if(!G.stats)G.stats=newStats(); save("game",G); show('game'); renderGame(); } else startNewGame(); }
+function continueGame(){ if(G){ if(!G.intel){ G.intel={}; recordIntel(G.loc); } if(G.bankRate==null)G.bankRate=BANK.rate; if(G.routeUntil==null)G.routeUntil=0; if(G.loan==null)G.loan=0; if(G.capBuys==null)G.capBuys=0; if(G.heat==null)G.heat=0; if(!G.contracts)G.contracts=[]; if(!G.basis)G.basis={}; if(!G.stats)G.stats=newStats(); ensureV17(); save("game",G); show('game'); renderGame(); } else startNewGame(); }
 function confirmQuit(){
   openSheet(`<h3>${T('quit')}</h3><p class="small" style="margin:8px 0 16px">${T('quitInfo')}</p>
     <button class="btn danger" onclick="closeSheet();show('home');refreshHome()">${T('quitYes')}</button>
@@ -1152,6 +1251,7 @@ function updHUD(){
   if(hh){ hh.style.display=w>0?'':'none'; hh.className='heatpill w'+w; hh.innerHTML=`🚨 ${'★'.repeat(w)}<span class="off">${'★'.repeat(5-w)}</span>`; hh.title=T('wantedLbl'); }
   document.getElementById('hudCap').textContent=fmtN(stashCount())+"/"+fmtN(G.cap);
   const hl=document.getElementById('hudLoan');
+  updRival();
   if(hl){ if(G.loan>0){ hl.style.display='flex'; hl.innerHTML=`<span>🦈 ${T('debtLbl')}: <b>${money(G.loan)}</b></span><span class="hlrate">+${Math.round(loanRate()*100)}%/${T('dayWord')}</span>`; } else hl.style.display='none'; }
 }
 function renderGame(){ updHUD(); switchTab(tab); }
@@ -1205,7 +1305,7 @@ function dealBanner(){
 }
 function dealGo(loc){ travelSel=loc; travelMethod=null; travelProt={}; switchTab('travel'); }
 function viewMarket(){
-  let html=cityBanner(G.loc,'here')+contractsHtml()+dealBanner();
+  let html=cityBanner(G.loc,'here')+rivalHereHtml()+worldNewsHtml()+contractsHtml()+dealBanner();
   const n=G.market.news;
   if(n){ const g=GOODS.find(x=>x.id===n.id);
     html+=`<div class="news">${g.em} <span>${gname(n.id)} ${n.up?T('spike'):T('crash')}</span></div>`; }
@@ -1222,7 +1322,7 @@ function viewMarket(){
         <button class="minibtn sell" onclick="openTrade('${g.id}','sell')" ${have?'':'disabled'}>${T('sell')}</button>
       </div></div>`;
   });
-  return html;
+  return html+warehouseHtml();
 }
 function openTrade(id,mode){
   const g=GOODS.find(x=>x.id===id), p=G.market.prices[id];
@@ -1294,7 +1394,7 @@ function viewIntel(){
   h+=`<div class="intelwrap"><table class="intel"><thead><tr><th>${T('city')}</th>`;
   GOODS.forEach(g=>h+=`<th>${g.em}</th>`);
   h+=`</tr></thead><tbody>`;
-  for(const id in LOCS){
+  for(const id of activeLocs()){
     const seen=G.intel&&G.intel[id];
     const age = seen ? (G.day-G.intel[id].day) : null;
     const ageTxt = seen ? (age<=0?T('nowTag'):`${age}${T('dAgo')}`) : "";
@@ -1315,11 +1415,11 @@ function viewIntel(){
 /* ---------- TRAVEL ---------- */
 function viewTravel(){
   let pins="";
-  for(const id in LOCS){
-    const l=LOCS[id], cls=(id===G.loc?"here":(travelSel===id?"sel":""));
+  for(const id of activeLocs()){
+    const l=LOCS[id], cls=(id===G.loc?"here":(travelSel===id?"sel":""))+(isClosed(id)?' closed':'');
     const ct=(G.contracts||[]).some(c=>c.to===id);
     pins+=`<div class="pin ${cls}${ct?' ctr':''}${l.lp?' lp-'+l.lp:''}" style="left:${l.x}%;top:${l.y}%" onclick="selDest('${id}')">
-      <span class="dot"></span><span class="pn">${ct?'📜':''}${l.em} ${locname(id)}</span></div>`;
+      <span class="dot"></span><span class="pn">${ct?'📜':''}${newsBadge(id)}${l.em} ${locname(id)}</span></div>`;
   }
   let body=`<div class="mapwrap${ART.has('map_world')?' artmap':''}"><div class="mapgrid"></div><svg id="routeSvg" viewBox="0 0 100 52.5" preserveAspectRatio="none"></svg>${pins}</div>`;
   if(!travelSel){
@@ -1379,10 +1479,10 @@ function viewTravel(){
   }
   return body;
 }
-function travelCost(dest,mk){ return Math.max(40,(dist(G.loc,dest)*4+25)*METHODS[mk].costMul*DIFF[G.diff].mul); }
+function travelCost(dest,mk){ return Math.max(40,(dist(G.loc,dest)*4+25)*METHODS[mk].costMul*DIFF[G.diff].mul*(1-FLEET.costCut*fleetLvl(mk))); }
 function riskLevel(dest,mk){
-  const m=METHODS[mk], heat=LOCS[dest].heat, gang=(LOCS[dest].gang||1);
-  let r=(m.storm*.4+m.police*heat+m.gang*.3*gang+m.customs*heat)*DIFF[G.diff].evt;
+  const m=METHODS[mk], heat=Math.min(1,LOCS[dest].heat+(hasNews('crackdown',dest)?.35:0)), gang=(LOCS[dest].gang||1);
+  let r=(m.storm*.4+m.police*heat+m.gang*.3*gang+m.customs*heat)*DIFF[G.diff].evt*(1-FLEET.riskCut*fleetLvl(mk));
   return Math.min(.8, r/2.0);
 }
 function riskDots(r){ let h=""; for(let i=0;i<4;i++){ const on=r> i/4; const hi=r>.62&&i>=2; h+=`<span class="riskdot ${on?(hi?'hi':'on'):''}"></span>`; } return h; }
@@ -1398,7 +1498,7 @@ function drawMap(){
     p.setAttribute("class","dash"); svg.appendChild(p);
   }
 }
-function selDest(id){ if(id===G.loc){travelSel=null;} else {travelSel=id; travelMethod=null; travelProt={};} switchTab('travel'); }
+function selDest(id){ if(id===G.loc){travelSel=null;} else { if(isClosed(id)){ toast('🚫 '+T('portClosed')+' · '+locname(id)); return; } travelSel=id; travelMethod=null; travelProt={};} switchTab('travel'); }
 // profit preview at destination using last known prices there vs current local prices
 function destProfitPanel(dest){
   const seen=G.intel&&G.intel[dest];
@@ -1439,6 +1539,7 @@ function depart(){
   const protCost=Object.keys(travelProt).reduce((a,k)=>a+PROTECTS[k].cost,0);
   const total=cost+protCost;
   if(total>G.cash){ toast(T('cantAfford')); return; }
+  if(isClosed(travelSel)){ toast('🚫 '+T('portClosed')); travelSel=null; switchTab('travel'); return; }
   G.cash-=total;
   const from=G.loc, dest=travelSel, mk=travelMethod, prot={...travelProt};
   advanceDays(METHODS[mk].days);
@@ -1464,7 +1565,7 @@ function startJourney(from,dest,mk,ev,done){
   const ov=document.createElement('div');
   ov.className='journey'; ov.id='journeyOv';
   let pins="";
-  for(const id in LOCS){ const l=LOCS[id]; const role=id===from?'from':(id===dest?'to':'dim');
+  for(const id of activeLocs()){ const l=LOCS[id]; const role=id===from?'from':(id===dest?'to':'dim');
     pins+=`<div class="jpin ${role}${l.lp?' lp-'+l.lp:''}" style="left:${l.x}%;top:${l.y}%"><span class="jdot"></span>${(role!=='dim')?`<span class="jpn">${l.em} ${locname(id)}</span>`:''}</div>`; }
   ov.innerHTML=`
     <div class="jbar"><span class="jem">${m.em}</span> <b>${locname(from)}</b> <span class="jarr">➜</span> <b>${locname(dest)}</b> <span class="jday">· ${T('dayWord')} ${G.day}</span></div>
@@ -1642,6 +1743,9 @@ function eventChoices(ev){
 function applyChoice(ev,id){
   const before={...G.stash};
   const R=applyChoiceCore(ev,id);
+  const hl=fleetLvl('hidden');
+  if(hl>0){ let saved=0; for(const k in before){ const lost=before[k]-(G.stash[k]||0); if(lost>0){ const back=Math.floor(lost*FLEET.hideSave*hl); if(back>0){ G.stash[k]=(G.stash[k]||0)+back; saved+=back; } } }
+    if(saved>0&&R.badge){ R.badge.txt+=` · 🧳 ${T('hiddenSaved')} ${fmtN(saved)}`; } }
   const good=!(R.badge&&R.badge.cls==='bad');
   // free goods (e.g. loot after a won fight) lower the average price you paid
   if(!G.basis)G.basis={};
@@ -1851,13 +1955,13 @@ function viewBlack(){
       ${routeActive?`<div class="small" style="color:var(--good)">${T('routeActive')} · ${T('dayWord')} ${G.routeUntil}</div>`:''}</div>
     </div>
     <button class="btn sm" style="margin-top:12px" ${BM.routeIntel>G.cash?'disabled':''} onclick="buyRouteIntel()">${T('buyBtn')} · ${money(BM.routeIntel)}</button>
-  </div>`;
+  </div>${fleetHtml()}`;
 }
 function buyCap(){ const c=upgCost(); if(c>G.cash)return; const add=upgCap(); G.cash-=c; G.cap+=add; G.capBuys=(G.capBuys||0)+1; beep(440,.1); save("game",G); updHUD(); switchTab('black'); toast(`🎒 +${fmtN(add)}`); }
 function buyPriceIntel(){
   if(BM.priceIntel>G.cash){ toast(T('cantAfford')); return; }
   // choose a city (other than current) to get a fresh price snapshot
-  const rows=Object.keys(LOCS).filter(l=>l!==G.loc).map(id=>
+  const rows=activeLocs().filter(l=>l!==G.loc).map(id=>
     `<button class="btn evchoice" onclick="doPriceIntel('${id}')"><span class="che">${LOCS[id].em}</span><span class="chl"><b>${locname(id)}</b><small>${specialtyLine(id)}</small></span></button>`).join('');
   openSheet(`<div style="text-align:center;font-size:32px">📡</div><h3>${T('buyPricesT')}</h3>
     <p class="small" style="text-align:center;margin:6px 2px 12px">${T('pickCityIntel').replace('{c}',money(BM.priceIntel))}</p>
@@ -1877,7 +1981,7 @@ function buyRouteIntel(){
   G.cash-=BM.routeIntel; G.routeUntil=G.day+BM.routeDays;
   beep(620,.1); save("game",G); updHUD();
   // show the forecast board immediately
-  const rows=Object.keys(LOCS).filter(l=>l!==G.loc).map(id=>{
+  const rows=activeLocs().filter(l=>l!==G.loc).map(id=>{
     const f=routeForecast(id);
     return `<div class="fcrow"><span class="fcname">${LOCS[id].em} ${locname(id)}</span><span class="fcthreat">${f.em} ${f.label}</span><span class="fcdanger ${f.cls}">${f.dots}</span></div>`;
   }).join('');
@@ -1976,13 +2080,20 @@ function endMonth(){
   let dailyLine='';
   if(G.daily) dailyLine=finishDaily(worth);
   document.getElementById('endMsg').textContent=(profit<=0?T('broke'):"")+dailyLine;
-  // hall of fame: keep the best 15 per category (difficulty / daily)
-  const cat=G.daily?'daily':G.diff;
-  let hof=load("hof",[]);
-  hof.push({name:S.name||"???", worth, rank, date:new Date().toISOString().slice(0,10), diff:G.diff, cat});
-  hof.sort((a,b)=>b.worth-a.worth);
-  const per={}; hof=hof.filter(h=>{ const c=h.cat||h.diff||'normal'; per[c]=(per[c]||0)+1; return per[c]<=15; });
-  save("hof",hof);
+  // the rival's month
+  document.getElementById('endRival').innerHTML=rivalEndHtml(worth);
+  // story mode: chapter goal → next chapter or retry
+  document.getElementById('endStory').innerHTML=G.story?finishChapter(worth):'';
+  window.__lastEnd={worth,rank,rk:(ri<0?5:ri+1),profit,name:S.name||'',daily:G.daily?{date:G.ddate,mods:G.mods}:null,story:G.story||null,diff:G.diff,win:profit>0};
+  // hall of fame: keep the best 15 per category (difficulty / daily); story chapters aren't ranked here
+  if(!G.story){
+    const cat=G.daily?'daily':G.diff;
+    let hof=load("hof",[]);
+    hof.push({name:S.name||"???", worth, rank, date:new Date().toISOString().slice(0,10), diff:G.diff, cat});
+    hof.sort((a,b)=>b.worth-a.worth);
+    const per={}; hof=hof.filter(h=>{ const c=h.cat||h.diff||'normal'; per[c]=(per[c]||0)+1; return per[c]<=15; });
+    save("hof",hof);
+  }
   G=null; store.del(PFX+"game");
   refreshHome();
   if(profit>0){ sfx('fanfare'); vib([30,40,30,40,80]); setTimeout(()=>confetti(ri>=2?120:60),250); } else { sfx('bad'); vib([100,60,100]); }
@@ -2014,6 +2125,7 @@ function curScreen(){ const s=document.querySelector('.screen.on'); return s?s.i
 function show(id,isBack){
   if(!isBack){ if(id==='home') navStack=['home']; else { const i=navStack.indexOf(id); if(i>=0) navStack=navStack.slice(0,i+1); else navStack.push(id); } }
   document.querySelectorAll('.screen').forEach(s=>s.classList.toggle('on',s.id===id));
+  if(id!=='end') document.querySelectorAll('.confetti').forEach(c=>c.remove());
   if(id==='hof')renderHof();
   if(id==='settings')syncSettings();
   if(id==='about')syncAbout();
@@ -2066,7 +2178,7 @@ function refreshHome(){
   document.getElementById('contSub').textContent= G?`${T('dayWord')} ${G.day}/${G.maxDays} · ${money(netWorth())}`:'';
   document.getElementById('verHome').textContent=VERSION;
   const got=Object.keys(AS.got).length; document.getElementById('achSub').textContent=`${got}/${ACH.length}`;
-  renderDailyCard();
+  renderDailyCard(); renderStoryCard();
   const hb=document.getElementById('heroBg'); if(hb) hb.innerHTML=ART.has('home_hero')?art('home_hero','','heroimg'):'';
 }
 function openSheet(html){ document.getElementById('sheet').innerHTML=html; document.getElementById('modal').classList.add('on'); }
@@ -2089,6 +2201,8 @@ function syncSettings(){
   document.getElementById('chSndOff').classList.toggle('on',!S.sound);
   document.getElementById('chVibOn').classList.toggle('on',S.vibe!==false);
   document.getElementById('chVibOff').classList.toggle('on',S.vibe===false);
+  document.getElementById('chMusOn').classList.toggle('on',S.music!==false);
+  document.getElementById('chMusOff').classList.toggle('on',S.music===false);
   document.getElementById('verSet').textContent=VERSION;
 }
 function setUsername(v){ S.name=v; persistS(); }
@@ -2097,7 +2211,7 @@ function setPal(k){ S.pal=k; persistS(); document.body.dataset.pal=k; syncSettin
 function setTheme(t){ S.theme=t; persistS(); document.body.dataset.theme=t; document.querySelector('meta[name=theme-color]').content= t==='day'?'#f3efe6':'#0a0a0a'; syncSettings(); }
 function setSound(v){ S.sound=v; persistS(); syncSettings(); if(v)sfx('coin'); }
 function setVibe(v){ S.vibe=v; persistS(); syncSettings(); vib(40); }
-function wipeAll(){ if(confirm(T('wipeConfirm'))){ ["game","hof","settings","ach","daily"].forEach(k=>store.del(PFX+k)); location.reload(); } }
+function wipeAll(){ if(confirm(T('wipeConfirm'))){ ["game","hof","settings","ach","daily","story"].forEach(k=>store.del(PFX+k)); location.reload(); } }
 
 function syncAbout(){
   document.getElementById('aVer').textContent=VERSION;
@@ -2127,7 +2241,11 @@ function renderGuide(){
     ["🛰️","שוק שחור","שם אפשר להגדיל את התיק, <b>לקנות מחירים עדכניים</b> של עיר רחוקה (כדי לדעת מה כדאי להביא), ו<b>לקנות תחזית מסלולים</b> שמראה מה מחכה בדרך — כנופיות, מכס או משטרה — לפני שיוצאים."],
     ["🚨","רמת מבוקשות","נסיעות עם מטען, בריחות וקרבות <b>מחממים אותך</b> (כוכבים למעלה). ככל שאתה מבוקש יותר — יותר צרות בדרך. החום יורד מעצמו כל יום, ואפשר גם <b>לשכב נמוך</b> יום אחד במסך המסע."],
     ["📜","חוזים","לפעמים בעיר חדשה תקבל <b>הצעת חוזה</b>: להביא כמות סחורה לעיר מסוימת עד יום מסוים, תמורת תשלום שמן. היעד מסומן במפה, ובהגעה מופיע כפתור <b>מסור</b>."],
-    ["📅","אתגר יומי והישגים","כל יום יש <b>אתגר יומי</b> — אותו חודש לכולם, עם שני טוויסטים. שחק כמה ימים ברצף כדי לבנות 🔥 רצף. ויש <b>20 הישגים</b> לפתוח במסך הבית."]
+    ["📅","אתגר יומי והישגים","כל יום יש <b>אתגר יומי</b> — אותו חודש לכולם, עם שני טוויסטים. שחק כמה ימים ברצף כדי לבנות 🔥 רצף. ויש <b>הישגים</b> לפתוח במסך הבית."],
+    ["🥸","מוישה הגדול","סוחר יריב שמשחק באותו חודש. כשאתם נפגשים בעיר הוא מזיז מחירים ולפעמים חוטף לך חוזה. בסוף החודש רואים מי הרוויח יותר."],
+    ["🗺️","מצב סיפור","חמישה פרקים: מתחילים בשש ערים, ובכל פרק נפתחות ערים חדשות ויעד גדול יותר. הכסף, הצי והמחסנים עוברים איתך מפרק לפרק. הבוס האחרון — הכריש."],
+    ["⚓","צי ומחסנים","בשוק השחור קונים סירה, מטוס ורכב משלך (נסיעות זולות ובטוחות יותר) ותא סודי. בשוק אפשר לשכור מחסן ולשמור בו סחורה."],
+    ["📰","חדשות העולם","שביתות שסוגרות נמלים, פסטיבלים שמקפיצים ביקוש, מבצעי משטרה ומחסורים עולמיים — שווה לקרוא לפני שיוצאים."]
   ]:[
     ["🎬","The goal","You have <b>30 days</b> (one month) to make as much money as possible. At month's end your net worth earns you a title."],
     ["💰","Buy & sell","Prices differ everywhere. Buy where a good is cheap, sell where it's expensive. Watch the <b>market news</b> for a spike or crash."],
@@ -2140,7 +2258,11 @@ function renderGuide(){
     ["🛰️","Black market","There you can grow your bag, <b>buy current prices</b> of a far city (to know what to bring), and <b>buy route intel</b> that shows what's waiting on the roads — gangs, customs or police — before you set off."],
     ["🚨","Wanted level","Trips with cargo, escapes and fights <b>heat you up</b> (stars go up). The more wanted you are, the more trouble on the road. Heat cools a little every day, or you can <b>lie low</b> for a day on the Travel screen."],
     ["📜","Contracts","Sometimes a new city offers a <b>contract</b>: bring an amount of goods to a city by a certain day for a fat payout. The target is marked on the map, and when you arrive a <b>Deliver</b> button appears."],
-    ["📅","Daily challenge & achievements","Every day there's a <b>daily challenge</b> — the same month for everyone, with two twists. Play several days in a row to build a 🔥 streak. There are also <b>20 achievements</b> to unlock from the home screen."]
+    ["📅","Daily challenge & achievements","Every day there's a <b>daily challenge</b> — the same month for everyone, with two twists. Play several days in a row to build a 🔥 streak. There are also <b>achievements</b> to unlock from the home screen."],
+    ["🥸","Big Moshe","A rival smuggler playing the same month. When you meet in a city he moves prices and sometimes grabs your contract. At month's end you see who made more."],
+    ["🗺️","Story mode","Five chapters: start with six cities; each chapter opens new cities and a bigger goal. Your money, fleet and warehouses carry over. The final boss — the shark."],
+    ["⚓","Fleet & warehouses","In the black market buy your own boat, plane and car (cheaper, safer trips) and a hidden compartment. In the market you can rent a warehouse to store goods."],
+    ["📰","World news","Strikes close ports, festivals spike demand, police crackdowns and global shortages — worth reading before you set off."]
   ];
   document.getElementById('guideBody').innerHTML=steps.map(s=>`<div class="card" style="display:flex;gap:14px;align-items:flex-start">
     <div style="font-size:30px">${s[0]}</div><div><div style="font-weight:900;font-size:16px;margin-bottom:4px">${s[1]}</div>
@@ -2198,6 +2320,7 @@ const QUIPS={
     shark:["הכסף שלי, הריבית שלי, החיוך שלי. 🦷","לווה בזהירות. אני לא נושך. בדרך כלל.","תמיד שמח לראות לקוח חוזר.","הכספת שלך? בטוחה. הלוואה ממני? פחות."],
     sharkOwed:["אני רואה שאתה עדיין חייב לי… כל יום קצת יותר. 😁","הריבית לא ישנה, חביבי.","אל תשכח אותי. אני לא שוכח אף אחד.","תחזיר מוקדם, תישן טוב."],
     sharkOffer:["רוצה להתחיל בגדול? יש לי בדיוק את מה שאתה צריך…","כסף מהיר, חיוך רחב, ריבית… נדבר על זה אחר כך.","כל אגדה התחילה בהלוואה קטנה. ככה אומרים. אני אומר."],
+    rival:["נו, תראו מי פה. הסוחר הקטן. 😏","אתה עוד מנסה? חמוד.","העיר הזאת שלי היום, חביבי.","הגעתי ראשון. כרגיל."],
     hacker:["פרצתי לטבלאות המחירים. אל תשאל איך.","המידע שלי טרי יותר מהלחם בשוק.","כל עיר משאירה עקבות. אני רק קורא אותם.","קנית מודיעין? יופי. עכשיו תשתמש בו."],
     dealer:["פססט… יש לי בדיוק מה שאתה צריך.","מידע זה הסחורה הכי יקרה בשוק.","תיק גדול יותר? יש. שאלות? אין.","אני לא קיים. אבל המחירים שלי כן."]
   },
@@ -2209,6 +2332,7 @@ const QUIPS={
     shark:["My money, my interest, my smile. 🦷","Borrow carefully. I don't bite. Usually.","Always nice to see a returning customer.","Your safe? Safe. A loan from me? Less so."],
     sharkOwed:["I see you still owe me… a little more every day. 😁","Interest never sleeps, friend.","Don't forget me. I never forget anyone.","Pay early, sleep well."],
     sharkOffer:["Want to start big? I've got exactly what you need…","Fast cash, big smile, interest… we'll talk about that later.","Every legend started with a little loan. So they say. I say."],
+    rival:["Well, look who's here. The little trader. 😏","Still trying? Cute.","This town is mine today, pal.","Got here first. As usual."],
     hacker:["I hacked the price boards. Don't ask how.","My data is fresher than the market bread.","Every city leaves a trail. I just read it.","Bought intel? Great. Now use it."],
     dealer:["Psst… I've got just what you need.","Information is the priciest goods on the market.","Bigger bag? Got it. Questions? None.","I don't exist. My prices do."]
   }
@@ -2303,11 +2427,11 @@ function onArrive(dest){
   const st=stats(); st.visited[dest]=1;
   const w=netWorth(); st.peakWorth=Math.max(st.peakWorth||0,w); st.peakHeat=Math.max(st.peakHeat||0,G.heat||0);
   stat('citiesOne',0,Object.keys(st.visited).length); stat('peakWorth',0,w);
-  checkContracts(); maybeOfferContract();
+  checkContracts(); rollWorldNews(); rivalMeet(); maybeOfferContract();
 }
 function lieLow(){
   advanceDays(1); addHeat(-HEAT.lieLow);
-  G.market=genMarket(G.loc); recordIntel(G.loc); recordHistory(); checkContracts(); maybeOfferContract();
+  G.market=genMarket(G.loc); recordIntel(G.loc); recordHistory(); checkContracts(); rollWorldNews(); maybeOfferContract();
   save("game",G); sfx('tap');
   if(G.day>G.maxDays){ endMonth(); return; }
   tab='market'; renderGame(); toast(`🕶️ ${T('laidLow')} · ${T('dayWord')} ${G.day}`);
@@ -2331,8 +2455,9 @@ function maybeOfferContract(){
   if(G.offer||G.contracts.length>=2||G.day>=G.maxDays-3) return;
   if(RND()>.4) return;
   const g=GOODS[Math.floor(RND()*GOODS.length)];
-  const dests=Object.keys(LOCS).filter(l=>l!==G.loc).sort((a,b)=>(LOCS[b].bias[g.id]||1)-(LOCS[a].bias[g.id]||1));
-  const to=dests[Math.floor(RND()*5)];
+  const dests=activeLocs().filter(l=>l!==G.loc&&!isClosed(l)).sort((a,b)=>(LOCS[b].bias[g.id]||1)-(LOCS[a].bias[g.id]||1));
+  if(!dests.length) return;
+  const to=dests[Math.floor(RND()*Math.min(5,dests.length))];
   // size the job to what you can actually carry AND afford right now (≈25–50% of your cash at today's price)
   const price=G.market.prices[g.id]||g.base;
   const q=Math.min(Math.round(G.cap*rnd(.12,.28)), Math.floor(Math.max(0,G.cash)*rnd(.25,.5)/price));
@@ -2390,7 +2515,9 @@ const ACH=[
   {id:'debtFree',em:'🧾',k:'bigRepay',n:1},          {id:'contract1',em:'📜',k:'contracts',n:1},
   {id:'contract10',em:'📦',k:'contracts',n:10},      {id:'wanted5',em:'🚨',k:'maxWanted',n:5},
   {id:'ghost',em:'👻',k:'cleanMonth',n:1},           {id:'legend',em:'🐐',k:'legend',n:1},
-  {id:'hardWin',em:'🔥',k:'hardWin',n:1},            {id:'daily3',em:'📅',k:'dailyStreak',n:3}
+  {id:'hardWin',em:'🔥',k:'hardWin',n:1},            {id:'daily3',em:'📅',k:'dailyStreak',n:3},
+  {id:'beatMoshe',em:'🥸',k:'beatMoshe',n:1},        {id:'storyDone',em:'🗺️',k:'storyDone',n:1},
+  {id:'fleet1',em:'⚓',k:'fleet',n:1},               {id:'warehouse1',em:'🏚️',k:'warehouse',n:1}
 ];
 const AS=load('ach',{st:{},got:{}});
 if(!AS.st)AS.st={}; if(!AS.got)AS.got={};
@@ -2466,6 +2593,261 @@ function finishDaily(worth){
   save('daily',DS); stat('dailyStreak',0,DS.streak);
   return ` 📅 ${T('dailyDone')} · 🔥 ${DS.streak}`;
 }
+
+/* =====================================================================
+   v1.7 — rival smuggler, world news, own fleet, warehouses,
+          story mode, share card, background music
+   ===================================================================== */
+function ensureV17(){
+  if(!G) return;
+  if(!G.fleet) G.fleet={sea:0,air:0,land:0,hidden:0};
+  if(!G.wh) G.wh={};
+  if(!G.news) G.news=[];
+  if(!G.rival) G.rival=newRival(G.startCash||2000,G.diff);
+}
+// story mode opens the map chapter by chapter; classic & daily use every city
+function activeLocs(){ return (G&&G.cities)?G.cities:Object.keys(LOCS); }
+
+/* ---------- world news: strikes, festivals, crackdowns, shortages, gluts ---------- */
+const NEWS_T=['strike','festival','crackdown','shortage','glut'];
+function hasNews(type,loc){ return !!(G&&G.news&&G.news.some(n=>n.type===type&&n.loc===loc&&n.until>=G.day)); }
+function isClosed(loc){ return hasNews('strike',loc); }
+function newsMult(loc,gid){
+  if(!G||!G.news) return 1; let m=1;
+  for(const n of G.news){ if(n.until<G.day) continue;
+    if(n.type==='festival'&&n.loc===loc&&n.gid===gid) m*=1.8;
+    if(n.type==='shortage'&&n.gid===gid) m*=1.4;
+    if(n.type==='glut'&&n.gid===gid) m*=.65; }
+  return m;
+}
+function newsBadge(id){ return isClosed(id)?'🚫':hasNews('crackdown',id)?'🚓':(G.news||[]).some(n=>n.type==='festival'&&n.loc===id&&n.until>=G.day)?'🎉':''; }
+function rollWorldNews(){
+  if(!G.news) G.news=[];
+  G.news=G.news.filter(n=>n.until>=G.day);
+  if(G.news.length>=3||RND()>.35) return;
+  const type=NEWS_T[Math.floor(RND()*NEWS_T.length)];
+  const locs=activeLocs().filter(l=>l!==G.loc), loc=locs[Math.floor(RND()*locs.length)];
+  const gid=GOODS[Math.floor(RND()*GOODS.length)].id;
+  if(G.news.some(n=>n.type===type&&(n.loc===loc||n.gid===gid))) return;
+  const n={type,loc:(type==='shortage'||type==='glut')?null:loc,gid:(type==='strike'||type==='crackdown')?null:gid,until:G.day+3+Math.floor(RND()*4)};
+  G.news.push(n); toast('📰 '+newsText(n));
+}
+function newsText(n){ return T('news_'+n.type).replace('{c}',n.loc?`${LOCS[n.loc].em} ${locname(n.loc)}`:'').replace('{g}',n.gid?`${GOODS.find(g=>g.id===n.gid).em} ${gname(n.gid)}`:''); }
+function worldNewsHtml(){
+  const L=(G.news||[]).filter(n=>n.until>=G.day); if(!L.length) return '';
+  return `<div class="newsbox"><div class="nbhd">📰 ${T('worldNews')}</div>${L.map(n=>`<div class="nbrow ${n.type}"><span>${newsText(n)}</span><small>${n.until-G.day<=0?T('lastDay'):`${n.until-G.day} ${T('daysLeft')}`}</small></div>`).join('')}</div>`;
+}
+
+/* ---------- your own fleet: cheaper, safer trips + a hidden compartment ---------- */
+const FLEET={costCut:.18, riskCut:.12, hideSave:.22, price:[2500,9000,30000], hidPrice:[3500,12000,40000]};
+function fleetLvl(k){ return (G&&G.fleet&&G.fleet[k])||0; }
+function fleetPrice(k){ const l=fleetLvl(k); if(l>=3) return null; return Math.round((k==='hidden'?FLEET.hidPrice:FLEET.price)[l]*DIFF[G.diff].mul/50)*50; }
+function fleetHtml(){
+  const rows=['sea','air','land','hidden'].map(k=>{ const l=fleetLvl(k), pr=fleetPrice(k);
+    const ico=k==='hidden'?'<span class="artfb ico">🧳</span>':art('veh_'+k,METHODS[k].em,'ico');
+    return `<div class="fleetrow"><div class="bmico">${ico}</div>
+      <div style="flex:1;min-width:0"><b>${T('fleet_'+k)}</b><div class="small">${T('fleetd_'+k)}</div>
+        <div class="pips">${[0,1,2].map(i=>`<i class="${i<l?'on':''}"></i>`).join('')}</div></div>
+      ${pr==null?`<span class="maxtag">MAX</span>`:`<button class="minibtn sell" ${pr>G.cash?'disabled':''} onclick="buyFleet('${k}')">${money(pr)}</button>`}</div>`; }).join('');
+  return `<div class="card fleetcard"><div class="fchd">⚓ ${T('fleetTitle')}</div><div class="small" style="margin-bottom:8px">${T('fleetInfo')}</div>${rows}</div>`;
+}
+function buyFleet(k){ const pr=fleetPrice(k); if(pr==null||pr>G.cash) return; G.cash-=pr; G.fleet[k]=fleetLvl(k)+1; stat('fleet');
+  save("game",G); sfx('cash'); vib([15,30,15]); updHUD(); switchTab('black'); toast(`⚓ ${T('fleet_'+k)} · ${'★'.repeat(G.fleet[k])}`); }
+
+/* ---------- warehouses: park goods in a city, safe from the road ---------- */
+const WH={base:1500,grow:.6};
+function whCost(){ return Math.round(WH.base*DIFF[G.diff].mul*(1+WH.grow*Object.keys(G.wh||{}).length)/50)*50; }
+function whPrice(loc,gid){ if(loc===G.loc&&G.market) return G.market.prices[gid]||0; const i=G.intel&&G.intel[loc]; return i?i.prices[gid]:GOODS.find(g=>g.id===gid).base; }
+function whValue(){ let v=0; if(!G||!G.wh) return 0; for(const loc in G.wh) for(const gid in G.wh[loc]) v+=G.wh[loc][gid].q*whPrice(loc,gid); return v; }
+function warehouseHtml(){
+  const here=G.wh&&G.wh[G.loc];
+  const others=Object.keys(G.wh||{}).filter(l=>l!==G.loc&&Object.keys(G.wh[l]).length);
+  let h='';
+  if(here){
+    const stored=Object.keys(here), carry=Object.keys(G.stash);
+    h=`<div class="card whcard"><div class="fchd">🏚️ ${T('whTitle')} · ${locname(G.loc)}</div>
+      ${stored.length?stored.map(gid=>{ const g=GOODS.find(x=>x.id===gid); return `<div class="whrow"><span>${g.em} ${gname(gid)} <b>×${fmtN(here[gid].q)}</b></span><button class="minibtn" onclick="whTake('${gid}')">⬆️ ${T('whTake')}</button></div>`; }).join(''):`<div class="small">${T('whEmpty')}</div>`}
+      ${carry.length?`<div class="whsep">${T('whFromBag')}</div>`+carry.map(gid=>{ const g=GOODS.find(x=>x.id===gid); return `<div class="whrow"><span>${g.em} ${gname(gid)} ×${fmtN(G.stash[gid])}</span><button class="minibtn sell" onclick="whStore('${gid}')">⬇️ ${T('whStore')}</button></div>`; }).join(''):''}
+    </div>`;
+  } else {
+    const c=whCost();
+    h=`<div class="card whcard dim"><div style="display:flex;align-items:center;gap:10px"><div style="font-size:26px">🏚️</div>
+      <div style="flex:1"><b>${T('whRent')}</b><div class="small">${T('whInfo')}</div></div>
+      <button class="minibtn sell" ${c>G.cash?'disabled':''} onclick="rentWarehouse()">${money(c)}</button></div></div>`;
+  }
+  if(others.length) h+=`<div class="small whothers">🏚️ ${T('whElsewhere')}: ${others.map(l=>`${LOCS[l].em} ${locname(l)} (${Object.keys(G.wh[l]).map(g=>GOODS.find(x=>x.id===g).em+fmtN(G.wh[l][g].q)).join(' ')})`).join(' · ')}</div>`;
+  return h;
+}
+function rentWarehouse(){ const c=whCost(); if(c>G.cash) return; G.cash-=c; G.wh[G.loc]={}; stat('warehouse'); save("game",G); sfx('cash'); updHUD(); switchTab('market'); toast('🏚️ '+T('whRented')); }
+function whStore(gid){ const q=G.stash[gid]||0; if(!q||!G.wh[G.loc]) return; const W=G.wh[G.loc], b=(G.basis&&G.basis[gid])||0, o=W[gid]||{q:0,b:0};
+  W[gid]={q:o.q+q,b:(o.q*o.b+q*b)/(o.q+q)}; delete G.stash[gid]; if(G.basis) delete G.basis[gid];
+  save("game",G); sfx('buy'); updHUD(); switchTab('market'); }
+function whTake(gid){ const W=G.wh[G.loc]; if(!W||!W[gid]) return; const room=G.cap-stashCount(); const q=Math.min(W[gid].q,room); if(q<=0){ toast(T('noRoom')); return; }
+  const have=G.stash[gid]||0; if(!G.basis)G.basis={}; G.basis[gid]=((G.basis[gid]||0)*have+W[gid].b*q)/(have+q);
+  G.stash[gid]=have+q; W[gid].q-=q; if(W[gid].q<=0) delete W[gid];
+  save("game",G); sfx('buy'); updHUD(); switchTab('market'); }
+
+/* ---------- the rival: "Big Moshe" plays the same month, moves prices, snatches deals ---------- */
+const RIVAL={growth:{easy:.062,normal:.055,hard:.03}};
+function newRival(cash,diff){ return {worth:cash, loc:'amsterdam', g:RIVAL.growth[diff]||.055, moveIn:2}; }
+function rivalDay(){
+  const r=G.rival; if(!r) return;
+  // a smuggler's day: steady growth with noise, sometimes a bust or a jackpot
+  let f=Math.exp(r.g+(RND()-.5)*.08);
+  const x=RND(); if(x<.05) f*=1-(.15+RND()*.15); else if(x<.09) f*=1.2+RND()*.2;
+  r.worth=Math.max(200,Math.round(r.worth*f));
+  if(--r.moveIn<=0){ const L=activeLocs().filter(l=>l!==r.loc&&!isClosed(l)); r.loc=L[Math.floor(RND()*L.length)]; r.moveIn=2+Math.floor(RND()*3); }
+}
+function rivalMeet(){
+  const r=G.rival; if(!r||r.loc!==G.loc) return;
+  const g=GOODS[Math.floor(RND()*GOODS.length)], up=RND()<.5;
+  G.market.prices[g.id]=Math.max(5,Math.round(G.market.prices[g.id]*(up?1.35:.7)/5)*5);
+  let snatched=false; if(G.offer&&RND()<.35){ G.offer=null; snatched=true; }
+  G.rivalNote={gid:g.id,up,day:G.day,snatched,q:Math.floor(Math.random()*4)};
+  stats().metRival=(stats().metRival||0)+1;
+}
+function rivalHereHtml(){
+  const r=G.rival, n=G.rivalNote; if(!r||r.loc!==G.loc||!n||n.day!==G.day) return '';
+  const g=GOODS.find(x=>x.id===n.gid);
+  const fx=`${n.up?T('rivalBought'):T('rivalDumped')} ${g.em} ${gname(n.gid)} ${n.up?'▲':'▼'}${n.snatched?' · '+T('rivalSnatched'):''}`;
+  const L=(QUIPS[S.lang]&&QUIPS[S.lang].rival)||QUIPS.en.rival;
+  return `<div class="rivalnote">${sayHtml('rival','🥸',L[n.q%L.length])}<div class="rnfx">${fx}</div></div>`;
+}
+function updRival(){
+  const el=document.getElementById('hudRival'); if(!el||!G||!G.rival) return;
+  const r=G.rival, me=netWorth(), ahead=me>=r.worth;
+  el.style.display='flex';
+  el.innerHTML=`<span>🥸 ${T('rivalName')}: <b>${money(r.worth)}</b></span><span class="${ahead?'up':'down'}">${ahead?'▲ '+T('youLead'):'▼ '+T('heLeads')}</span>`;
+}
+function rivalInfo(){ const r=G.rival; toast(`🥸 ${T('rivalName')} · ${LOCS[r.loc].em} ${locname(r.loc)} · ${money(r.worth)}`); }
+function rivalEndHtml(worth){
+  const r=G.rival; if(!r) return '';
+  const win=worth>=r.worth; if(win) stat('beatMoshe');
+  return `<div class="card rivalend ${win?'win':'lose'}">${sayHtml('rival','🥸',win?T('rivalLostLine'):T('rivalWonLine'))}
+    <div class="kv"><span>🥸 ${T('rivalName')}</span><b>${money(r.worth)}</b></div>
+    <div class="kv"><span>😎 ${S.name||T('you')}</span><b style="color:${win?'var(--good)':'var(--bad)'}">${money(worth)}</b></div></div>`;
+}
+
+/* ---------- story mode: five chapters, the map opens up, the final boss is the shark ---------- */
+const STORY=[
+  {add:['telaviv','marrakech','amsterdam','dubai','moscow','istanbul'], goal:6000},
+  {add:['miami','kingston','bogota','tijuana'], goal:40000},
+  {add:['bangkok','hongkong'], goal:160000},
+  {add:['rio','capetown'], goal:500000},
+  {add:[], goal:1500000, noDebt:true}
+];
+const SST=load('story',{ch:1,snap:null,done:false});
+function storyCities(ch){ let c=[]; for(let i=0;i<ch;i++) c=c.concat(STORY[i].add); return c; }
+function newStoryState(){
+  const g=newGameState('normal',null); g.story=1; g.cities=storyCities(1); return g;
+}
+function nextChapterState(prev,ch,worth){
+  const g=newGameState('normal',null);
+  for(const k of ['cash','bank','loan','cap','capBuys','fleet','wh','stash','basis','intel']) g[k]=JSON.parse(JSON.stringify(prev[k]??g[k]));
+  g.story=ch; g.cities=storyCities(ch); g.startCash=Math.max(2000,Math.round(worth));
+  g.rival=newRival(Math.round(worth*.8),'normal');
+  return g;
+}
+function renderStoryCard(){
+  const el=document.getElementById('storyCard'); if(!el) return;
+  const ch=Math.min(5,SST.ch), st=STORY[ch-1];
+  el.innerHTML=`<div class="dtop"><span class="dt">🗺️ ${T('storyTitle')}</span><span class="dstreak">${SST.done?'🏆':`${T('chapter')} <span dir="ltr">${ch}/5</span>`}</span></div>
+    <div class="spips">${[1,2,3,4,5].map(i=>`<i class="${i<ch||SST.done?'on':i===ch?'cur':''}"></i>`).join('')}</div>
+    <div class="dfoot"><span>${SST.done?T('storyDoneShort'):`${T('goal')}: <b>${money(st.goal)}</b>`}</span><span class="dgo">${SST.snap||SST.done?T('playNow'):T('storyStart')} ›</span></div>`;
+}
+function openStory(){
+  if(SST.done){ openSheet(`<div style="text-align:center;font-size:44px">🏆</div><h3 style="text-align:center">${T('storyDoneT')}</h3>
+      <p class="small" style="text-align:center;margin:8px 4px 14px;line-height:1.6">${T('storyDoneX')}</p>
+      <button class="btn primary" onclick="resetStory()">${T('storyRestart')}</button>`); return; }
+  if(G&&!G.story){ openSheet(`<p class="small" style="text-align:center;color:var(--warn);margin:8px 4px 12px">⚠️ ${T('dailyOverwrite')}</p>
+      <button class="btn primary" onclick="playStory()">${T('playNow')} 🗺️</button>`); return; }
+  if(G&&G.story){ continueGame(); return; }
+  playStory();
+}
+function playStory(){
+  if(!SST.snap){ SST.ch=1; SST.snap=JSON.stringify(newStoryState()); save('story',SST); }
+  beginGame(JSON.parse(SST.snap));
+}
+function resetStory(){ SST.ch=1; SST.snap=null; SST.done=false; save('story',SST); closeSheet(); playStory(); }
+function showChapterIntro(ch){
+  const st=STORY[ch-1], fresh=st.add.filter(c=>ch>1||c!=='telaviv');
+  openSheet(`${sayHtml(ch===5?'shark':'sam',ch===5?'🦈':'😎',T('ch'+ch+'Q'))}
+    <h3 style="text-align:center">${T('chapter')} ${ch} · ${T('ch'+ch+'T')}</h3>
+    <p class="small" style="text-align:center;margin:6px 4px 10px;line-height:1.6">${T('ch'+ch+'X')}</p>
+    <div class="goalbox">🎯 ${T('goal')}: <b>${money(st.goal)}</b> ${T('inDays').replace('{d}',G.maxDays)}${st.noDebt?' · '+T('noDebtGoal'):''}</div>
+    ${fresh.length?`<div class="dmods" style="justify-content:center;margin:10px 0">${fresh.map(c=>`<span class="modchip">${LOCS[c].em} ${locname(c)}</span>`).join('')}</div>`:''}
+    <button class="btn primary" style="margin-top:10px" onclick="closeSheet()">${T('letsGo')} 🎬</button>`);
+}
+function finishChapter(worth){
+  const ch=G.story, st=STORY[ch-1], pass=worth>=st.goal&&(!st.noDebt||!(G.loan>0));
+  if(pass&&ch<5){
+    const nx=nextChapterState(G,ch+1,worth); SST.ch=ch+1; SST.snap=JSON.stringify(nx); save('story',SST);
+    return `<div class="card storyres win"><b>✅ ${T('chapter')} ${ch} ${T('chDone')}</b><div class="small">${T('goal')}: ${money(st.goal)}</div>
+      <button class="btn primary" style="margin-top:10px" onclick="playStory()">${T('nextChapter')} ${ch+1} ›</button></div>`;
+  }
+  if(pass){ SST.done=true; SST.snap=null; save('story',SST); stat('storyDone');
+    return `<div class="card storyres win"><b>🏆 ${T('storyDoneT')}</b><div class="small">${T('storyDoneX')}</div></div>`; }
+  return `<div class="card storyres lose"><b>❌ ${T('chFailed')}</b><div class="small">${T('goal')}: ${money(st.goal)}${st.noDebt&&G.loan>0?' · '+T('noDebtGoal'):''}</div>
+    <button class="btn primary" style="margin-top:10px" onclick="playStory()">${T('retryChapter')}</button></div>`;
+}
+
+/* ---------- share card: a picture of your month, ready for WhatsApp ---------- */
+function loadImg(src){ return new Promise(r=>{ const i=new Image(); i.onload=()=>r(i); i.onerror=()=>r(null); i.src=src; }); }
+async function shareResult(){
+  const d=window.__lastEnd; if(!d) return;
+  const W=1080,H=1350, c=document.createElement('canvas'); c.width=W; c.height=H; const x=c.getContext('2d');
+  const rtl=RTL.includes(S.lang); x.direction=rtl?'rtl':'ltr'; x.textAlign='center';
+  const gr=x.createLinearGradient(0,0,0,H); gr.addColorStop(0,'#17120a'); gr.addColorStop(1,'#050505'); x.fillStyle=gr; x.fillRect(0,0,W,H);
+  x.strokeStyle='#c9a038'; x.lineWidth=6; x.strokeRect(24,24,W-48,H-48);
+  const hero=ART.has(d.win?'end_win':'end_broke')?await loadImg(`art/${d.win?'end_win':'end_broke'}.webp`):null;
+  if(hero) x.drawImage(hero,W/2-260,170,520,520);
+  const medal=ART.has('rank_'+d.rk)?await loadImg(`art/rank_${d.rk}.webp`):null;
+  x.fillStyle='#e8c25a'; x.font='900 84px "Segoe UI",Rubik,Heebo,Arial,sans-serif'; x.fillText(T('appName'),W/2,128);
+  x.fillStyle='#f2f2f2'; x.font='700 48px "Segoe UI",Rubik,Heebo,Arial,sans-serif'; x.fillText(d.name||'',W/2,760);
+  x.fillStyle='#e8c25a'; x.font='900 120px "Segoe UI",Rubik,Heebo,Arial,sans-serif'; x.fillText(money(d.worth),W/2,900);
+  if(medal) x.drawImage(medal,W/2-80,930,160,160);
+  x.fillStyle='#f2f2f2'; x.font='800 52px "Segoe UI",Rubik,Heebo,Arial,sans-serif'; x.fillText(d.rank,W/2,1150);
+  x.fillStyle='#9a9a9a'; x.font='600 38px "Segoe UI",Rubik,Heebo,Arial,sans-serif';
+  const sub=d.daily?`📅 ${T('dailyTitle')} · ${d.daily.date}`:d.story?`🗺️ ${T('chapter')} ${d.story}/5`:`${T(d.diff)} · ${new Date().toISOString().slice(0,10)}`;
+  x.fillText(sub,W/2,1222); x.fillStyle='#c9a038'; x.font='700 30px "Segoe UI",Arial,sans-serif'; x.fillText('AppNest',W/2,1290);
+  let blob=null; try{ blob=await new Promise(r=>c.toBlob(r,'image/png')); }catch(e){}
+  if(!blob){ toast('⚠️'); return; }
+  const file=new File([blob],'samtrader.png',{type:'image/png'});
+  const txt=`${T('appName')} · ${money(d.worth)} · ${d.rank}\n${location.href.split('#')[0]}`;
+  try{ if(navigator.canShare&&navigator.canShare({files:[file]})){ await navigator.share({files:[file],text:txt}); return; } }catch(e){ if(e&&e.name==='AbortError') return; }
+  const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='samtrader.png'; document.body.appendChild(a); a.click(); setTimeout(()=>{ URL.revokeObjectURL(a.href); a.remove(); },1500);
+  toast('📥 '+T('savedImage'));
+}
+
+/* ---------- background music: a quiet, procedurally played noir-jazz loop (no files) ---------- */
+const MUS={on:false,timer:null,next:0,beat:0,out:null};
+const PROG=[[57,60,64,67],[50,54,57,60],[55,59,62,66],[48,52,55,59],[54,57,60,64],[47,51,54,57],[52,55,59,62],[52,55,59,62]];
+const mhz=m=>440*Math.pow(2,(m-69)/12);
+function musicCtx(){ try{ AC=AC||new (window.AudioContext||window.webkitAudioContext)(); if(AC.state==='suspended') AC.resume(); return AC; }catch(e){ return null; } }
+function mNote(c,f,t,d,type,v,dest){ const o=c.createOscillator(),g=c.createGain(); o.type=type; o.frequency.setValueAtTime(f,t); g.gain.setValueAtTime(.0001,t); g.gain.exponentialRampToValueAtTime(v,t+.012); g.gain.exponentialRampToValueAtTime(.0001,t+d); o.connect(g); g.connect(dest); o.start(t); o.stop(t+d+.05); }
+function mHat(c,t,v,dest){ const n=Math.floor(c.sampleRate*.06), b=c.createBuffer(1,n,c.sampleRate), d=b.getChannelData(0); for(let i=0;i<n;i++) d[i]=(Math.random()*2-1)*(1-i/n);
+  const s=c.createBufferSource(); s.buffer=b; const f=c.createBiquadFilter(); f.type='highpass'; f.frequency.value=6500; const g=c.createGain(); g.gain.value=v; s.connect(f); f.connect(g); g.connect(dest); s.start(t); }
+function playBeat(c,b,t){
+  const B=60/88, bar=Math.floor(b/4)%PROG.length, pos=b%4, ch=PROG[bar], nx=PROG[(bar+1)%PROG.length], o=MUS.out;
+  // walking bass: root, chord tones, then a chromatic step into the next chord
+  const bass = pos===0?ch[0]-12: pos===3? nx[0]-12+(Math.random()<.5?1:-1) : ch[pos===1?1:2]-12;
+  mNote(c,mhz(bass),t,B*.9,'triangle',.5,o);
+  // ride/hat: every beat + a swung "and" on 2 and 4
+  mHat(c,t,pos%2?.18:.1,o); if(pos%2) mHat(c,t+B*.66,.08,o);
+  // soft piano stabs
+  if(pos===0||(pos===1&&Math.random()<.45)){ const tt=pos===1?t+B*.66:t; ch.forEach((m,i)=>mNote(c,mhz(m+12),tt+i*.012,B*1.2,'sine',.05,o)); }
+}
+function musicTick(){ const c=AC; if(!c||!MUS.on) return; while(MUS.next<c.currentTime+.5){ playBeat(c,MUS.beat,MUS.next); MUS.next+=60/88; MUS.beat++; } }
+function startMusic(){
+  if(MUS.on||S.music===false) return; const c=musicCtx(); if(!c) return;
+  MUS.out=c.createGain(); const lp=c.createBiquadFilter(); lp.type='lowpass'; lp.frequency.value=2400;
+  MUS.out.connect(lp); lp.connect(c.destination); MUS.out.gain.setValueAtTime(.0001,c.currentTime); MUS.out.gain.exponentialRampToValueAtTime(.07,c.currentTime+2);
+  MUS.on=true; MUS.next=c.currentTime+.15; MUS.timer=setInterval(musicTick,100);
+}
+function stopMusic(){ if(!MUS.on) return; MUS.on=false; clearInterval(MUS.timer); const c=AC, o=MUS.out; if(c&&o){ try{ o.gain.setTargetAtTime(.0001,c.currentTime,.25); setTimeout(()=>{ try{o.disconnect();}catch(e){} },1500); }catch(e){} } }
+function setMusic(v){ S.music=v; persistS(); syncSettings(); if(v) startMusic(); else stopMusic(); }
+window.addEventListener('pointerdown',()=>{ if(S.music!==false) startMusic(); },{once:true});
+document.addEventListener('visibilitychange',()=>{ if(document.hidden) stopMusic(); else if(S.music!==false&&AC) startMusic(); });
 
 /* ---------- boot ---------- */
 document.body.dataset.theme=S.theme; document.body.dataset.pal=S.pal;

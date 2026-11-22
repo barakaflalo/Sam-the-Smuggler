@@ -20,7 +20,7 @@
 })();
 
 /* Sam the Smuggler — AppNest service worker (network-first shell) */
-const VERSION = "samtrader-v10";
+const VERSION = "samtrader-v11";
 const CORE = ["./", "./manifest.json", "./icon-192.png", "./icon-512.png",
   "./art/bm_bag.webp",
   "./art/bm_prices.webp",
