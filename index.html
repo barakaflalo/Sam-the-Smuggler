@@ -449,6 +449,7 @@ input,select{width:100%; padding:13px; border-radius:12px; border:1px solid var(
 
 /* ===== v1.7 ===== */
 .hudrival{display:flex; justify-content:space-between; align-items:center; gap:8px; margin-top:7px; padding:5px 11px; border:1px solid var(--line); background:var(--card); border-radius:10px; font-size:12px; font-weight:700; cursor:pointer}
+.hudrival .hrv{display:flex; align-items:center; gap:6px} .hudrival .hudav{width:22px; height:22px; border-radius:50%; object-fit:cover; border:1px solid var(--gold2)}
 .hudrival .up{color:var(--good); font-size:11px} .hudrival .down{color:var(--bad); font-size:11px}
 .rivalnote{margin-bottom:12px} .rivalnote .say{margin-bottom:4px} .rnfx{font-size:12px; font-weight:800; color:var(--warn); padding:0 60px}
 .newsbox{border:1px solid var(--line); background:linear-gradient(180deg,var(--card),var(--bg2)); border-radius:14px; padding:9px 12px; margin-bottom:12px}
@@ -673,7 +674,7 @@ input,select{width:100%; padding:13px; border-radius:12px; border:1px solid var(
 
 <script>
 "use strict";
-const VERSION="1.7.0";
+const VERSION="1.7.1";
 
 /* ---------- storage shim ---------- */
 const mem={};
@@ -2295,7 +2296,7 @@ function roundRect(x,a,b,w,h,r){ x.beginPath(); x.moveTo(a+r,b); x.arcTo(a+w,b,a
 /* ---------- art: images from the design brief drop into art/<name>.webp.
    Only names listed in ART are requested; everything else shows the emoji fallback,
    so the game looks right before, during and after the art arrives. ---------- */
-const ART=new Set(["bm_bag", "bm_prices", "bm_route", "char_cop", "char_customs", "char_dealer", "char_gang", "char_hacker", "char_sam", "char_shark", "city_amsterdam", "city_bangkok", "city_bogota", "city_dubai", "city_kingston", "city_marrakech", "city_miami", "city_moscow", "city_telaviv", "city_tijuana", "end_broke", "end_win", "ev_customs", "ev_escape", "ev_fight_win", "ev_gang", "ev_lucky_cash", "ev_lucky_crate", "ev_police", "ev_quiet", "ev_storm", "good_candy", "good_diamond", "good_dust", "good_grass", "good_pills", "good_shrooms", "home_hero", "map_world", "prot_bribe", "prot_car", "prot_docs", "prot_guard", "rank_1", "rank_2", "rank_3", "rank_4", "rank_5", "veh_car", "veh_plane", "veh_ship"]);
+const ART=new Set(["bm_bag", "bm_prices", "bm_route", "char_cop", "char_customs", "char_dealer", "char_gang", "char_hacker", "char_rival", "char_sam", "char_shark", "city_amsterdam", "city_bangkok", "city_bogota", "city_capetown", "city_dubai", "city_hongkong", "city_istanbul", "city_kingston", "city_marrakech", "city_miami", "city_moscow", "city_rio", "city_telaviv", "city_tijuana", "end_broke", "end_win", "ev_customs", "ev_escape", "ev_fight_win", "ev_gang", "ev_lucky_cash", "ev_lucky_crate", "ev_police", "ev_quiet", "ev_storm", "good_candy", "good_diamond", "good_dust", "good_grass", "good_pills", "good_shrooms", "home_hero", "map_world", "prot_bribe", "prot_car", "prot_docs", "prot_guard", "rank_1", "rank_2", "rank_3", "rank_4", "rank_5", "veh_car", "veh_plane", "veh_ship"]);
 function art(name,fb,cls=''){
   if(ART.has(name)) return `<img class="art ${cls}" src="art/${name}.webp" alt="" draggable="false" onerror="this.replaceWith(Object.assign(document.createElement('span'),{className:'artfb ${cls}',textContent:'${fb}'}))">`;
   return fb?`<span class="artfb ${cls}">${fb}</span>`:'';
@@ -2717,7 +2718,7 @@ function updRival(){
   const el=document.getElementById('hudRival'); if(!el||!G||!G.rival) return;
   const r=G.rival, me=netWorth(), ahead=me>=r.worth;
   el.style.display='flex';
-  el.innerHTML=`<span>🥸 ${T('rivalName')}: <b>${money(r.worth)}</b></span><span class="${ahead?'up':'down'}">${ahead?'▲ '+T('youLead'):'▼ '+T('heLeads')}</span>`;
+  el.innerHTML=`<span class="hrv">${art('char_rival','🥸','hudav')} ${T('rivalName')}: <b>${money(r.worth)}</b></span><span class="${ahead?'up':'down'}">${ahead?'▲ '+T('youLead'):'▼ '+T('heLeads')}</span>`;
 }
 function rivalInfo(){ const r=G.rival; toast(`🥸 ${T('rivalName')} · ${LOCS[r.loc].em} ${locname(r.loc)} · ${money(r.worth)}`); }
 function rivalEndHtml(worth){

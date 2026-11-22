@@ -20,7 +20,7 @@
 })();
 
 /* Sam the Smuggler — AppNest service worker (network-first shell) */
-const VERSION = "samtrader-v11";
+const VERSION = "samtrader-v12";
 const CORE = ["./", "./manifest.json", "./icon-192.png", "./icon-512.png",
   "./art/bm_bag.webp",
   "./art/bm_prices.webp",
@@ -30,16 +30,21 @@ const CORE = ["./", "./manifest.json", "./icon-192.png", "./icon-512.png",
   "./art/char_dealer.webp",
   "./art/char_gang.webp",
   "./art/char_hacker.webp",
+  "./art/char_rival.webp",
   "./art/char_sam.webp",
   "./art/char_shark.webp",
   "./art/city_amsterdam.webp",
   "./art/city_bangkok.webp",
   "./art/city_bogota.webp",
+  "./art/city_capetown.webp",
   "./art/city_dubai.webp",
+  "./art/city_hongkong.webp",
+  "./art/city_istanbul.webp",
   "./art/city_kingston.webp",
   "./art/city_marrakech.webp",
   "./art/city_miami.webp",
   "./art/city_moscow.webp",
+  "./art/city_rio.webp",
   "./art/city_telaviv.webp",
   "./art/city_tijuana.webp",
   "./art/end_broke.webp",
