@@ -147,6 +147,11 @@ button{font-family:inherit; cursor:pointer; color:inherit}
 .pin.lp-up .pn,.jpin.lp-up .jpn{top:auto; bottom:7px}
 .pin.lp-right .pn,.jpin.lp-right .jpn{left:8px; top:0; transform:translateY(-50%)}
 .pin.lp-left .pn,.jpin.lp-left .jpn{left:auto; right:8px; top:0; transform:translateY(-50%)}
+.pin.lp-dl .pn,.jpin.lp-dl .jpn{transform:translateX(-100%); left:2px}
+.pin.lp-dr .pn,.jpin.lp-dr .jpn{transform:none; left:-2px}
+.pin.lp-ul .pn,.jpin.lp-ul .jpn{top:auto; bottom:7px; transform:translateX(-100%); left:2px}
+.pin.lp-ur .pn,.jpin.lp-ur .jpn{top:auto; bottom:7px; transform:none; left:-2px}
+.pin.here{z-index:5}
 .pin.here .dot{animation:pulse 1.4s infinite; background:#fff; box-shadow:0 0 0 2px var(--gold), 0 0 14px var(--gold)}
 .pin.here .pn{color:var(--gold)}
 .pin.sel .pn{color:#141005; background:var(--gold)}
@@ -187,6 +192,7 @@ button{font-family:inherit; cursor:pointer; color:inherit}
 table.intel{border-collapse:collapse; width:100%; font-size:12px; font-variant-numeric:tabular-nums}
 table.intel th,table.intel td{padding:7px 6px; text-align:center; border-bottom:1px solid var(--line); white-space:nowrap}
 table.intel thead th{position:sticky; top:0; background:var(--bg2); font-size:15px; z-index:1}
+table.intel thead th .thico{width:30px; height:30px; object-fit:contain; vertical-align:middle} table.intel thead th .artfb.thico{width:auto;height:auto;font-size:15px}
 table.intel thead th:first-child{text-align:start; font-size:12px; color:var(--dim)}
 table.intel td.cty{text-align:start; font-weight:700}
 table.intel td.cty .age{display:block; font-size:9px; color:var(--dim); font-weight:600}
@@ -315,6 +321,12 @@ input,select{width:100%; padding:13px; border-radius:12px; border:1px solid var(
 .modal.on{opacity:1; pointer-events:auto}
 .sheet{width:100%; max-width:560px; background:var(--bg2); border-radius:20px 20px 0 0; border-top:1px solid var(--gold2); padding:18px 18px calc(20px + env(safe-area-inset-bottom)); transform:translateY(100%); transition:transform .25s}
 .modal.on .sheet{transform:none}
+.sheet{position:relative; max-height:88vh; max-height:88dvh; overflow-y:auto; overscroll-behavior:contain; -webkit-overflow-scrolling:touch}
+.sheet .shx{position:sticky; top:-18px; float:inline-end; margin:-8px -8px 0 0; width:36px; height:36px; border-radius:50%; border:1px solid var(--line); background:var(--card); color:var(--dim); font-size:16px; font-weight:900; z-index:5}
+.evchoices.cgrid{display:grid; grid-template-columns:1fr 1fr; gap:8px}
+.evchoices.cgrid .btn.evchoice{padding:10px 10px; gap:8px}
+.evchoices.cgrid .btn.evchoice .chl b{font-size:14px}
+.evchoices.cgrid .btn.evchoice .chl small{font-size:10.5px; white-space:normal}
 .sheet h3{font-size:18px; font-weight:900; margin-bottom:4px}
 .qtybar{display:flex; align-items:center; gap:12px; margin:16px 0}
 .qtybar button{width:52px; height:52px; border-radius:14px; border:1px solid var(--gold2); background:var(--card); color:var(--gold); font-size:26px; font-weight:800}
@@ -347,7 +359,7 @@ input,select{width:100%; padding:13px; border-radius:12px; border:1px solid var(
 .herobg{position:absolute; inset:0; z-index:0; pointer-events:none}
 .herobg .heroimg{width:100%; height:100%; object-fit:cover; opacity:.55; -webkit-mask-image:linear-gradient(180deg,#000 55%,transparent); mask-image:linear-gradient(180deg,#000 55%,transparent)}
 .hero>*:not(.herobg){position:relative; z-index:1}
-.logo{animation:floaty 4s ease-in-out infinite}
+.logo{animation:floaty 4s ease-in-out infinite; border-radius:50%; border:2px solid var(--gold); box-shadow:0 0 0 4px #0008, 0 8px 26px -6px #000, 0 0 30px -4px var(--gold2); object-fit:cover; background:#0a0a0a}
 @keyframes floaty{50%{transform:translateY(-6px)}}
 #endArt:not(:empty)+.evemoji{display:none}
 #endArt .endimg{width:150px; height:150px; object-fit:contain; display:block; margin:0 auto; animation:pop .5s}
@@ -355,7 +367,19 @@ input,select{width:100%; padding:13px; border-radius:12px; border:1px solid var(
 /* art images & fallbacks */
 .art{display:block; max-width:100%; user-select:none}
 .artfb{display:inline-block; line-height:1}
-.gem .gico{width:36px; height:36px; object-fit:contain} .gem .artfb.gico{font-size:26px}
+.goodrow .gem{width:64px; height:64px; position:relative; cursor:zoom-in; border-radius:12px; background:radial-gradient(circle at 50% 45%, #e8c25a22, transparent 70%)}
+.gem .gico{width:64px; height:64px; object-fit:contain; filter:drop-shadow(0 3px 6px #000a)} .gem .artfb.gico{font-size:40px; line-height:64px}
+.gem .zh{position:absolute; bottom:-2px; inset-inline-end:-3px; font-size:10px; width:18px; height:18px; line-height:17px; border-radius:50%; background:var(--bg2); border:1px solid var(--gold2); text-align:center; opacity:.85}
+.goodrow{padding:9px 10px; gap:10px}
+.zoombox{text-align:center; padding-top:4px}
+.zoombox .zimg{width:min(68vw,300px); height:min(68vw,300px); object-fit:contain; display:block; margin:0 auto 6px; filter:drop-shadow(0 10px 24px #000) drop-shadow(0 0 30px #e8c25a33); animation:zpop .28s ease-out}
+.zoombox .artfb.zimg{font-size:150px; line-height:min(68vw,300px)}
+.zoombox h3{font-size:22px; color:var(--gold)}
+.zoombox .zsub{font-size:14px; color:var(--dim); margin:4px 0 14px}
+.zoombox .zsub b{color:var(--text)}
+.zoombox .zbtns{display:flex; gap:10px} .zoombox .zbtns .btn{flex:1}
+@keyframes zpop{from{transform:scale(.6); opacity:0} to{transform:none; opacity:1}}
+.bmico{cursor:zoom-in}
 .bmico{width:44px; text-align:center; flex:0 0 auto} .bmico .ico{width:44px; height:44px; object-fit:contain; margin:0 auto} .bmico .artfb{font-size:32px}
 .jescene{margin:-20px -18px 10px; border-radius:20px 20px 0 0; overflow:hidden; max-height:180px}
 .jescene .scene{width:100%; height:auto; display:block}
@@ -450,6 +474,12 @@ input,select{width:100%; padding:13px; border-radius:12px; border:1px solid var(
 /* ===== v1.7 ===== */
 .hudrival{display:flex; justify-content:space-between; align-items:center; gap:8px; margin-top:7px; padding:5px 11px; border:1px solid var(--line); background:var(--card); border-radius:10px; font-size:12px; font-weight:700; cursor:pointer}
 .hudrival .hrv{display:flex; align-items:center; gap:6px} .hudrival .hudav{width:22px; height:22px; border-radius:50%; object-fit:cover; border:1px solid var(--gold2)}
+.hud{transition:padding .2s}
+.hud.mini{padding-top:6px; padding-bottom:6px}
+.hud.mini .stats{margin-top:6px}
+.hud.mini .stat{padding:4px 6px}
+.hud.mini .stat .k,.hud.mini .hudrival{display:none}
+.hud.mini .hudloan{margin-top:5px; padding:3px 10px}
 .hudrival .up{color:var(--good); font-size:11px} .hudrival .down{color:var(--bad); font-size:11px}
 .rivalnote{margin-bottom:12px} .rivalnote .say{margin-bottom:4px} .rnfx{font-size:12px; font-weight:800; color:var(--warn); padding:0 60px}
 .newsbox{border:1px solid var(--line); background:linear-gradient(180deg,var(--card),var(--bg2)); border-radius:14px; padding:9px 12px; margin-bottom:12px}
@@ -674,7 +704,7 @@ input,select{width:100%; padding:13px; border-radius:12px; border:1px solid var(
 
 <script>
 "use strict";
-const VERSION="1.7.1";
+const VERSION="1.7.2";
 
 /* ---------- storage shim ---------- */
 const mem={};
@@ -1061,14 +1091,14 @@ const LOCS={
   amsterdam:{em:"🇳🇱",x:55.7,y:17.3,lp:"left",heat:.30,bias:{grass:.5,candy:1.4,pills:1.1,shrooms:.9,dust:1.3,diamond:1.2}},
   bogota:   {em:"🇨🇴",x:25.4,y:52.2,heat:.60,bias:{grass:.9,candy:1.1,pills:1.5,shrooms:1.2,dust:.4,diamond:1.3}},
   bangkok:  {em:"🇹🇭",x:92.5,y:45.6,heat:.50,bias:{grass:1.1,candy:.8,pills:1.2,shrooms:.5,dust:1.4,diamond:.6}},
-  marrakech:{em:"🇲🇦",x:50.8,y:32.5,heat:.40,bias:{grass:.6,candy:.7,pills:1.3,shrooms:1.3,dust:1.5,diamond:1.1}},
+  marrakech:{em:"🇲🇦",x:50.8,y:32.5,lp:"left",heat:.40,bias:{grass:.6,candy:.7,pills:1.3,shrooms:1.3,dust:1.5,diamond:1.1}},
   moscow:   {em:"🇷🇺",x:68.3,y:14.8,lp:"up",heat:.80,bias:{grass:1.3,candy:1.2,pills:.5,shrooms:1.5,dust:1.2,diamond:.9},gang:1.3},
   tijuana:  {em:"🇲🇽",x:8.8,y:31.9,heat:.70,bias:{grass:1,candy:1.1,pills:1.1,shrooms:1.1,dust:.5,diamond:1.2},gang:1.6},
-  dubai:    {em:"🇦🇪",x:75.1,y:37.2,lp:"right",heat:.85,bias:{grass:1.6,candy:1.5,pills:1.4,shrooms:1.4,dust:1.5,diamond:.5}},
+  dubai:    {em:"🇦🇪",x:75.1,y:37.2,lp:"down",heat:.85,bias:{grass:1.6,candy:1.5,pills:1.4,shrooms:1.4,dust:1.5,diamond:.5}},
   miami:    {em:"🇺🇸",x:23.0,y:36.8,lp:"up",heat:.75,bias:{grass:1.4,candy:1.4,pills:1.3,shrooms:1.4,dust:1.4,diamond:1.4}},
   kingston: {em:"🇯🇲",x:24.3,y:42.5,lp:"right",heat:.20,bias:{grass:.5,candy:.9,pills:1,shrooms:.5,dust:1.1,diamond:1},gang:.7},
   istanbul: {em:"🇹🇷",x:65.0,y:25.6,lp:"left",heat:.50,bias:{grass:1.2,candy:.7,pills:1.3,shrooms:1,dust:1.2,diamond:1.1}},
-  hongkong: {em:"🇭🇰",x:97.8,y:39.3,lp:"left",heat:.65,bias:{grass:1.4,candy:1.2,pills:.6,shrooms:1.3,dust:1.3,diamond:.8}},
+  hongkong: {em:"🇭🇰",x:97.8,y:39.3,lp:"ul",heat:.65,bias:{grass:1.4,candy:1.2,pills:.6,shrooms:1.3,dust:1.3,diamond:.8}},
   rio:      {em:"🇧🇷",x:37.2,y:72.5,heat:.55,bias:{grass:.6,candy:1.4,pills:1.2,shrooms:.7,dust:1.3,diamond:1.2},gang:1.3},
   capetown: {em:"🇿🇦",x:60.9,y:80.5,heat:.40,bias:{grass:.8,candy:1.2,pills:1.1,shrooms:1.2,dust:1.3,diamond:.45}},
 };
@@ -1313,7 +1343,7 @@ function viewMarket(){
   GOODS.forEach(g=>{
     const p=G.market.prices[g.id], have=G.stash[g.id]||0;
     html+=`<div class="goodrow" id="gr_${g.id}">
-      <div class="gem">${art('good_'+g.id,g.em,'gico')}</div>
+      <div class="gem" onclick="zoomGood('${g.id}')">${art('good_'+g.id,g.em,'gico')}<span class="zh">🔍</span></div>
       <div class="gmid">
         <div class="gname">${gname(g.id)}</div>
         <div class="gsub"><span class="price">${money(p)}</span>${have?`<span class="hold">· ${T('hold')} ${fmtN(have)}</span>`:''}${G.basis&&G.basis[g.id]&&have?`<span class="basis ${p>G.basis[g.id]?'up':'down'}">${p>G.basis[g.id]?'▲':'▼'} ${T('paidAvg')} ${money(G.basis[g.id])}</span>`:''}</div>
@@ -1324,6 +1354,15 @@ function viewMarket(){
       </div></div>`;
   });
   return html+warehouseHtml();
+}
+function zoomArt(name,fb,title,sub,extra){
+  openSheet(`<div class="zoombox">${art(name,fb,'zimg')}<h3>${title}</h3>${sub?`<div class="zsub">${sub}</div>`:''}${extra||''}</div>`);
+}
+function zoomGood(id){
+  const g=GOODS.find(x=>x.id===id), p=G.market.prices[id], have=G.stash[id]||0;
+  zoomArt('good_'+id,g.em,gname(id),`<b>${money(p)}</b>${have?` · ${T('hold')} <b>${fmtN(have)}</b>`:''}`,
+    `<div class="zbtns"><button class="btn primary" ${p>G.cash?'disabled':''} onclick="closeSheet();openTrade('${id}','buy')">${T('buy')}</button>
+     <button class="btn" ${have?'':'disabled'} onclick="closeSheet();openTrade('${id}','sell')">${T('sell')}</button></div>`);
 }
 function openTrade(id,mode){
   const g=GOODS.find(x=>x.id===id), p=G.market.prices[id];
@@ -1393,7 +1432,7 @@ function viewIntel(){
   h+=`<div class="sectitle">${T('intelTitle')} 🗺️</div>
     <p class="small" style="margin:-4px 2px 10px">${T('intelInfo')}</p>`;
   h+=`<div class="intelwrap"><table class="intel"><thead><tr><th>${T('city')}</th>`;
-  GOODS.forEach(g=>h+=`<th>${g.em}</th>`);
+  GOODS.forEach(g=>h+=`<th onclick="zoomGood('${g.id}')">${art('good_'+g.id,g.em,'thico')}</th>`);
   h+=`</tr></thead><tbody>`;
   for(const id of activeLocs()){
     const seen=G.intel&&G.intel[id];
@@ -1933,7 +1972,7 @@ function viewBlack(){
   return `${sayHtml('dealer','🕶️',quip('dealer'))}<div class="sectitle">${T('blackTitle')} 🕶️</div>
   <div class="card">
     <div style="display:flex;align-items:center;gap:12px">
-      <div class="bmico">${art('bm_bag','🎒','ico')}</div>
+      <div class="bmico" onclick="zoomArt('bm_bag','🎒',T('capUpg'))">${art('bm_bag','🎒','ico')}</div>
       <div style="flex:1"><div style="font-weight:900;font-size:16px">${T('capUpg')} (+${fmtN(add)})</div>
       <div class="small">${T('capDesc')}</div>
       <div class="small">${T('capNow')}: <b style="color:var(--gold)">${fmtN(G.cap)}</b></div></div>
@@ -1942,7 +1981,7 @@ function viewBlack(){
   </div>
   <div class="card">
     <div style="display:flex;align-items:center;gap:12px">
-      <div class="bmico">${art('bm_prices','📡','ico')}</div>
+      <div class="bmico" onclick="zoomArt('bm_prices','📡',T('buyPricesT'))">${art('bm_prices','📡','ico')}</div>
       <div style="flex:1"><div style="font-weight:900;font-size:16px">${T('buyPricesT')}</div>
       <div class="small">${T('buyPricesDesc')}</div></div>
     </div>
@@ -1950,7 +1989,7 @@ function viewBlack(){
   </div>
   <div class="card">
     <div style="display:flex;align-items:center;gap:12px">
-      <div class="bmico">${art('bm_route','🛰️','ico')}</div>
+      <div class="bmico" onclick="zoomArt('bm_route','🛰️',T('buyRouteT'))">${art('bm_route','🛰️','ico')}</div>
       <div style="flex:1"><div style="font-weight:900;font-size:16px">${T('buyRouteT')}</div>
       <div class="small">${T('buyRouteDesc')}</div>
       ${routeActive?`<div class="small" style="color:var(--good)">${T('routeActive')} · ${T('dayWord')} ${G.routeUntil}</div>`:''}</div>
@@ -1966,7 +2005,7 @@ function buyPriceIntel(){
     `<button class="btn evchoice" onclick="doPriceIntel('${id}')"><span class="che">${LOCS[id].em}</span><span class="chl"><b>${locname(id)}</b><small>${specialtyLine(id)}</small></span></button>`).join('');
   openSheet(`<div style="text-align:center;font-size:32px">📡</div><h3>${T('buyPricesT')}</h3>
     <p class="small" style="text-align:center;margin:6px 2px 12px">${T('pickCityIntel').replace('{c}',money(BM.priceIntel))}</p>
-    <div class="evchoices">${rows}</div>`);
+    <div class="evchoices cgrid">${rows}</div>`);
 }
 function doPriceIntel(id){
   if(BM.priceIntel>G.cash){ toast(T('cantAfford')); closeSheet(); return; }
@@ -2182,8 +2221,10 @@ function refreshHome(){
   renderDailyCard(); renderStoryCard();
   const hb=document.getElementById('heroBg'); if(hb) hb.innerHTML=ART.has('home_hero')?art('home_hero','','heroimg'):'';
 }
-function openSheet(html){ document.getElementById('sheet').innerHTML=html; document.getElementById('modal').classList.add('on'); }
+function openSheet(html){ const sh=document.getElementById('sheet'); sh.innerHTML='<button class="shx" onclick="closeSheet()" aria-label="close">✕</button>'+html; sh.scrollTop=0; document.getElementById('modal').classList.add('on'); }
 function closeSheet(){ document.getElementById('modal').classList.remove('on'); }
+(function(){ const sc=document.getElementById('gameScroll'), hd=document.querySelector('#game .hud'); let mini=false;
+  sc.addEventListener('scroll',()=>{ const t=sc.scrollTop; if(!mini&&t>70){mini=true;hd.classList.add('mini');} else if(mini&&t<12){mini=false;hd.classList.remove('mini');} },{passive:true}); })();
 document.getElementById('modal').addEventListener('click',e=>{ if(e.target.id==='modal')closeSheet(); });
 let toastT;
 function toast(m){ if(!m)return; const t=document.getElementById('toast'); t.textContent=m; t.classList.add('on'); clearTimeout(toastT); toastT=setTimeout(()=>t.classList.remove('on'),1600); }
